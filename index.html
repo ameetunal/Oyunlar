@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Çalkantı — Hayatta Kal</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="game-wrap">
+    <canvas id="game" width="960" height="600"></canvas>
+
+    <div id="hud">
+      <div class="bar-row">
+        <div class="bar hp-bar"><div id="hp-fill" class="bar-fill"></div></div>
+        <span id="hp-text">100/100</span>
+      </div>
+      <div class="bar-row">
+        <div class="bar xp-bar"><div id="xp-fill" class="bar-fill"></div></div>
+        <span id="lvl-text">Lv 1</span>
+      </div>
+      <div id="stats">
+        <span id="timer">00:00</span>
+        <span id="kills">Düşman: 0</span>
+      </div>
+    </div>
+
+    <div id="start-screen" class="overlay">
+      <h1>ÇALKANTI</h1>
+      <p>Dalga dalga gelen düşmanlara karşı hayatta kal, seviye atla, dünyayı salla.</p>
+      <p class="controls">Hareket: <b>WASD</b> / <b>Ok tuşları</b> — Saldırı otomatik</p>
+      <button id="start-btn">BAŞLA</button>
+    </div>
+
+    <div id="levelup-screen" class="overlay hidden">
+      <h2>SEVİYE ATLADIN!</h2>
+      <div id="upgrade-options"></div>
+    </div>
+
+    <div id="gameover-screen" class="overlay hidden">
+      <h2>DÜŞTÜN</h2>
+      <p id="final-stats"></p>
+      <button id="restart-btn">TEKRAR DENE</button>
+    </div>
+  </div>
+
+  <script src="js/game.js"></script>
+</body>
+</html>
