@@ -236,6 +236,7 @@
       invuln: 0,
       orbCount: 0, orbDamage: 16, orbRadius: 65, orbAngle: 0,
       explosiveRadius: 0,
+      facingAngle: -Math.PI / 2, ringSpin: 0,
     };
   }
 
@@ -415,7 +416,9 @@
       const len = Math.hypot(dx, dy);
       player.x = clamp(player.x + (dx / len) * player.speed * dt * magnitude, player.r, W - player.r);
       player.y = clamp(player.y + (dy / len) * player.speed * dt * magnitude, player.r, H - player.r);
+      player.facingAngle = Math.atan2(dy, dx);
     }
+    player.ringSpin += dt * 1.4;
 
     // orbit shield
     if (player.orbCount > 0) {
@@ -651,15 +654,62 @@
       ctx.shadowBlur = 0;
     }
 
-    // player
+    // player — layered glowing orb with a spinning containment ring and a facing chevron
     if (player) {
+      const hit = player.invuln > 0;
+
+      // spinning dashed containment ring (player's own identity marker)
+      ctx.save();
+      ctx.translate(player.x, player.y);
+      ctx.rotate(player.ringSpin);
       ctx.beginPath();
-      ctx.fillStyle = player.invuln > 0 ? '#ffffff' : '#4ade80';
+      ctx.strokeStyle = hit ? 'rgba(255,255,255,0.7)' : 'rgba(134,239,172,0.55)';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([3, 5]);
+      ctx.arc(0, 0, player.r + 7, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.restore();
+
+      // gradient body for a glassy, 3D orb look
+      const grad = ctx.createRadialGradient(
+        player.x - player.r * 0.3, player.y - player.r * 0.3, player.r * 0.15,
+        player.x, player.y, player.r
+      );
+      if (hit) {
+        grad.addColorStop(0, '#ffffff');
+        grad.addColorStop(1, '#eafff1');
+      } else {
+        grad.addColorStop(0, '#d4ffe3');
+        grad.addColorStop(0.55, '#4ade80');
+        grad.addColorStop(1, '#15803d');
+      }
+      ctx.beginPath();
+      ctx.fillStyle = grad;
       ctx.shadowColor = '#4ade80';
-      ctx.shadowBlur = 10;
+      ctx.shadowBlur = 14;
       ctx.arc(player.x, player.y, player.r, 0, Math.PI * 2);
       ctx.fill();
       ctx.shadowBlur = 0;
+
+      // specular highlight
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(255,255,255,0.6)';
+      ctx.ellipse(player.x - player.r * 0.32, player.y - player.r * 0.35, player.r * 0.3, player.r * 0.18, -0.6, 0, Math.PI * 2);
+      ctx.fill();
+
+      // facing chevron
+      ctx.save();
+      ctx.translate(player.x, player.y);
+      ctx.rotate(player.facingAngle);
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(255,255,255,0.9)';
+      ctx.moveTo(player.r + 6, 0);
+      ctx.lineTo(player.r - 4, -5);
+      ctx.lineTo(player.r - 4, 5);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
     }
 
     // floating texts
