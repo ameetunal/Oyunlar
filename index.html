@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Çalkantı — Hayatta Kal</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -11,24 +11,33 @@
     <canvas id="game" width="960" height="600"></canvas>
 
     <div id="hud">
-      <div class="bar-row">
-        <div class="bar hp-bar"><div id="hp-fill" class="bar-fill"></div></div>
-        <span id="hp-text">100/100</span>
-      </div>
-      <div class="bar-row">
-        <div class="bar xp-bar"><div id="xp-fill" class="bar-fill"></div></div>
-        <span id="lvl-text">Lv 1</span>
-      </div>
-      <div id="stats">
-        <span id="timer">00:00</span>
-        <span id="kills">Düşman: 0</span>
+      <div class="hud-top">
+        <div class="hud-bars">
+          <div class="bar-row">
+            <div class="bar hp-bar"><div id="hp-fill" class="bar-fill"></div></div>
+            <span id="hp-text">100/100</span>
+          </div>
+          <div class="bar-row">
+            <div class="bar xp-bar"><div id="xp-fill" class="bar-fill"></div></div>
+            <span id="lvl-text">Lv 1</span>
+          </div>
+          <div id="stats">
+            <span id="timer">00:00</span>
+            <span id="kills">Düşman: 0</span>
+          </div>
+        </div>
+        <div class="hud-controls">
+          <button id="mute-btn" class="icon-btn" title="Sesi kapat/aç">🔊</button>
+          <button id="pause-btn" class="icon-btn" title="Duraklat">⏸</button>
+        </div>
       </div>
     </div>
 
     <div id="start-screen" class="overlay">
       <h1>ÇALKANTI</h1>
       <p>Dalga dalga gelen düşmanlara karşı hayatta kal, seviye atla, dünyayı salla.</p>
-      <p class="controls">Hareket: <b>WASD</b> / <b>Ok tuşları</b> — Saldırı otomatik</p>
+      <p class="controls">Hareket: <b>WASD</b> / <b>Ok tuşları</b> / dokunmatik joystick — Saldırı otomatik</p>
+      <p id="best-score" class="best-score hidden"></p>
       <button id="start-btn">BAŞLA</button>
     </div>
 
@@ -37,10 +46,20 @@
       <div id="upgrade-options"></div>
     </div>
 
+    <div id="pause-screen" class="overlay hidden">
+      <h2>DURAKLATILDI</h2>
+      <button id="resume-btn">DEVAM ET</button>
+    </div>
+
     <div id="gameover-screen" class="overlay hidden">
       <h2>DÜŞTÜN</h2>
+      <p id="record-badge" class="record-badge hidden">🏆 YENİ REKOR!</p>
       <p id="final-stats"></p>
       <button id="restart-btn">TEKRAR DENE</button>
+    </div>
+
+    <div id="joystick" class="hidden">
+      <div id="joystick-knob"></div>
     </div>
   </div>
 
