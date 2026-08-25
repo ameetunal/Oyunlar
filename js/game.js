@@ -265,12 +265,14 @@
     else { x = -30; y = rand(0, H); }
 
     const t = elapsed / 60; // minutes-ish scaling
+    const spikePhase = rand(0, Math.PI * 2);
     if (isBoss) {
       enemies.push({
         x, y, r: 34,
         hp: 220 + t * 140, maxHp: 220 + t * 140,
         speed: 55, damage: 26,
-        color: '#b83bff', boss: true, xpValue: 12, orbCooldown: 0,
+        color: '#b83bff', colorDark: '#5b1a86', colorLight: '#e6bbff',
+        boss: true, xpValue: 12, orbCooldown: 0, spikePhase, facingAngle: 0,
       });
       shake = 18;
       floatingTexts.push({ x: W / 2, y: 60, text: 'BÜYÜK TEHDİT YAKLAŞIYOR', life: 2.2, big: true, color: '#b83bff' });
@@ -282,17 +284,53 @@
           x, y, r: 20,
           hp: 40 + t * 18, maxHp: 40 + t * 18,
           speed: 60, damage: 14,
-          color: '#ff8c42', xpValue: 3, orbCooldown: 0,
+          color: '#ff8c42', colorDark: '#7a3a0f', colorLight: '#ffc088',
+          xpValue: 3, orbCooldown: 0, spikePhase, facingAngle: 0,
         });
       } else {
         enemies.push({
           x, y, r: 11,
           hp: 12 + t * 6, maxHp: 12 + t * 6,
           speed: rand(95, 130), damage: 8,
-          color: '#ff5555', xpValue: 1, orbCooldown: 0,
+          color: '#ff5555', colorDark: '#8f1f1f', colorLight: '#ffaaaa',
+          xpValue: 1, orbCooldown: 0, spikePhase, facingAngle: 0,
         });
       }
     }
+  }
+
+  function drawSpikeRing(x, y, r, count, len, halfWidth, rot, color) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rot);
+    ctx.fillStyle = color;
+    for (let i = 0; i < count; i++) {
+      ctx.save();
+      ctx.rotate((i / count) * Math.PI * 2);
+      ctx.beginPath();
+      ctx.moveTo(r, -halfWidth);
+      ctx.lineTo(r + len, 0);
+      ctx.lineTo(r, halfWidth);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+    ctx.restore();
+  }
+
+  function drawRimPlates(x, y, r, count, size, rot, color) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rot);
+    ctx.fillStyle = color;
+    for (let i = 0; i < count; i++) {
+      ctx.save();
+      ctx.rotate((i / count) * Math.PI * 2);
+      ctx.translate(r - size * 0.35, 0);
+      ctx.fillRect(-size / 2, -size / 2, size, size);
+      ctx.restore();
+    }
+    ctx.restore();
   }
 
   function spawnParticles(x, y, color, count = 10) {
@@ -471,6 +509,7 @@
       const ang = Math.atan2(player.y - e.y, player.x - e.x);
       e.x += Math.cos(ang) * e.speed * dt;
       e.y += Math.sin(ang) * e.speed * dt;
+      e.facingAngle = ang;
 
       // hit player
       if (dist(e, player) < e.r + player.r && player.invuln <= 0) {
@@ -597,18 +636,63 @@
     }
     ctx.shadowBlur = 0;
 
-    // enemies
+    // enemies — each archetype gets its own silhouette so the swarm reads at a glance
     for (const e of enemies) {
-      ctx.beginPath();
       if (e.boss) {
+        // crown of long spikes, slowly rotating, tips poking out from under the body
+        drawSpikeRing(e.x, e.y, e.r * 0.7, 8, 14, 6, elapsed * 0.4 + e.spikePhase, e.colorDark);
+
         const pulse = 4 + Math.sin(elapsed * 6) * 3;
+        const grad = ctx.createRadialGradient(e.x - e.r * 0.3, e.y - e.r * 0.3, e.r * 0.1, e.x, e.y, e.r);
+        grad.addColorStop(0, e.colorLight);
+        grad.addColorStop(0.6, e.color);
+        grad.addColorStop(1, e.colorDark);
+        ctx.beginPath();
+        ctx.fillStyle = grad;
         ctx.shadowColor = '#b83bff';
         ctx.shadowBlur = 14 + pulse;
+        ctx.arc(e.x, e.y, e.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // glowing core eye
+        const eyePulse = 0.55 + Math.sin(elapsed * 4) * 0.25;
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(255,255,255,${eyePulse})`;
+        ctx.shadowColor = '#e6bbff';
+        ctx.shadowBlur = 10;
+        ctx.arc(e.x, e.y, e.r * 0.22, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      } else if (e.maxHp > 20) {
+        // brute: armored gradient body with rim plates
+        const grad = ctx.createRadialGradient(e.x - e.r * 0.3, e.y - e.r * 0.3, e.r * 0.1, e.x, e.y, e.r);
+        grad.addColorStop(0, e.colorLight);
+        grad.addColorStop(0.6, e.color);
+        grad.addColorStop(1, e.colorDark);
+        ctx.beginPath();
+        ctx.fillStyle = grad;
+        ctx.arc(e.x, e.y, e.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = e.colorDark;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        drawRimPlates(e.x, e.y, e.r, 6, 7, e.spikePhase, e.colorDark);
+      } else {
+        // mite: small spiky body with a dark eye facing its target
+        drawSpikeRing(e.x, e.y, e.r * 0.6, 5, 5, 2, elapsed * 1.6 + e.spikePhase, e.colorDark);
+        ctx.beginPath();
+        ctx.fillStyle = e.color;
+        ctx.arc(e.x, e.y, e.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = e.colorDark;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.fillStyle = e.colorDark;
+        ctx.arc(e.x + Math.cos(e.facingAngle) * e.r * 0.35, e.y + Math.sin(e.facingAngle) * e.r * 0.35, e.r * 0.24, 0, Math.PI * 2);
+        ctx.fill();
       }
-      ctx.fillStyle = e.color;
-      ctx.arc(e.x, e.y, e.r, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.shadowBlur = 0;
       // hp bar for tanky/boss
       if (e.boss || e.maxHp > 20) {
         const w = e.r * 2;
