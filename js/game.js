@@ -23,8 +23,7 @@
   const resumeBtn = document.getElementById('resume-btn');
   const bestScoreEl = document.getElementById('best-score');
   const recordBadge = document.getElementById('record-badge');
-  const joystick = document.getElementById('joystick');
-  const joystickKnob = document.getElementById('joystick-knob');
+  const fullscreenBtn = document.getElementById('fullscreen-btn');
 
   const keys = {};
   window.addEventListener('keydown', e => {
@@ -116,25 +115,22 @@
   }
   showBestOnStart();
 
-  // ---- touch joystick ----
+  // ---- touch controls: drag anywhere on the canvas, no visible joystick ----
   const touchVec = { x: 0, y: 0, active: false };
-  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  if (isTouchDevice) joystick.classList.remove('hidden');
   let joyTouchId = null;
+  let joyOriginX = 0, joyOriginY = 0;
   const JOY_RADIUS = 55;
   function joyStart(id, clientX, clientY) {
     joyTouchId = id;
     touchVec.active = true;
-    joystick.dataset.originX = clientX;
-    joystick.dataset.originY = clientY;
+    joyOriginX = clientX;
+    joyOriginY = clientY;
   }
   function joyMove(clientX, clientY) {
     if (!touchVec.active) return;
-    const ox = Number(joystick.dataset.originX), oy = Number(joystick.dataset.originY);
-    let dx = clientX - ox, dy = clientY - oy;
+    let dx = clientX - joyOriginX, dy = clientY - joyOriginY;
     const len = Math.hypot(dx, dy);
     if (len > JOY_RADIUS) { dx = (dx / len) * JOY_RADIUS; dy = (dy / len) * JOY_RADIUS; }
-    joystickKnob.style.transform = `translate(${dx}px, ${dy}px)`;
     touchVec.x = dx / JOY_RADIUS;
     touchVec.y = dy / JOY_RADIUS;
   }
@@ -142,22 +138,45 @@
     touchVec.active = false;
     touchVec.x = 0; touchVec.y = 0;
     joyTouchId = null;
-    joystickKnob.style.transform = 'translate(0, 0)';
   }
-  joystick.addEventListener('touchstart', e => {
+  canvas.addEventListener('touchstart', e => {
+    if (state !== 'playing') return;
     e.preventDefault();
     const t = e.changedTouches[0];
     joyStart(t.identifier, t.clientX, t.clientY);
   }, { passive: false });
-  joystick.addEventListener('touchmove', e => {
-    e.preventDefault();
-    for (const t of e.changedTouches) if (t.identifier === joyTouchId) joyMove(t.clientX, t.clientY);
+  window.addEventListener('touchmove', e => {
+    for (const t of e.changedTouches) {
+      if (t.identifier === joyTouchId) { e.preventDefault(); joyMove(t.clientX, t.clientY); }
+    }
   }, { passive: false });
-  joystick.addEventListener('touchend', e => {
-    e.preventDefault();
+  window.addEventListener('touchend', e => {
     for (const t of e.changedTouches) if (t.identifier === joyTouchId) joyEnd();
-  }, { passive: false });
-  joystick.addEventListener('touchcancel', joyEnd);
+  });
+  window.addEventListener('touchcancel', joyEnd);
+
+  // ---- fullscreen ----
+  function requestFullscreenSafe() {
+    const el = document.documentElement;
+    const req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+    if (req) { try { req.call(el); } catch (e) {} }
+  }
+  function toggleFullscreen() {
+    const fsEl = document.fullscreenElement || document.webkitFullscreenElement;
+    if (!fsEl) {
+      requestFullscreenSafe();
+    } else {
+      const exit = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+      if (exit) { try { exit.call(document); } catch (e) {} }
+    }
+  }
+  fullscreenBtn.addEventListener('click', toggleFullscreen);
+  function updateFullscreenBtn() {
+    const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+    fullscreenBtn.title = isFs ? 'Tam ekrandan çık' : 'Tam ekran';
+  }
+  document.addEventListener('fullscreenchange', updateFullscreenBtn);
+  document.addEventListener('webkitfullscreenchange', updateFullscreenBtn);
 
   function togglePause() {
     if (state === 'playing') {
@@ -678,6 +697,7 @@
 
   startBtn.addEventListener('click', () => {
     ensureAudio();
+    requestFullscreenSafe();
     resetGame();
     startScreen.classList.add('hidden');
     state = 'playing';
