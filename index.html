@@ -44,10 +44,14 @@
 
     <div id="start-screen" class="overlay">
       <h1>ÇALKANTI</h1>
-      <p>Dalga dalga gelen düşmanlara karşı hayatta kal, seviye atla, dünyayı salla.</p>
+      <p>İstanbul'un sokaklarında dalga dalga gelen belalara karşı hayatta kal, seviye atla, şehri çalkala.</p>
       <p class="controls">Hareket: <b>WASD</b> / <b>Ok tuşları</b> / ekranın herhangi bir yerine dokunup sürükle — Saldırı otomatik</p>
       <p id="best-score" class="best-score hidden"></p>
-      <button id="start-btn">BAŞLA</button>
+      <p id="akce-display" class="akce-display hidden"></p>
+      <div class="start-buttons">
+        <button id="start-btn">BAŞLA</button>
+        <button id="shop-btn" class="secondary-btn">🪙 DÜKKAN</button>
+      </div>
     </div>
 
     <div id="levelup-screen" class="overlay hidden">
@@ -60,10 +64,18 @@
       <button id="resume-btn">DEVAM ET</button>
     </div>
 
+    <div id="shop-screen" class="overlay hidden">
+      <h2>KALICI YÜKSELTMELER</h2>
+      <p class="shop-akce">🪙 Akçe: <span id="shop-akce-total">0</span></p>
+      <div id="shop-list"></div>
+      <button id="shop-back-btn">GERİ</button>
+    </div>
+
     <div id="gameover-screen" class="overlay hidden">
       <h2>DÜŞTÜN</h2>
       <p id="record-badge" class="record-badge hidden">🏆 YENİ REKOR!</p>
       <p id="final-stats"></p>
+      <p id="akce-earned" class="akce-earned"></p>
       <button id="restart-btn">TEKRAR DENE</button>
     </div>
   </div>

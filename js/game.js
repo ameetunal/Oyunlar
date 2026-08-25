@@ -24,6 +24,13 @@
   const bestScoreEl = document.getElementById('best-score');
   const recordBadge = document.getElementById('record-badge');
   const fullscreenBtn = document.getElementById('fullscreen-btn');
+  const shopBtn = document.getElementById('shop-btn');
+  const shopScreen = document.getElementById('shop-screen');
+  const shopBackBtn = document.getElementById('shop-back-btn');
+  const shopList = document.getElementById('shop-list');
+  const shopAkceTotal = document.getElementById('shop-akce-total');
+  const akceDisplay = document.getElementById('akce-display');
+  const akceEarnedEl = document.getElementById('akce-earned');
 
   const keys = {};
   window.addEventListener('keydown', e => {
@@ -114,6 +121,92 @@
     }
   }
   showBestOnStart();
+
+  // ---- permanent progression: Akçe currency + shop ----
+  const META_STATS = [
+    { id: 'hp', name: 'Simit Stoku', icon: '🥯', desc: 'Maks can +8/seviye', maxLevel: 10 },
+    { id: 'dmg', name: 'Nazar Gücü', icon: '🧿', desc: 'Hasar +5%/seviye', maxLevel: 10 },
+    { id: 'speed', name: 'Dolmuş Motoru', icon: '🚌', desc: 'Hareket hızı +4%/seviye', maxLevel: 10 },
+    { id: 'magnet', name: 'Vapur Işığı', icon: '🚢', desc: 'Toplama menzili +8/seviye', maxLevel: 10 },
+  ];
+  function getAkce() {
+    try { return Number(localStorage.getItem('calkanti_akce') || 0); } catch (e) { return 0; }
+  }
+  function addAkce(amount) {
+    const total = getAkce() + amount;
+    try { localStorage.setItem('calkanti_akce', String(total)); } catch (e) {}
+    return total;
+  }
+  function getMeta() {
+    try {
+      const raw = JSON.parse(localStorage.getItem('calkanti_meta') || '{}');
+      const meta = {};
+      for (const s of META_STATS) meta[s.id] = raw[s.id] || 0;
+      return meta;
+    } catch (e) {
+      const meta = {};
+      for (const s of META_STATS) meta[s.id] = 0;
+      return meta;
+    }
+  }
+  function saveMeta(meta) {
+    try { localStorage.setItem('calkanti_meta', JSON.stringify(meta)); } catch (e) {}
+  }
+  function metaCost(level) {
+    return Math.round(50 * Math.pow(1.55, level));
+  }
+  function showAkceOnStart() {
+    const akce = getAkce();
+    akceDisplay.textContent = `🪙 Akçe: ${akce}`;
+    akceDisplay.classList.remove('hidden');
+  }
+  showAkceOnStart();
+
+  function renderShop() {
+    const akce = getAkce();
+    const meta = getMeta();
+    shopAkceTotal.textContent = akce;
+    shopList.innerHTML = '';
+    for (const s of META_STATS) {
+      const level = meta[s.id];
+      const maxed = level >= s.maxLevel;
+      const cost = maxed ? 0 : metaCost(level);
+      const row = document.createElement('div');
+      row.className = 'shop-row';
+      row.innerHTML = `
+        <div class="icon">${s.icon}</div>
+        <div class="info">
+          <div class="name">${s.name}</div>
+          <div class="desc">${s.desc}</div>
+          <div class="level">Seviye ${level}/${s.maxLevel}</div>
+        </div>
+        <button ${maxed || akce < cost ? 'disabled' : ''}>${maxed ? 'MAKS' : `🪙 ${cost}`}</button>
+      `;
+      if (!maxed) {
+        row.querySelector('button').addEventListener('click', () => {
+          const currentAkce = getAkce();
+          const currentMeta = getMeta();
+          const buyCost = metaCost(currentMeta[s.id]);
+          if (currentAkce < buyCost) return;
+          try { localStorage.setItem('calkanti_akce', String(currentAkce - buyCost)); } catch (e) {}
+          currentMeta[s.id] += 1;
+          saveMeta(currentMeta);
+          renderShop();
+          showAkceOnStart();
+        });
+      }
+      shopList.appendChild(row);
+    }
+  }
+  shopBtn.addEventListener('click', () => {
+    renderShop();
+    startScreen.classList.add('hidden');
+    shopScreen.classList.remove('hidden');
+  });
+  shopBackBtn.addEventListener('click', () => {
+    shopScreen.classList.add('hidden');
+    startScreen.classList.remove('hidden');
+  });
 
   // ---- touch controls: drag anywhere on the canvas, no visible joystick ----
   const touchVec = { x: 0, y: 0, active: false };
@@ -209,6 +302,20 @@
   }
   buildStars();
 
+  // fixed skyline silhouette (İstanbul at night) — generated once, never changes
+  let buildings = [];
+  function buildSkyline() {
+    buildings = [];
+    let x = 0;
+    while (x < W) {
+      const w = rand(28, 64);
+      const h = rand(35, 130);
+      buildings.push({ x, w, h, lit: Math.random() < 0.4, litY: rand(10, h - 12) });
+      x += w + rand(2, 8);
+    }
+  }
+  buildSkyline();
+
   const UPGRADES = [
     { id: 'dmg', name: 'Güç Artışı', icon: '⚔️', desc: 'Hasar +25%', apply: p => p.damage *= 1.25 },
     { id: 'rate', name: 'Çılgın Hız', icon: '⚡', desc: 'Ateş hızı +20%', apply: p => p.fireRate *= 0.8 },
@@ -223,15 +330,17 @@
   ];
 
   function newPlayer() {
+    const meta = getMeta();
+    const maxHp = 100 + meta.hp * 8;
     return {
       x: W / 2, y: H / 2, r: 14,
-      hp: 100, maxHp: 100,
-      speed: 220,
-      damage: 12,
+      hp: maxHp, maxHp,
+      speed: 220 * (1 + meta.speed * 0.04),
+      damage: 12 * (1 + meta.dmg * 0.05),
       fireRate: 0.55, // seconds between shots
       projCount: 1,
       pierce: 0,
-      magnet: 70,
+      magnet: 70 + meta.magnet * 8,
       level: 1, xp: 0, xpNeeded: 10,
       invuln: 0,
       orbCount: 0, orbDamage: 16, orbRadius: 65, orbAngle: 0,
@@ -267,32 +376,35 @@
     const t = elapsed / 60; // minutes-ish scaling
     const spikePhase = rand(0, Math.PI * 2);
     if (isBoss) {
+      // Boğaz Canavarı — a deep-sea beast rising from the strait
       enemies.push({
         x, y, r: 34,
         hp: 220 + t * 140, maxHp: 220 + t * 140,
         speed: 55, damage: 26,
-        color: '#b83bff', colorDark: '#5b1a86', colorLight: '#e6bbff',
+        color: '#0ea5e9', colorDark: '#075985', colorLight: '#bae6fd',
         boss: true, xpValue: 12, orbCooldown: 0, spikePhase, facingAngle: 0,
       });
       shake = 18;
-      floatingTexts.push({ x: W / 2, y: 60, text: 'BÜYÜK TEHDİT YAKLAŞIYOR', life: 2.2, big: true, color: '#b83bff' });
+      floatingTexts.push({ x: W / 2, y: 60, text: 'BOĞAZ CANAVARI YAKLAŞIYOR', life: 2.2, big: true, color: '#7dd3fc' });
       sfx.boss();
     } else {
       const tank = Math.random() < clamp(0.15 + t * 0.03, 0.15, 0.4);
       if (tank) {
+        // Trafik Canavarı — an armored taxi-yellow brute
         enemies.push({
           x, y, r: 20,
           hp: 40 + t * 18, maxHp: 40 + t * 18,
           speed: 60, damage: 14,
-          color: '#ff8c42', colorDark: '#7a3a0f', colorLight: '#ffc088',
+          color: '#facc15', colorDark: '#92610a', colorLight: '#fff3b0',
           xpValue: 3, orbCooldown: 0, spikePhase, facingAngle: 0,
         });
       } else {
+        // Martı — a small, fast seagull swarming for scraps
         enemies.push({
           x, y, r: 11,
           hp: 12 + t * 6, maxHp: 12 + t * 6,
           speed: rand(95, 130), damage: 8,
-          color: '#ff5555', colorDark: '#8f1f1f', colorLight: '#ffaaaa',
+          color: '#e2e8f0', colorDark: '#475569', colorLight: '#ffffff',
           xpValue: 1, orbCooldown: 0, spikePhase, facingAngle: 0,
         });
       }
@@ -429,6 +541,9 @@
     const isRecord = maybeSaveRecord();
     recordBadge.classList.toggle('hidden', !isRecord);
     finalStats.textContent = `Süre: ${fmtTime(elapsed)} — Seviye: ${player.level} — Düşman: ${killCount}`;
+    const earned = Math.round(elapsed) + killCount * 2;
+    const total = addAkce(earned);
+    akceEarnedEl.textContent = `🪙 +${earned} Akçe kazandın (Toplam: ${total})`;
     gameoverScreen.classList.remove('hidden');
   }
 
@@ -610,6 +725,37 @@
     }
     ctx.globalAlpha = 1;
 
+    // crescent moon
+    ctx.beginPath();
+    ctx.fillStyle = 'rgba(255,244,214,0.85)';
+    ctx.arc(W * 0.15, 70, 26, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.fillStyle = '#0a0a12';
+    ctx.arc(W * 0.15 + 11, 62, 22, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Bosphorus bridge silhouette
+    const bx1 = W * 0.32, bx2 = W * 0.68, bTop = H - 190, bBase = H - 40;
+    ctx.strokeStyle = 'rgba(190,205,255,0.22)';
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(bx1, bBase); ctx.lineTo(bx1, bTop); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(bx2, bBase); ctx.lineTo(bx2, bTop); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(bx1, bTop);
+    ctx.quadraticCurveTo(W / 2, bTop - 55, bx2, bTop);
+    ctx.stroke();
+
+    // city skyline silhouette (fixed shapes, low contrast so gameplay stays readable)
+    for (const b of buildings) {
+      ctx.fillStyle = '#14162c';
+      ctx.fillRect(b.x, H - b.h, b.w, b.h);
+      if (b.lit) {
+        ctx.fillStyle = 'rgba(255,209,102,0.4)';
+        ctx.fillRect(b.x + b.w * 0.35, H - b.h + b.litY, 3, 3);
+      }
+    }
+
     if (shake > 0) {
       ctx.translate(rand(-shake, shake), rand(-shake, shake));
     }
@@ -649,7 +795,7 @@
         grad.addColorStop(1, e.colorDark);
         ctx.beginPath();
         ctx.fillStyle = grad;
-        ctx.shadowColor = '#b83bff';
+        ctx.shadowColor = e.color;
         ctx.shadowBlur = 14 + pulse;
         ctx.arc(e.x, e.y, e.r, 0, Math.PI * 2);
         ctx.fill();
@@ -659,7 +805,7 @@
         const eyePulse = 0.55 + Math.sin(elapsed * 4) * 0.25;
         ctx.beginPath();
         ctx.fillStyle = `rgba(255,255,255,${eyePulse})`;
-        ctx.shadowColor = '#e6bbff';
+        ctx.shadowColor = e.colorLight;
         ctx.shadowBlur = 10;
         ctx.arc(e.x, e.y, e.r * 0.22, 0, Math.PI * 2);
         ctx.fill();
@@ -844,6 +990,7 @@
     gameoverScreen.classList.add('hidden');
     recordBadge.classList.add('hidden');
     showBestOnStart();
+    showAkceOnStart();
     state = 'playing';
     lastTime = performance.now();
   });

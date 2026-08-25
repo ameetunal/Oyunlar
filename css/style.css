@@ -142,6 +142,83 @@ canvas {
   font-weight: bold;
 }
 
+.akce-display {
+  color: #f4c542;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.akce-earned {
+  color: #f4c542;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.start-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.secondary-btn {
+  background: linear-gradient(180deg, #3a3a5a, #24243d);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.shop-akce {
+  color: #f4c542;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+#shop-screen {
+  justify-content: flex-start;
+  padding-top: 32px;
+  padding-bottom: 32px;
+  overflow-y: auto;
+}
+
+#shop-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 420px;
+  padding: 4px;
+}
+
+.shop-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #1a1a2e;
+  border: 2px solid #444;
+  border-radius: 8px;
+  padding: 10px 14px;
+  text-align: left;
+}
+
+.shop-row .icon { font-size: 24px; flex-shrink: 0; }
+.shop-row .info { flex: 1; min-width: 0; }
+.shop-row .name { font-weight: bold; color: #ffd166; }
+.shop-row .desc { font-size: 12px; color: #aaa; }
+.shop-row .level { font-size: 11px; color: #6bc9ff; }
+
+.shop-row button {
+  margin-top: 0;
+  padding: 8px 16px;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.shop-row button:disabled {
+  background: #333;
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.shop-row button:disabled:hover { transform: none; }
+
 .record-badge {
   color: #ffd166;
   font-size: 20px;
