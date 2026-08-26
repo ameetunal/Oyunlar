@@ -4,6 +4,7 @@ import { sultans } from './data/sultans';
 import { glossary } from './data/glossary';
 import AdSlot from './components/AdSlot';
 import EraTimeline from './components/EraTimeline';
+import useAdSenseScript from './hooks/useAdSenseScript';
 import './App.css';
 
 const PROGRESS_KEY = 'osmanli-hikayesi:progress';
@@ -62,6 +63,7 @@ function buildPages(periods) {
 }
 
 export default function App() {
+  useAdSenseScript();
   const pages = useMemo(() => buildPages(periods), []);
 
   const [pageIndex, setPageIndex] = useState(0);

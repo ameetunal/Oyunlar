@@ -1,0 +1,6 @@
+# AdSense onayı sonrası bu satırı kendi yayıncı numaranızla değiştirip
+# aktif edin (baştaki # işaretini silin). Numarayı AdSense panelinde
+# "Hesap" -> "Hesap bilgileri" altında "pub-" ile başlayan hâliyle
+# bulabilirsiniz (kod içindeki VITE_ADSENSE_CLIENT_ID'nin "ca-" öneki
+# olmayan hâlidir). Bkz. README "Reklamı Etkinleştirme".
+# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
