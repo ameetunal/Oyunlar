@@ -16,6 +16,8 @@ dönemlere ve dönüm noktası olaylara ayrılmış sayfalar hâlinde okunur.
   edin" hatırlatıcısı (tercihler tarayıcıda `localStorage` ile saklanır)
 - Sayfa başına tahmini okuma süresi ve genel okuma ilerleme çubuğu
 - PWA manifest'i sayesinde telefonda ana ekrana eklenebilir
+- Servis çalışanı (`public/sw.js`) ile tamamen çevrimdışı çalışır —
+  ilk açılıştan sonra internet olmadan da tüm kitap okunabilir
 - Reklamla gelir modeline hazır, şimdilik yer tutucu reklam alanları
   (`src/components/AdSlot.jsx`) — gerçek ağ (ör. AdSense) onayı
   alındığında buraya entegre edilecek
