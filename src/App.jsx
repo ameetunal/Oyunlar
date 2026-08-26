@@ -9,6 +9,7 @@ import { viziers } from './data/viziers';
 import { vizierProfiles } from './data/vizierProfiles';
 import { architects } from './data/architects';
 import { architectProfiles } from './data/architectProfiles';
+import { dailyLife } from './data/dailyLife';
 import AdSlot from './components/AdSlot';
 import EraTimeline from './components/EraTimeline';
 import useAdSenseScript from './hooks/useAdSenseScript';
@@ -87,6 +88,10 @@ function buildPages(periods) {
     .forEach((architect) => {
       pages.push({ type: 'architect-profile', architect, profile: architectProfiles[architect.name] });
     });
+  pages.push({ type: 'daily-life' });
+  dailyLife.forEach((entry) => {
+    pages.push({ type: 'daily-life-topic', entry });
+  });
   pages.push({ type: 'glossary' });
   return pages;
 }
@@ -194,6 +199,7 @@ export default function App() {
   else if (page.type === 'sultan-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
   else if (page.type === 'vizier-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
   else if (page.type === 'architect-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
+  else if (page.type === 'daily-life-topic') readingMinutes = estimateReadingMinutes(page.entry.text);
 
   return (
     <div className="app">
@@ -354,6 +360,14 @@ export default function App() {
                   onClick={() => goTo(pages.findIndex((p) => p.type === 'architects'))}
                 >
                   Ünlü Mimarlar ve Sanatçılar
+                </button>
+              </li>
+              <li>
+                <button
+                  className={page.type === 'daily-life' ? 'active' : ''}
+                  onClick={() => goTo(pages.findIndex((p) => p.type === 'daily-life'))}
+                >
+                  Günlük Yaşam
                 </button>
               </li>
               <li>
@@ -744,6 +758,62 @@ export default function App() {
                   </div>
                 </dl>
                 <Paragraphs text={page.profile.text} className="event-text" />
+              </>
+            )}
+
+            {page.type === 'daily-life' && (
+              <>
+                <p className="chapter-label">Ek</p>
+                <h1 className="chapter-title">Günlük Yaşam</h1>
+                <p className="chapter-summary">
+                  Sarayın ve savaş meydanlarının dışında, sıradan bir Osmanlı tebaasının günü nasıl
+                  geçerdi? Mutfaktan kıyafete, hamamdan bayramlara, konu başlıklarına tıklayarak
+                  gündelik hayatın izini sürebilirsiniz.
+                </p>
+                <div className="sultans-table-wrap">
+                  <table className="sultans-table wars-table">
+                    <thead>
+                      <tr>
+                        <th>Sıra</th>
+                        <th>Konu</th>
+                        <th>Özet</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {dailyLife.map((d) => (
+                        <tr key={d.topic}>
+                          <td>{d.order}</td>
+                          <td>
+                            <button
+                              className="wars-table__link"
+                              onClick={() =>
+                                goTo(
+                                  pages.findIndex(
+                                    (p) => p.type === 'daily-life-topic' && p.entry.topic === d.topic
+                                  )
+                                )
+                              }
+                            >
+                              {d.topic}
+                            </button>
+                          </td>
+                          <td>{d.summary}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+
+            {page.type === 'daily-life-topic' && (
+              <>
+                <p className="event-breadcrumb">
+                  Günlük Yaşam <span aria-hidden="true">·</span> {page.entry.topic}
+                  {readingMinutes && <span className="reading-time"> · {readingMinutes} dk okuma</span>}
+                </p>
+                <h1 className="event-title">{page.entry.title}</h1>
+                <Paragraphs text={page.entry.text} className="event-text" />
               </>
             )}
 
