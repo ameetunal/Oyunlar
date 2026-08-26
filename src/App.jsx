@@ -71,6 +71,7 @@ export default function App() {
     const saved = Number(readStorage(PROGRESS_KEY));
     return Number.isInteger(saved) && saved > 0 ? saved : null;
   });
+  const [isOffline, setIsOffline] = useState(() => !navigator.onLine);
 
   const touchStartX = useRef(null);
 
@@ -98,6 +99,17 @@ export default function App() {
   useEffect(() => {
     writeStorage(FONT_KEY, fontSize);
   }, [fontSize]);
+
+  useEffect(() => {
+    const goOffline = () => setIsOffline(true);
+    const goOnline = () => setIsOffline(false);
+    window.addEventListener('offline', goOffline);
+    window.addEventListener('online', goOnline);
+    return () => {
+      window.removeEventListener('offline', goOffline);
+      window.removeEventListener('online', goOnline);
+    };
+  }, []);
 
   useEffect(() => {
     const onKeyDown = (e) => {
@@ -148,6 +160,11 @@ export default function App() {
           <span className="site-title__sub">Bir İmparatorluğun Hikâyesi</span>
         </div>
         <div className="reader-controls">
+          {isOffline && (
+            <span className="offline-badge" title="İnternet bağlantısı yok, önbellekten okuyorsunuz">
+              Çevrimdışı
+            </span>
+          )}
           <button
             className="reader-controls__btn"
             onClick={cycleFontSize}
