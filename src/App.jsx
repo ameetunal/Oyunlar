@@ -10,6 +10,8 @@ import { vizierProfiles } from './data/vizierProfiles';
 import { architects } from './data/architects';
 import { architectProfiles } from './data/architectProfiles';
 import { dailyLife } from './data/dailyLife';
+import { scientists } from './data/scientists';
+import { scientistProfiles } from './data/scientistProfiles';
 import AdSlot from './components/AdSlot';
 import EraTimeline from './components/EraTimeline';
 import useAdSenseScript from './hooks/useAdSenseScript';
@@ -92,6 +94,12 @@ function buildPages(periods) {
   dailyLife.forEach((entry) => {
     pages.push({ type: 'daily-life-topic', entry });
   });
+  pages.push({ type: 'scientists' });
+  scientists
+    .filter((s) => scientistProfiles[s.name])
+    .forEach((scientist) => {
+      pages.push({ type: 'scientist-profile', scientist, profile: scientistProfiles[scientist.name] });
+    });
   pages.push({ type: 'glossary' });
   return pages;
 }
@@ -200,6 +208,7 @@ export default function App() {
   else if (page.type === 'vizier-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
   else if (page.type === 'architect-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
   else if (page.type === 'daily-life-topic') readingMinutes = estimateReadingMinutes(page.entry.text);
+  else if (page.type === 'scientist-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
 
   return (
     <div className="app">
@@ -368,6 +377,14 @@ export default function App() {
                   onClick={() => goTo(pages.findIndex((p) => p.type === 'daily-life'))}
                 >
                   Günlük Yaşam
+                </button>
+              </li>
+              <li>
+                <button
+                  className={page.type === 'scientists' ? 'active' : ''}
+                  onClick={() => goTo(pages.findIndex((p) => p.type === 'scientists'))}
+                >
+                  Ünlü Bilim İnsanları
                 </button>
               </li>
               <li>
@@ -814,6 +831,95 @@ export default function App() {
                 </p>
                 <h1 className="event-title">{page.entry.title}</h1>
                 <Paragraphs text={page.entry.text} className="event-text" />
+              </>
+            )}
+
+            {page.type === 'scientists' && (
+              <>
+                <p className="chapter-label">Ek</p>
+                <h1 className="chapter-title">Ünlü Bilim İnsanları</h1>
+                <p className="chapter-summary">
+                  Rasathaneden ameliyathaneye, matbaadan gökyüzüne uzanan meraklarıyla Osmanlı
+                  düşünce dünyasını şekillendiren isimler — bir satıra tıklayarak kendi sayfasına
+                  gidebilirsiniz.
+                </p>
+                <div className="sultans-table-wrap">
+                  <table className="sultans-table wars-table">
+                    <thead>
+                      <tr>
+                        <th>Sıra</th>
+                        <th>İsim</th>
+                        <th>Alanı</th>
+                        <th>Dönem</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {scientists.map((s) => (
+                        <tr key={s.name}>
+                          <td>{s.order}</td>
+                          <td>
+                            {scientistProfiles[s.name] ? (
+                              <button
+                                className="wars-table__link"
+                                onClick={() =>
+                                  goTo(
+                                    pages.findIndex(
+                                      (p) => p.type === 'scientist-profile' && p.scientist.name === s.name
+                                    )
+                                  )
+                                }
+                              >
+                                {s.name}
+                              </button>
+                            ) : (
+                              s.name
+                            )}
+                          </td>
+                          <td>{s.field}</td>
+                          <td>{s.era}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+
+            {page.type === 'scientist-profile' && (
+              <>
+                <p className="event-breadcrumb">
+                  Ünlü Bilim İnsanları <span aria-hidden="true">·</span> {page.scientist.field}
+                  {readingMinutes && <span className="reading-time"> · {readingMinutes} dk okuma</span>}
+                </p>
+                <h1 className="event-title">{page.scientist.name}</h1>
+                <p className="chapter-summary">{page.scientist.era}</p>
+                <dl className="sultan-facts">
+                  <div>
+                    <dt>Doğum</dt>
+                    <dd>{page.profile.born}</dd>
+                  </div>
+                  <div>
+                    <dt>Ölüm</dt>
+                    <dd>{page.profile.died}</dd>
+                  </div>
+                  <div>
+                    <dt>Alanı</dt>
+                    <dd>{page.profile.field}</dd>
+                  </div>
+                  <div>
+                    <dt>Dönemi</dt>
+                    <dd>{page.profile.era}</dd>
+                  </div>
+                  <div>
+                    <dt>Başlıca Eserleri</dt>
+                    <dd>{page.profile.majorWorks}</dd>
+                  </div>
+                  <div>
+                    <dt>Mirası</dt>
+                    <dd>{page.profile.legacy}</dd>
+                  </div>
+                </dl>
+                <Paragraphs text={page.profile.text} className="event-text" />
               </>
             )}
 
