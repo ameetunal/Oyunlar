@@ -9,6 +9,19 @@
   --gold: #b8892b;
   --navy: #16324a;
   --muted: #7a6a52;
+  --backdrop: var(--navy);
+}
+
+:root[data-theme='dark'] {
+  --ink: #e7ddc9;
+  --paper: #1c1712;
+  --paper-shadow: #332a20;
+  --maroon: #d9707d;
+  --maroon-deep: #3a0d13;
+  --gold: #d3a94f;
+  --navy: #0a1520;
+  --muted: #a9987e;
+  --backdrop: #08111a;
 }
 
 * {
@@ -23,9 +36,10 @@ body,
 }
 
 body {
-  background: var(--navy);
+  background: var(--backdrop);
   color: var(--ink);
   font-family: 'Source Sans 3', system-ui, sans-serif;
+  transition: background-color 0.2s ease;
 }
 
 .app {
@@ -77,6 +91,45 @@ body {
   text-transform: uppercase;
   color: var(--gold);
   opacity: 0.9;
+}
+
+.reader-controls {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.reader-controls__btn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--paper);
+  font-size: 0.8rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.reader-controls__btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.reader-controls__label {
+  display: none;
+}
+
+/* Progress bar */
+.progress-track {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.progress-track__fill {
+  height: 100%;
+  background: var(--gold);
+  transition: width 0.25s ease;
 }
 
 /* Layout */
@@ -135,6 +188,21 @@ body {
 
 .toc__period-title:hover {
   color: var(--maroon);
+}
+
+.toc__period-title--static {
+  cursor: default;
+  margin: 0.4rem 0 0;
+  color: var(--muted);
+  text-transform: uppercase;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+}
+
+.toc__period-title--static:hover {
+  color: var(--muted);
 }
 
 .toc__range {
@@ -206,6 +274,49 @@ body {
   margin: 0 0 0.5rem;
 }
 
+.reading-time {
+  color: var(--muted);
+  font-weight: 400;
+  letter-spacing: 0.05em;
+}
+
+/* Resume banner */
+.resume-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  background: var(--paper-shadow);
+  border: 1px solid var(--gold);
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.resume-banner__actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.resume-banner__actions button {
+  background: var(--maroon);
+  color: var(--paper);
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.resume-banner__actions button.resume-banner__ghost {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--muted);
+}
+
 .chapter-title,
 .event-title {
   font-family: 'Cormorant Garamond', serif;
@@ -253,6 +364,93 @@ body {
   line-height: 0.85;
   padding-right: 0.4rem;
   padding-top: 0.15rem;
+}
+
+/* Yazı boyutu tercihleri */
+.page-sheet.font-sm .chapter-intro,
+.page-sheet.font-sm .event-text {
+  font-size: 0.96rem;
+}
+
+.page-sheet.font-lg .chapter-intro,
+.page-sheet.font-lg .event-text {
+  font-size: 1.24rem;
+}
+
+.page-sheet.font-lg .chapter-title {
+  font-size: 2.9rem;
+}
+
+.page-sheet.font-lg .event-title {
+  font-size: 2.35rem;
+}
+
+/* Padişahlar tablosu */
+.sultans-table-wrap {
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
+
+.sultans-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.sultans-table th,
+.sultans-table td {
+  text-align: left;
+  padding: 0.5rem 0.7rem;
+  border-bottom: 1px solid var(--paper-shadow);
+  vertical-align: top;
+}
+
+.sultans-table th {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  color: var(--maroon);
+  border-bottom: 2px solid var(--gold);
+}
+
+.sultans-table td:first-child {
+  color: var(--gold);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.sultans-table td:nth-child(2) {
+  font-weight: 600;
+}
+
+.sultans-table td:nth-child(3) {
+  color: var(--muted);
+}
+
+/* Terimler sözlüğü */
+.glossary-list {
+  margin: 0;
+}
+
+.glossary-list__item {
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--paper-shadow);
+}
+
+.glossary-list__item:last-child {
+  border-bottom: none;
+}
+
+.glossary-list dt {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--maroon);
+}
+
+.glossary-list dd {
+  margin: 0.3rem 0 0;
+  color: var(--ink);
+  line-height: 1.7;
 }
 
 /* Pager */
@@ -333,8 +531,28 @@ body {
   font-size: 0.78rem;
 }
 
+@media (min-width: 560px) {
+  .reader-controls__label {
+    display: inline;
+  }
+}
+
 /* Responsive */
 @media (max-width: 860px) {
+  .site-header {
+    flex-wrap: wrap;
+  }
+
+  .site-title {
+    order: 3;
+    width: 100%;
+    margin-top: 0.25rem;
+  }
+
+  .reader-controls {
+    margin-left: auto;
+  }
+
   .layout {
     grid-template-columns: 1fr;
   }
@@ -358,10 +576,6 @@ body {
 
   .toc--open {
     transform: translateX(0);
-  }
-
-  .site-title {
-    margin: 0;
   }
 
   .page-sheet {

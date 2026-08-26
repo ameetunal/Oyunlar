@@ -1,7 +1,31 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { periods } from './data/periods';
+import { sultans } from './data/sultans';
+import { glossary } from './data/glossary';
 import AdSlot from './components/AdSlot';
 import './App.css';
+
+const PROGRESS_KEY = 'osmanli-hikayesi:progress';
+const THEME_KEY = 'osmanli-hikayesi:theme';
+const FONT_KEY = 'osmanli-hikayesi:font-size';
+const FONT_SIZES = ['sm', 'md', 'lg'];
+const FONT_LABELS = { sm: 'Küçük', md: 'Orta', lg: 'Büyük' };
+
+function readStorage(key) {
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function writeStorage(key, value) {
+  try {
+    window.localStorage.setItem(key, value);
+  } catch {
+    // Depolama kullanılamıyorsa (gizli sekme vb.) sessizce yok say.
+  }
+}
 
 // Çok paragraflı metinleri (\n\n ile ayrılmış) ayrı <p> etiketleri olarak render eder.
 function Paragraphs({ text, className }) {
@@ -14,9 +38,15 @@ function Paragraphs({ text, className }) {
     ));
 }
 
+function estimateReadingMinutes(text) {
+  const words = text.trim().split(/\s+/).length;
+  return Math.max(1, Math.round(words / 200));
+}
+
 // Okuma akışı: her dönemin bir "bölüm açılışı" (giriş) sayfası, ardından
-// o dönemin olay sayfaları sırayla gelir. Tamamı tek, doğrusal bir kitap
-// gibi "önceki / sonraki sayfa" ile de gezilebilir.
+// o dönemin olay sayfaları sırayla gelir; en sonda iki referans eki
+// (Padişahlar Listesi, Terimler Sözlüğü) yer alır. Tamamı tek, doğrusal
+// bir kitap gibi "önceki / sonraki sayfa" ile de gezilebilir.
 function buildPages(periods) {
   const pages = [];
   periods.forEach((period) => {
@@ -25,23 +55,83 @@ function buildPages(periods) {
       pages.push({ type: 'event', period, event });
     });
   });
+  pages.push({ type: 'sultans' });
+  pages.push({ type: 'glossary' });
   return pages;
 }
 
 export default function App() {
   const pages = useMemo(() => buildPages(periods), []);
+
   const [pageIndex, setPageIndex] = useState(0);
   const [tocOpen, setTocOpen] = useState(false);
+  const [theme, setTheme] = useState(() => readStorage(THEME_KEY) || 'light');
+  const [fontSize, setFontSize] = useState(() => readStorage(FONT_KEY) || 'md');
+  const [resumeIndex, setResumeIndex] = useState(() => {
+    const saved = Number(readStorage(PROGRESS_KEY));
+    return Number.isInteger(saved) && saved > 0 ? saved : null;
+  });
+
+  const touchStartX = useRef(null);
 
   const page = pages[pageIndex];
   const canPrev = pageIndex > 0;
   const canNext = pageIndex < pages.length - 1;
+  const progressPercent = Math.round(((pageIndex + 1) / pages.length) * 100);
 
   const goTo = (index) => {
+    if (index < 0 || index >= pages.length) return;
     setPageIndex(index);
     setTocOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  useEffect(() => {
+    writeStorage(PROGRESS_KEY, String(pageIndex));
+  }, [pageIndex]);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    writeStorage(THEME_KEY, theme);
+  }, [theme]);
+
+  useEffect(() => {
+    writeStorage(FONT_KEY, fontSize);
+  }, [fontSize]);
+
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.key === 'ArrowRight') goTo(pageIndex + 1);
+      if (e.key === 'ArrowLeft') goTo(pageIndex - 1);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pageIndex, pages.length]);
+
+  const onTouchStart = (e) => {
+    touchStartX.current = e.changedTouches[0].clientX;
+  };
+
+  const onTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(dx) < 60) return;
+    if (dx < 0) goTo(pageIndex + 1);
+    else goTo(pageIndex - 1);
+  };
+
+  const cycleFontSize = () => {
+    const currentIdx = FONT_SIZES.indexOf(fontSize);
+    setFontSize(FONT_SIZES[(currentIdx + 1) % FONT_SIZES.length]);
+  };
+
+  const dismissResume = () => setResumeIndex(null);
+
+  let readingMinutes = null;
+  if (page.type === 'intro') readingMinutes = estimateReadingMinutes(page.period.intro);
+  else if (page.type === 'event') readingMinutes = estimateReadingMinutes(page.event.text);
 
   return (
     <div className="app">
@@ -57,7 +147,33 @@ export default function App() {
           <span className="site-title__main">Osmanlı</span>
           <span className="site-title__sub">Bir İmparatorluğun Hikâyesi</span>
         </div>
+        <div className="reader-controls">
+          <button
+            className="reader-controls__btn"
+            onClick={cycleFontSize}
+            title="Yazı boyutunu değiştir"
+            aria-label="Yazı boyutunu değiştir"
+          >
+            <span aria-hidden="true">A</span>
+            <span className="reader-controls__label">{FONT_LABELS[fontSize]}</span>
+          </button>
+          <button
+            className="reader-controls__btn"
+            onClick={() => setTheme((t) => (t === 'light' ? 'dark' : 'light'))}
+            title="Gece modunu aç/kapat"
+            aria-label="Gece modunu aç/kapat"
+          >
+            <span aria-hidden="true">{theme === 'light' ? '🌙' : '☀️'}</span>
+            <span className="reader-controls__label">
+              {theme === 'light' ? 'Gece Modu' : 'Gündüz Modu'}
+            </span>
+          </button>
+        </div>
       </header>
+
+      <div className="progress-track" aria-hidden="true">
+        <div className="progress-track__fill" style={{ width: `${progressPercent}%` }} />
+      </div>
 
       <AdSlot variant="banner" />
 
@@ -95,25 +211,129 @@ export default function App() {
               </ul>
             </div>
           ))}
+
+          <div className="toc__period">
+            <p className="toc__period-title toc__period-title--static">
+              Ekler
+            </p>
+            <ul>
+              <li>
+                <button
+                  className={page.type === 'sultans' ? 'active' : ''}
+                  onClick={() => goTo(pages.findIndex((p) => p.type === 'sultans'))}
+                >
+                  Padişahlar Listesi
+                </button>
+              </li>
+              <li>
+                <button
+                  className={page.type === 'glossary' ? 'active' : ''}
+                  onClick={() => goTo(pages.findIndex((p) => p.type === 'glossary'))}
+                >
+                  Terimler Sözlüğü
+                </button>
+              </li>
+            </ul>
+          </div>
+
           <AdSlot variant="sidebar" />
         </nav>
 
         <main className="reader">
-          <article className="page-sheet">
-            {page.type === 'intro' ? (
+          <article
+            className={`page-sheet font-${fontSize}`}
+            onTouchStart={onTouchStart}
+            onTouchEnd={onTouchEnd}
+          >
+            {resumeIndex !== null && resumeIndex !== pageIndex && (
+              <div className="resume-banner">
+                <span>Kaldığınız sayfadan devam edebilirsiniz.</span>
+                <div className="resume-banner__actions">
+                  <button
+                    onClick={() => {
+                      goTo(resumeIndex);
+                      dismissResume();
+                    }}
+                  >
+                    Devam Et
+                  </button>
+                  <button className="resume-banner__ghost" onClick={dismissResume}>
+                    Kapat
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {page.type === 'intro' && (
               <>
-                <p className="chapter-label">Bölüm · {page.period.range}</p>
+                <p className="chapter-label">
+                  Bölüm · {page.period.range}
+                  {readingMinutes && <span className="reading-time"> · {readingMinutes} dk okuma</span>}
+                </p>
                 <h1 className="chapter-title">{page.period.title}</h1>
                 <p className="chapter-summary">{page.period.summary}</p>
                 <Paragraphs text={page.period.intro} className="chapter-intro" />
               </>
-            ) : (
+            )}
+
+            {page.type === 'event' && (
               <>
                 <p className="event-breadcrumb">
                   {page.period.title} <span aria-hidden="true">·</span> {page.event.year}
+                  {readingMinutes && <span className="reading-time"> · {readingMinutes} dk okuma</span>}
                 </p>
                 <h1 className="event-title">{page.event.title}</h1>
                 <Paragraphs text={page.event.text} className="event-text" />
+              </>
+            )}
+
+            {page.type === 'sultans' && (
+              <>
+                <p className="chapter-label">Ek</p>
+                <h1 className="chapter-title">Padişahlar Listesi</h1>
+                <p className="chapter-summary">
+                  Osman Gazi'den son padişah VI. Mehmed'e, altı asırlık hanedanın otuz altı hükümdarı.
+                </p>
+                <div className="sultans-table-wrap">
+                  <table className="sultans-table">
+                    <thead>
+                      <tr>
+                        <th>Sıra</th>
+                        <th>Padişah</th>
+                        <th>Saltanat</th>
+                        <th>Not</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {sultans.map((s) => (
+                        <tr key={s.name}>
+                          <td>{s.order}</td>
+                          <td>{s.name}</td>
+                          <td>{s.reign}</td>
+                          <td>{s.note}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+
+            {page.type === 'glossary' && (
+              <>
+                <p className="chapter-label">Ek</p>
+                <h1 className="chapter-title">Terimler Sözlüğü</h1>
+                <p className="chapter-summary">
+                  Osmanlı tarihini okurken sık karşılaşılacak temel kavramlar.
+                </p>
+                <dl className="glossary-list">
+                  {glossary.map((g) => (
+                    <div key={g.term} className="glossary-list__item">
+                      <dt>{g.term}</dt>
+                      <dd>{g.definition}</dd>
+                    </div>
+                  ))}
+                </dl>
               </>
             )}
 
