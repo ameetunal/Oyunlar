@@ -7,6 +7,8 @@ import { wars } from './data/wars';
 import { sultanProfiles } from './data/sultanProfiles';
 import { viziers } from './data/viziers';
 import { vizierProfiles } from './data/vizierProfiles';
+import { architects } from './data/architects';
+import { architectProfiles } from './data/architectProfiles';
 import AdSlot from './components/AdSlot';
 import EraTimeline from './components/EraTimeline';
 import useAdSenseScript from './hooks/useAdSenseScript';
@@ -78,6 +80,12 @@ function buildPages(periods) {
     .filter((v) => vizierProfiles[v.name])
     .forEach((vizier) => {
       pages.push({ type: 'vizier-profile', vizier, profile: vizierProfiles[vizier.name] });
+    });
+  pages.push({ type: 'architects' });
+  architects
+    .filter((a) => architectProfiles[a.name])
+    .forEach((architect) => {
+      pages.push({ type: 'architect-profile', architect, profile: architectProfiles[architect.name] });
     });
   pages.push({ type: 'glossary' });
   return pages;
@@ -185,6 +193,7 @@ export default function App() {
   else if (page.type === 'theme') readingMinutes = estimateReadingMinutes(page.theme.text);
   else if (page.type === 'sultan-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
   else if (page.type === 'vizier-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
+  else if (page.type === 'architect-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
 
   return (
     <div className="app">
@@ -337,6 +346,14 @@ export default function App() {
                   onClick={() => goTo(pages.findIndex((p) => p.type === 'viziers'))}
                 >
                   Ünlü Sadrazamlar
+                </button>
+              </li>
+              <li>
+                <button
+                  className={page.type === 'architects' ? 'active' : ''}
+                  onClick={() => goTo(pages.findIndex((p) => p.type === 'architects'))}
+                >
+                  Ünlü Mimarlar ve Sanatçılar
                 </button>
               </li>
               <li>
@@ -635,6 +652,95 @@ export default function App() {
                   <div>
                     <dt>Görevin Sonu</dt>
                     <dd>{page.profile.end}</dd>
+                  </div>
+                </dl>
+                <Paragraphs text={page.profile.text} className="event-text" />
+              </>
+            )}
+
+            {page.type === 'architects' && (
+              <>
+                <p className="chapter-label">Ek</p>
+                <h1 className="chapter-title">Ünlü Mimarlar ve Sanatçılar</h1>
+                <p className="chapter-summary">
+                  Osmanlı'yı taştan, yazıdan, renkten ve nağmeden inşa eden isimler — mimarlardan
+                  hattatlara, minyatür ustalarından bestekarlara — bir satıra tıklayarak kendi
+                  sayfasına gidebilirsiniz.
+                </p>
+                <div className="sultans-table-wrap">
+                  <table className="sultans-table wars-table">
+                    <thead>
+                      <tr>
+                        <th>Sıra</th>
+                        <th>İsim</th>
+                        <th>Alanı</th>
+                        <th>Dönem</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {architects.map((a) => (
+                        <tr key={a.name}>
+                          <td>{a.order}</td>
+                          <td>
+                            {architectProfiles[a.name] ? (
+                              <button
+                                className="wars-table__link"
+                                onClick={() =>
+                                  goTo(
+                                    pages.findIndex(
+                                      (p) => p.type === 'architect-profile' && p.architect.name === a.name
+                                    )
+                                  )
+                                }
+                              >
+                                {a.name}
+                              </button>
+                            ) : (
+                              a.name
+                            )}
+                          </td>
+                          <td>{a.field}</td>
+                          <td>{a.era}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+
+            {page.type === 'architect-profile' && (
+              <>
+                <p className="event-breadcrumb">
+                  Ünlü Mimarlar ve Sanatçılar <span aria-hidden="true">·</span> {page.architect.field}
+                  {readingMinutes && <span className="reading-time"> · {readingMinutes} dk okuma</span>}
+                </p>
+                <h1 className="event-title">{page.architect.name}</h1>
+                <p className="chapter-summary">{page.architect.era}</p>
+                <dl className="sultan-facts">
+                  <div>
+                    <dt>Doğum</dt>
+                    <dd>{page.profile.born}</dd>
+                  </div>
+                  <div>
+                    <dt>Ölüm</dt>
+                    <dd>{page.profile.died}</dd>
+                  </div>
+                  <div>
+                    <dt>Alanı</dt>
+                    <dd>{page.profile.field}</dd>
+                  </div>
+                  <div>
+                    <dt>Dönemi</dt>
+                    <dd>{page.profile.era}</dd>
+                  </div>
+                  <div>
+                    <dt>Başlıca Eserleri</dt>
+                    <dd>{page.profile.majorWorks}</dd>
+                  </div>
+                  <div>
+                    <dt>Mirası</dt>
+                    <dd>{page.profile.legacy}</dd>
                   </div>
                 </dl>
                 <Paragraphs text={page.profile.text} className="event-text" />
