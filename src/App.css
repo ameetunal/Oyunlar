@@ -388,6 +388,7 @@ body {
 .reader {
   display: flex;
   justify-content: center;
+  min-width: 0;
 }
 
 .page-sheet {
@@ -398,6 +399,7 @@ body {
   padding: 3rem 3.5rem;
   max-width: 720px;
   width: 100%;
+  min-width: 0;
 }
 
 .chapter-label,
