@@ -3,6 +3,17 @@ import { periods } from './data/periods';
 import AdSlot from './components/AdSlot';
 import './App.css';
 
+// Çok paragraflı metinleri (\n\n ile ayrılmış) ayrı <p> etiketleri olarak render eder.
+function Paragraphs({ text, className }) {
+  return text
+    .split('\n\n')
+    .map((paragraph, i) => (
+      <p key={i} className={className}>
+        {paragraph}
+      </p>
+    ));
+}
+
 // Okuma akışı: her dönemin bir "bölüm açılışı" (giriş) sayfası, ardından
 // o dönemin olay sayfaları sırayla gelir. Tamamı tek, doğrusal bir kitap
 // gibi "önceki / sonraki sayfa" ile de gezilebilir.
@@ -94,7 +105,7 @@ export default function App() {
                 <p className="chapter-label">Bölüm · {page.period.range}</p>
                 <h1 className="chapter-title">{page.period.title}</h1>
                 <p className="chapter-summary">{page.period.summary}</p>
-                <p className="chapter-intro">{page.period.intro}</p>
+                <Paragraphs text={page.period.intro} className="chapter-intro" />
               </>
             ) : (
               <>
@@ -102,7 +113,7 @@ export default function App() {
                   {page.period.title} <span aria-hidden="true">·</span> {page.event.year}
                 </p>
                 <h1 className="event-title">{page.event.title}</h1>
-                <p className="event-text">{page.event.text}</p>
+                <Paragraphs text={page.event.text} className="event-text" />
               </>
             )}
 

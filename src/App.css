@@ -236,10 +236,16 @@ body {
 .event-text {
   font-size: 1.08rem;
   line-height: 1.85;
+  margin: 0 0 1.1rem;
 }
 
-.chapter-intro::first-letter,
-.event-text::first-letter {
+.chapter-intro:last-of-type,
+.event-text:last-of-type {
+  margin-bottom: 0;
+}
+
+.chapter-intro:first-of-type::first-letter,
+.event-text:first-of-type::first-letter {
   font-family: 'Cormorant Garamond', serif;
   font-size: 3.2rem;
   color: var(--maroon);
