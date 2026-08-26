@@ -5,6 +5,8 @@ import { glossary } from './data/glossary';
 import { themesByPeriod } from './data/themes';
 import { wars } from './data/wars';
 import { sultanProfiles } from './data/sultanProfiles';
+import { viziers } from './data/viziers';
+import { vizierProfiles } from './data/vizierProfiles';
 import AdSlot from './components/AdSlot';
 import EraTimeline from './components/EraTimeline';
 import useAdSenseScript from './hooks/useAdSenseScript';
@@ -71,6 +73,12 @@ function buildPages(periods) {
       pages.push({ type: 'sultan-profile', sultan, profile: sultanProfiles[sultan.name] });
     });
   pages.push({ type: 'wars' });
+  pages.push({ type: 'viziers' });
+  viziers
+    .filter((v) => vizierProfiles[v.name])
+    .forEach((vizier) => {
+      pages.push({ type: 'vizier-profile', vizier, profile: vizierProfiles[vizier.name] });
+    });
   pages.push({ type: 'glossary' });
   return pages;
 }
@@ -176,6 +184,7 @@ export default function App() {
   else if (page.type === 'event') readingMinutes = estimateReadingMinutes(page.event.text);
   else if (page.type === 'theme') readingMinutes = estimateReadingMinutes(page.theme.text);
   else if (page.type === 'sultan-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
+  else if (page.type === 'vizier-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
 
   return (
     <div className="app">
@@ -320,6 +329,14 @@ export default function App() {
                   onClick={() => goTo(pages.findIndex((p) => p.type === 'wars'))}
                 >
                   Büyük Savaşlar
+                </button>
+              </li>
+              <li>
+                <button
+                  className={page.type === 'viziers' ? 'active' : ''}
+                  onClick={() => goTo(pages.findIndex((p) => p.type === 'viziers'))}
+                >
+                  Ünlü Sadrazamlar
                 </button>
               </li>
               <li>
@@ -532,6 +549,95 @@ export default function App() {
                     </tbody>
                   </table>
                 </div>
+              </>
+            )}
+
+            {page.type === 'viziers' && (
+              <>
+                <p className="chapter-label">Ek</p>
+                <h1 className="chapter-title">Ünlü Sadrazamlar</h1>
+                <p className="chapter-summary">
+                  Altı buçuk asırlık imparatorlukta padişahtan sonra en yetkili makam olan
+                  sadrazamlık koltuğunda oturan yüzlerce isimden, devletin kaderini en çok
+                  etkileyen on altısı — bir satıra tıklayarak kendi sayfasına gidebilirsiniz.
+                </p>
+                <div className="sultans-table-wrap">
+                  <table className="sultans-table wars-table">
+                    <thead>
+                      <tr>
+                        <th>Sıra</th>
+                        <th>Sadrazam</th>
+                        <th>Hizmet Yılları</th>
+                        <th>Padişah</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {viziers.map((v) => (
+                        <tr key={v.name}>
+                          <td>{v.order}</td>
+                          <td>
+                            {vizierProfiles[v.name] ? (
+                              <button
+                                className="wars-table__link"
+                                onClick={() =>
+                                  goTo(
+                                    pages.findIndex(
+                                      (p) => p.type === 'vizier-profile' && p.vizier.name === v.name
+                                    )
+                                  )
+                                }
+                              >
+                                {v.name}
+                              </button>
+                            ) : (
+                              v.name
+                            )}
+                          </td>
+                          <td>{v.term}</td>
+                          <td>{v.sultan}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+
+            {page.type === 'vizier-profile' && (
+              <>
+                <p className="event-breadcrumb">
+                  Ünlü Sadrazamlar <span aria-hidden="true">·</span> Sıra {page.vizier.order}
+                  {readingMinutes && <span className="reading-time"> · {readingMinutes} dk okuma</span>}
+                </p>
+                <h1 className="event-title">{page.vizier.name}</h1>
+                <p className="chapter-summary">{page.vizier.term}</p>
+                <dl className="sultan-facts">
+                  <div>
+                    <dt>Doğum</dt>
+                    <dd>{page.profile.born}</dd>
+                  </div>
+                  <div>
+                    <dt>Ölüm</dt>
+                    <dd>{page.profile.died}</dd>
+                  </div>
+                  <div>
+                    <dt>Kökeni</dt>
+                    <dd>{page.profile.origin}</dd>
+                  </div>
+                  <div>
+                    <dt>Hizmet Ettiği Padişahlar</dt>
+                    <dd>{page.profile.servedSultans}</dd>
+                  </div>
+                  <div>
+                    <dt>Önemli İcraatları</dt>
+                    <dd>{page.profile.notableWorks}</dd>
+                  </div>
+                  <div>
+                    <dt>Görevin Sonu</dt>
+                    <dd>{page.profile.end}</dd>
+                  </div>
+                </dl>
+                <Paragraphs text={page.profile.text} className="event-text" />
               </>
             )}
 
