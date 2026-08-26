@@ -375,6 +375,15 @@ body {
   color: var(--paper);
 }
 
+.toc__subheading {
+  padding: 0.5rem 0.3rem 0.15rem 0.9rem;
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 600;
+}
+
 /* Reader / page sheet */
 .reader {
   display: flex;
@@ -405,6 +414,15 @@ body {
   color: var(--muted);
   font-weight: 400;
   letter-spacing: 0.05em;
+}
+
+.theme-badge {
+  background: var(--maroon);
+  color: var(--paper);
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
 }
 
 /* Resume banner */

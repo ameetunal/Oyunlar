@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { periods } from './data/periods';
 import { sultans } from './data/sultans';
 import { glossary } from './data/glossary';
+import { themesByPeriod } from './data/themes';
 import AdSlot from './components/AdSlot';
 import EraTimeline from './components/EraTimeline';
 import useAdSenseScript from './hooks/useAdSenseScript';
@@ -46,15 +47,19 @@ function estimateReadingMinutes(text) {
 }
 
 // Okuma akışı: her dönemin bir "bölüm açılışı" (giriş) sayfası, ardından
-// o dönemin olay sayfaları sırayla gelir; en sonda iki referans eki
-// (Padişahlar Listesi, Terimler Sözlüğü) yer alır. Tamamı tek, doğrusal
-// bir kitap gibi "önceki / sonraki sayfa" ile de gezilebilir.
+// o dönemin olay sayfaları ve en sonda o dönemi konu bazında derinleştiren
+// tematik incelemeler (Ekonomi, Toplum, Ordu, Kültür) gelir; en sonda iki
+// referans eki (Padişahlar Listesi, Terimler Sözlüğü) yer alır. Tamamı tek,
+// doğrusal bir kitap gibi "önceki / sonraki sayfa" ile de gezilebilir.
 function buildPages(periods) {
   const pages = [];
   periods.forEach((period) => {
     pages.push({ type: 'intro', period });
     period.events.forEach((event) => {
       pages.push({ type: 'event', period, event });
+    });
+    (themesByPeriod[period.id] || []).forEach((theme) => {
+      pages.push({ type: 'theme', period, theme });
     });
   });
   pages.push({ type: 'sultans' });
@@ -153,6 +158,7 @@ export default function App() {
   let readingMinutes = null;
   if (page.type === 'intro') readingMinutes = estimateReadingMinutes(page.period.intro);
   else if (page.type === 'event') readingMinutes = estimateReadingMinutes(page.event.text);
+  else if (page.type === 'theme') readingMinutes = estimateReadingMinutes(page.theme.text);
 
   return (
     <div className="app">
@@ -251,6 +257,29 @@ export default function App() {
                     </button>
                   </li>
                 ))}
+                {(themesByPeriod[period.id] || []).length > 0 && (
+                  <li className="toc__subheading" aria-hidden="true">
+                    Derinlemesine
+                  </li>
+                )}
+                {(themesByPeriod[period.id] || []).map((theme) => (
+                  <li key={theme.title}>
+                    <button
+                      className={
+                        page.type === 'theme' && page.theme.title === theme.title ? 'active' : ''
+                      }
+                      onClick={() =>
+                        goTo(
+                          pages.findIndex(
+                            (p) => p.type === 'theme' && p.theme.title === theme.title
+                          )
+                        )
+                      }
+                    >
+                      {theme.title}
+                    </button>
+                  </li>
+                ))}
               </ul>
             </div>
           ))}
@@ -328,6 +357,18 @@ export default function App() {
                 </p>
                 <h1 className="event-title">{page.event.title}</h1>
                 <Paragraphs text={page.event.text} className="event-text" />
+              </>
+            )}
+
+            {page.type === 'theme' && (
+              <>
+                <p className="event-breadcrumb">
+                  {page.period.title} <span aria-hidden="true">·</span>{' '}
+                  <span className="theme-badge">{page.theme.category}</span>
+                  {readingMinutes && <span className="reading-time"> · {readingMinutes} dk okuma</span>}
+                </p>
+                <h1 className="event-title">{page.theme.title}</h1>
+                <Paragraphs text={page.theme.text} className="event-text" />
               </>
             )}
 
