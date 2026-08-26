@@ -8,7 +8,8 @@
 //   VITE_ADSENSE_SLOT_BANNER=XXXXXXXXXX
 //   VITE_ADSENSE_SLOT_SIDEBAR=XXXXXXXXXX
 //   VITE_ADSENSE_SLOT_INLINE=XXXXXXXXXX
-export const ADSENSE_CLIENT_ID = import.meta.env.VITE_ADSENSE_CLIENT_ID || null;
+export const ADSENSE_CLIENT_ID =
+  import.meta.env.VITE_ADSENSE_CLIENT_ID || 'ca-pub-5239689114245926';
 
 export const AD_SLOTS = {
   banner: import.meta.env.VITE_ADSENSE_SLOT_BANNER || null,
