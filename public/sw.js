@@ -34,7 +34,7 @@ self.addEventListener('fetch', (event) => {
           }
           return response;
         })
-        .catch(() => cached || (request.mode === 'navigate' ? cache.match('/') : undefined));
+        .catch(() => cached || (request.mode === 'navigate' ? cache.match(self.registration.scope) : undefined));
 
       return cached || networkFetch;
     })
