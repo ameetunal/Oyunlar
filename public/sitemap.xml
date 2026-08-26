@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Bu site tek sayfalık bir uygulama (SPA) olarak çalışır; 200'ü aşkın
+  "sayfa" tarayıcıda tek bir URL altında (https://ameetunal.github.io/)
+  durum (state) olarak gezilir, ayrı adresleri yoktur. Bu yüzden site
+  haritası tek bir giriş içerir — bu, arama motorları için doğru ve
+  eksiksiz bir temsildir.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://ameetunal.github.io/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>
