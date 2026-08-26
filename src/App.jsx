@@ -12,6 +12,12 @@ import { architectProfiles } from './data/architectProfiles';
 import { dailyLife } from './data/dailyLife';
 import { scientists } from './data/scientists';
 import { scientistProfiles } from './data/scientistProfiles';
+import { haremWomen } from './data/haremWomen';
+import { haremWomenProfiles } from './data/haremWomenProfiles';
+import { admirals } from './data/admirals';
+import { admiralProfiles } from './data/admiralProfiles';
+import { poets } from './data/poets';
+import { poetProfiles } from './data/poetProfiles';
 import AdSlot from './components/AdSlot';
 import EraTimeline from './components/EraTimeline';
 import useAdSenseScript from './hooks/useAdSenseScript';
@@ -99,6 +105,24 @@ function buildPages(periods) {
     .filter((s) => scientistProfiles[s.name])
     .forEach((scientist) => {
       pages.push({ type: 'scientist-profile', scientist, profile: scientistProfiles[scientist.name] });
+    });
+  pages.push({ type: 'harem-women' });
+  haremWomen
+    .filter((w) => haremWomenProfiles[w.name])
+    .forEach((woman) => {
+      pages.push({ type: 'harem-woman-profile', woman, profile: haremWomenProfiles[woman.name] });
+    });
+  pages.push({ type: 'admirals' });
+  admirals
+    .filter((a) => admiralProfiles[a.name])
+    .forEach((admiral) => {
+      pages.push({ type: 'admiral-profile', admiral, profile: admiralProfiles[admiral.name] });
+    });
+  pages.push({ type: 'poets' });
+  poets
+    .filter((p) => poetProfiles[p.name])
+    .forEach((poet) => {
+      pages.push({ type: 'poet-profile', poet, profile: poetProfiles[poet.name] });
     });
   pages.push({ type: 'glossary' });
   return pages;
@@ -209,6 +233,9 @@ export default function App() {
   else if (page.type === 'architect-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
   else if (page.type === 'daily-life-topic') readingMinutes = estimateReadingMinutes(page.entry.text);
   else if (page.type === 'scientist-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
+  else if (page.type === 'harem-woman-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
+  else if (page.type === 'admiral-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
+  else if (page.type === 'poet-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
 
   return (
     <div className="app">
@@ -385,6 +412,30 @@ export default function App() {
                   onClick={() => goTo(pages.findIndex((p) => p.type === 'scientists'))}
                 >
                   Ünlü Bilim İnsanları
+                </button>
+              </li>
+              <li>
+                <button
+                  className={page.type === 'harem-women' ? 'active' : ''}
+                  onClick={() => goTo(pages.findIndex((p) => p.type === 'harem-women'))}
+                >
+                  Kadın Sultanlar
+                </button>
+              </li>
+              <li>
+                <button
+                  className={page.type === 'admirals' ? 'active' : ''}
+                  onClick={() => goTo(pages.findIndex((p) => p.type === 'admirals'))}
+                >
+                  Kaptan-ı Deryalar
+                </button>
+              </li>
+              <li>
+                <button
+                  className={page.type === 'poets' ? 'active' : ''}
+                  onClick={() => goTo(pages.findIndex((p) => p.type === 'poets'))}
+                >
+                  Divan Şairleri
                 </button>
               </li>
               <li>
@@ -913,6 +964,268 @@ export default function App() {
                   <div>
                     <dt>Başlıca Eserleri</dt>
                     <dd>{page.profile.majorWorks}</dd>
+                  </div>
+                  <div>
+                    <dt>Mirası</dt>
+                    <dd>{page.profile.legacy}</dd>
+                  </div>
+                </dl>
+                <Paragraphs text={page.profile.text} className="event-text" />
+              </>
+            )}
+
+            {page.type === 'harem-women' && (
+              <>
+                <p className="chapter-label">Ek</p>
+                <h1 className="chapter-title">Kadın Sultanlar</h1>
+                <p className="chapter-summary">
+                  Padişah listelerinde adı geçmese de, sarayın ve zaman zaman devletin gerçek
+                  yöneticileri olan haseki ve valide sultanlar — bir satıra tıklayarak kendi
+                  sayfasına gidebilirsiniz.
+                </p>
+                <div className="sultans-table-wrap">
+                  <table className="sultans-table wars-table">
+                    <thead>
+                      <tr>
+                        <th>Sıra</th>
+                        <th>İsim</th>
+                        <th>Rolü</th>
+                        <th>Dönem</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {haremWomen.map((w) => (
+                        <tr key={w.name}>
+                          <td>{w.order}</td>
+                          <td>
+                            {haremWomenProfiles[w.name] ? (
+                              <button
+                                className="wars-table__link"
+                                onClick={() =>
+                                  goTo(
+                                    pages.findIndex(
+                                      (p) => p.type === 'harem-woman-profile' && p.woman.name === w.name
+                                    )
+                                  )
+                                }
+                              >
+                                {w.name}
+                              </button>
+                            ) : (
+                              w.name
+                            )}
+                          </td>
+                          <td>{w.role}</td>
+                          <td>{w.era}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+
+            {page.type === 'harem-woman-profile' && (
+              <>
+                <p className="event-breadcrumb">
+                  Kadın Sultanlar <span aria-hidden="true">·</span> {page.woman.role}
+                  {readingMinutes && <span className="reading-time"> · {readingMinutes} dk okuma</span>}
+                </p>
+                <h1 className="event-title">{page.woman.name}</h1>
+                <p className="chapter-summary">{page.woman.era}</p>
+                <dl className="sultan-facts">
+                  <div>
+                    <dt>Doğum</dt>
+                    <dd>{page.profile.born}</dd>
+                  </div>
+                  <div>
+                    <dt>Ölüm</dt>
+                    <dd>{page.profile.died}</dd>
+                  </div>
+                  <div>
+                    <dt>Rolü</dt>
+                    <dd>{page.profile.role}</dd>
+                  </div>
+                  <div>
+                    <dt>Ailesi</dt>
+                    <dd>{page.profile.family}</dd>
+                  </div>
+                  <div>
+                    <dt>Başlıca İcraatları</dt>
+                    <dd>{page.profile.achievements}</dd>
+                  </div>
+                  <div>
+                    <dt>Mirası</dt>
+                    <dd>{page.profile.legacy}</dd>
+                  </div>
+                </dl>
+                <Paragraphs text={page.profile.text} className="event-text" />
+              </>
+            )}
+
+            {page.type === 'admirals' && (
+              <>
+                <p className="chapter-label">Ek</p>
+                <h1 className="chapter-title">Kaptan-ı Deryalar</h1>
+                <p className="chapter-summary">
+                  Barbaros'tan Cezayirli Gazi Hasan Paşa'ya, Akdeniz'de bir asra yakın süren
+                  Osmanlı deniz üstünlüğünü kuran ve sürdüren denizciler — bir satıra tıklayarak
+                  kendi sayfasına gidebilirsiniz.
+                </p>
+                <div className="sultans-table-wrap">
+                  <table className="sultans-table wars-table">
+                    <thead>
+                      <tr>
+                        <th>Sıra</th>
+                        <th>İsim</th>
+                        <th>Dönem/Görev</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {admirals.map((a) => (
+                        <tr key={a.name}>
+                          <td>{a.order}</td>
+                          <td>
+                            {admiralProfiles[a.name] ? (
+                              <button
+                                className="wars-table__link"
+                                onClick={() =>
+                                  goTo(
+                                    pages.findIndex(
+                                      (p) => p.type === 'admiral-profile' && p.admiral.name === a.name
+                                    )
+                                  )
+                                }
+                              >
+                                {a.name}
+                              </button>
+                            ) : (
+                              a.name
+                            )}
+                          </td>
+                          <td>{a.term}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+
+            {page.type === 'admiral-profile' && (
+              <>
+                <p className="event-breadcrumb">
+                  Kaptan-ı Deryalar <span aria-hidden="true">·</span> {page.admiral.term}
+                  {readingMinutes && <span className="reading-time"> · {readingMinutes} dk okuma</span>}
+                </p>
+                <h1 className="event-title">{page.admiral.name}</h1>
+                <p className="chapter-summary">{page.profile.era}</p>
+                <dl className="sultan-facts">
+                  <div>
+                    <dt>Doğum</dt>
+                    <dd>{page.profile.born}</dd>
+                  </div>
+                  <div>
+                    <dt>Ölüm</dt>
+                    <dd>{page.profile.died}</dd>
+                  </div>
+                  <div>
+                    <dt>Kökeni</dt>
+                    <dd>{page.profile.origin}</dd>
+                  </div>
+                  <div>
+                    <dt>Dönemi</dt>
+                    <dd>{page.profile.era}</dd>
+                  </div>
+                  <div>
+                    <dt>Başlıca Zaferleri</dt>
+                    <dd>{page.profile.majorVictories}</dd>
+                  </div>
+                  <div>
+                    <dt>Mirası</dt>
+                    <dd>{page.profile.legacy}</dd>
+                  </div>
+                </dl>
+                <Paragraphs text={page.profile.text} className="event-text" />
+              </>
+            )}
+
+            {page.type === 'poets' && (
+              <>
+                <p className="chapter-label">Ek</p>
+                <h1 className="chapter-title">Divan Şairleri</h1>
+                <p className="chapter-summary">
+                  Fuzuli'nin aşk mesnevisinden Nedim'in İstanbul şiirine, Osmanlı divan edebiyatının
+                  en etkili altı kalemi — bir satıra tıklayarak kendi sayfasına gidebilirsiniz.
+                </p>
+                <div className="sultans-table-wrap">
+                  <table className="sultans-table wars-table">
+                    <thead>
+                      <tr>
+                        <th>Sıra</th>
+                        <th>İsim</th>
+                        <th>Dönem</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {poets.map((p) => (
+                        <tr key={p.name}>
+                          <td>{p.order}</td>
+                          <td>
+                            {poetProfiles[p.name] ? (
+                              <button
+                                className="wars-table__link"
+                                onClick={() =>
+                                  goTo(
+                                    pages.findIndex(
+                                      (pg) => pg.type === 'poet-profile' && pg.poet.name === p.name
+                                    )
+                                  )
+                                }
+                              >
+                                {p.name}
+                              </button>
+                            ) : (
+                              p.name
+                            )}
+                          </td>
+                          <td>{p.era}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+
+            {page.type === 'poet-profile' && (
+              <>
+                <p className="event-breadcrumb">
+                  Divan Şairleri <span aria-hidden="true">·</span> {page.poet.era}
+                  {readingMinutes && <span className="reading-time"> · {readingMinutes} dk okuma</span>}
+                </p>
+                <h1 className="event-title">{page.poet.name}</h1>
+                <p className="chapter-summary">{page.profile.style}</p>
+                <dl className="sultan-facts">
+                  <div>
+                    <dt>Doğum</dt>
+                    <dd>{page.profile.born}</dd>
+                  </div>
+                  <div>
+                    <dt>Ölüm</dt>
+                    <dd>{page.profile.died}</dd>
+                  </div>
+                  <div>
+                    <dt>Dönemi</dt>
+                    <dd>{page.profile.era}</dd>
+                  </div>
+                  <div>
+                    <dt>Başlıca Eserleri</dt>
+                    <dd>{page.profile.majorWorks}</dd>
+                  </div>
+                  <div>
+                    <dt>Üslubu</dt>
+                    <dd>{page.profile.style}</dd>
                   </div>
                   <div>
                     <dt>Mirası</dt>
