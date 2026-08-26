@@ -10,6 +10,7 @@ dönemlere ve dönüm noktası olaylara ayrılmış sayfalar hâlinde okunur.
 - 5 tarihsel dönem: Kuruluş, Yükselme, Duraklama, Gerileme, Dağılma
   (toplam 65 dönüm noktası olay, çok paragraflı belgesel anlatımıyla)
 - İki referans eki: Padişahlar Listesi (36 padişah) ve Terimler Sözlüğü
+- Tıklanabilir görsel zaman şeridi ile dönemler arasında hızlı gezinme
 - Sayfa çevirir gibi önceki/sonraki gezinme, tıklanabilir içindekiler,
   klavye oklarıyla ve mobilde parmak kaydırmasıyla sayfa çevirme
 - Gece modu, ayarlanabilir yazı boyutu ve "kaldığınız sayfadan devam
