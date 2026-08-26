@@ -1,0 +1,368 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;600&display=swap');
+
+:root {
+  --ink: #2a1e14;
+  --paper: #faf3e4;
+  --paper-shadow: #e8dcc2;
+  --maroon: #6b1420;
+  --maroon-deep: #4a0e17;
+  --gold: #b8892b;
+  --navy: #16324a;
+  --muted: #7a6a52;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--navy);
+  color: var(--ink);
+  font-family: 'Source Sans 3', system-ui, sans-serif;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.site-header {
+  background: linear-gradient(180deg, var(--maroon-deep), var(--maroon));
+  color: var(--paper);
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 3px solid var(--gold);
+}
+
+.toc-toggle {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--paper);
+  font-size: 1.1rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.site-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.site-title__main {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.1rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.site-title__sub {
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.9;
+}
+
+/* Layout */
+.layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+/* Table of contents */
+.toc {
+  background: var(--paper);
+  border: 1px solid var(--paper-shadow);
+  border-radius: 8px;
+  padding: 1rem;
+  align-self: start;
+  position: sticky;
+  top: 1.5rem;
+  max-height: calc(100vh - 3rem);
+  overflow-y: auto;
+}
+
+.toc__heading {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  color: var(--maroon);
+  margin: 0 0 0.75rem;
+  border-bottom: 2px solid var(--gold);
+  padding-bottom: 0.4rem;
+}
+
+.toc__period {
+  margin-bottom: 0.75rem;
+}
+
+.toc__period-title {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--ink);
+  cursor: pointer;
+  padding: 0.3rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.toc__period-title:hover {
+  color: var(--maroon);
+}
+
+.toc__range {
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-family: 'Source Sans 3', sans-serif;
+}
+
+.toc ul {
+  list-style: none;
+  margin: 0.2rem 0 0;
+  padding: 0;
+}
+
+.toc li button {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 0.3rem 0.3rem 0.3rem 0.9rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.toc li button:hover {
+  background: var(--paper-shadow);
+  color: var(--ink);
+}
+
+.toc li button.active {
+  background: var(--maroon);
+  color: var(--paper);
+}
+
+.toc__year {
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.toc li button.active .toc__year {
+  color: var(--paper);
+}
+
+/* Reader / page sheet */
+.reader {
+  display: flex;
+  justify-content: center;
+}
+
+.page-sheet {
+  background: var(--paper);
+  border: 1px solid var(--paper-shadow);
+  border-radius: 4px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  padding: 3rem 3.5rem;
+  max-width: 720px;
+  width: 100%;
+}
+
+.chapter-label,
+.event-breadcrumb {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.75rem;
+  color: var(--gold);
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
+.chapter-title,
+.event-title {
+  font-family: 'Cormorant Garamond', serif;
+  color: var(--maroon);
+  margin: 0 0 1rem;
+  line-height: 1.1;
+}
+
+.chapter-title {
+  font-size: 2.6rem;
+}
+
+.event-title {
+  font-size: 2.1rem;
+}
+
+.chapter-summary {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.25rem;
+  color: var(--muted);
+  border-left: 3px solid var(--gold);
+  padding-left: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.chapter-intro,
+.event-text {
+  font-size: 1.08rem;
+  line-height: 1.85;
+}
+
+.chapter-intro::first-letter,
+.event-text::first-letter {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3.2rem;
+  color: var(--maroon);
+  float: left;
+  line-height: 0.85;
+  padding-right: 0.4rem;
+  padding-top: 0.15rem;
+}
+
+/* Pager */
+.pager {
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--paper-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.pager button {
+  background: var(--maroon);
+  color: var(--paper);
+  border: none;
+  padding: 0.55rem 1rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.pager button:disabled {
+  background: var(--paper-shadow);
+  color: var(--muted);
+  cursor: default;
+}
+
+.pager__pos {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Ad slots — clearly labeled placeholders */
+.ad-slot {
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.04),
+    rgba(255, 255, 255, 0.04) 10px,
+    rgba(255, 255, 255, 0.08) 10px,
+    rgba(255, 255, 255, 0.08) 20px
+  );
+  border: 1px dashed rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 4px;
+}
+
+.ad-slot--banner {
+  margin: 0 1.5rem;
+  height: 72px;
+}
+
+.ad-slot--sidebar {
+  margin-top: 1rem;
+  height: 250px;
+}
+
+.ad-slot--inline {
+  height: 100px;
+  margin: 2rem 0;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-color: var(--paper-shadow);
+  color: var(--muted);
+}
+
+/* Footer */
+.site-footer {
+  text-align: center;
+  padding: 1.5rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.78rem;
+}
+
+/* Responsive */
+@media (max-width: 860px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .toc-toggle {
+    display: inline-block;
+  }
+
+  .toc {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 82vw;
+    max-width: 320px;
+    z-index: 20;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    border-radius: 0;
+  }
+
+  .toc--open {
+    transform: translateX(0);
+  }
+
+  .site-title {
+    margin: 0;
+  }
+
+  .page-sheet {
+    padding: 2rem 1.5rem;
+  }
+
+  .chapter-title {
+    font-size: 2rem;
+  }
+}
