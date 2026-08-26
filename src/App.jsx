@@ -3,6 +3,7 @@ import { periods } from './data/periods';
 import { sultans } from './data/sultans';
 import { glossary } from './data/glossary';
 import AdSlot from './components/AdSlot';
+import EraTimeline from './components/EraTimeline';
 import './App.css';
 
 const PROGRESS_KEY = 'osmanli-hikayesi:progress';
@@ -74,6 +75,7 @@ export default function App() {
   const [isOffline, setIsOffline] = useState(() => !navigator.onLine);
 
   const touchStartX = useRef(null);
+  const tocRef = useRef(null);
 
   const page = pages[pageIndex];
   const canPrev = pageIndex > 0;
@@ -112,6 +114,11 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    const activeItem = tocRef.current?.querySelector('.active');
+    activeItem?.scrollIntoView({ block: 'nearest' });
+  }, [pageIndex]);
+
+  useEffect(() => {
     const onKeyDown = (e) => {
       if (e.key === 'ArrowRight') goTo(pageIndex + 1);
       if (e.key === 'ArrowLeft') goTo(pageIndex - 1);
@@ -147,6 +154,9 @@ export default function App() {
 
   return (
     <div className="app">
+      <a className="skip-link" href="#main-content">
+        İçeriğe geç
+      </a>
       <header className="site-header">
         <button
           className="toc-toggle"
@@ -194,8 +204,22 @@ export default function App() {
 
       <AdSlot variant="banner" />
 
+      {page.period && (
+        <EraTimeline
+          periods={periods}
+          currentPeriodId={page.period.id}
+          onSelect={(periodId) =>
+            goTo(pages.findIndex((p) => p.type === 'intro' && p.period.id === periodId))
+          }
+        />
+      )}
+
       <div className="layout">
-        <nav className={`toc ${tocOpen ? 'toc--open' : ''}`} aria-label="İçindekiler">
+        <nav
+          ref={tocRef}
+          className={`toc ${tocOpen ? 'toc--open' : ''}`}
+          aria-label="İçindekiler"
+        >
           <h2 className="toc__heading">İçindekiler</h2>
           {periods.map((period) => (
             <div key={period.id} className="toc__period">
@@ -256,8 +280,9 @@ export default function App() {
           <AdSlot variant="sidebar" />
         </nav>
 
-        <main className="reader">
+        <main className="reader" id="main-content">
           <article
+            key={pageIndex}
             className={`page-sheet font-${fontSize}`}
             onTouchStart={onTouchStart}
             onTouchEnd={onTouchEnd}

@@ -48,6 +48,25 @@ body {
   flex-direction: column;
 }
 
+/* Erişilebilirlik: klavye kullanıcıları için içeriğe atlama bağlantısı */
+.skip-link {
+  position: absolute;
+  top: -3rem;
+  left: 0.5rem;
+  background: var(--gold);
+  color: var(--maroon-deep);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  z-index: 100;
+  transition: top 0.15s ease;
+}
+
+.skip-link:focus {
+  top: 0.5rem;
+}
+
 /* Header */
 .site-header {
   background: linear-gradient(180deg, var(--maroon-deep), var(--maroon));
@@ -143,6 +162,101 @@ body {
   height: 100%;
   background: var(--gold);
   transition: width 0.25s ease;
+}
+
+/* Dönem zaman şeridi */
+.era-timeline {
+  display: flex;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem 0;
+  gap: 0.4rem;
+  overflow-x: auto;
+}
+
+.era-timeline__item {
+  flex: 1;
+  min-width: 118px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  background: none;
+  border: none;
+  border-top: 3px solid rgba(255, 255, 255, 0.18);
+  padding: 0.55rem 0.15rem 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.era-timeline__item--past {
+  border-top-color: var(--gold);
+  opacity: 0.7;
+}
+
+.era-timeline__item--current {
+  border-top-color: var(--gold);
+}
+
+.era-timeline__item:hover {
+  opacity: 1;
+}
+
+.era-timeline__dot {
+  display: none;
+}
+
+.era-timeline__text {
+  display: flex;
+  flex-direction: column;
+}
+
+.era-timeline__title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.era-timeline__item--current .era-timeline__title {
+  color: var(--paper);
+}
+
+.era-timeline__item--past .era-timeline__title {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.era-timeline__range {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.4);
+  white-space: nowrap;
+}
+
+.era-timeline__item--current .era-timeline__range {
+  color: var(--gold);
+}
+
+/* Sayfa geçiş animasyonu */
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-sheet {
+  animation: pageFadeIn 0.25s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-sheet {
+    animation: none;
+  }
 }
 
 /* Layout */
