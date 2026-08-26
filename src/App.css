@@ -427,6 +427,38 @@ body {
   letter-spacing: 0.08em;
 }
 
+/* Padişah bilgi kutusu */
+.sultan-facts {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.9rem 1.5rem;
+  background: var(--paper-shadow);
+  border-radius: 6px;
+  padding: 1.1rem 1.3rem;
+  margin: 1.5rem 0 2rem;
+}
+
+.sultan-facts dt {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 0.15rem;
+}
+
+.sultan-facts dd {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 480px) {
+  .sultan-facts {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Resume banner */
 .resume-banner {
   display: flex;

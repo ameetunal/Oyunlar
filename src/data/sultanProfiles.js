@@ -1,0 +1,406 @@
+// Her padişah için ayrı bir tanıtım sayfası: doğum/ölüm, aile, eşler,
+// çocuklar, yaşadığı yerler ve saltanatının kısa bir özeti. Anahtar,
+// sultans.js içindeki "name" alanıyla birebir eşleşir.
+//
+// Not: Özellikle erken dönem padişahlar için eş/çocuk bilgileri
+// kaynaklara göre değişebilir; bu gibi durumlarda "rivayete göre"
+// ifadesi kullanılmıştır.
+
+export const sultanProfiles = {
+  'I. Osman (Gazi)': {
+    born: '1258 civarı, Söğüt',
+    died: '1326, Bursa',
+    father: 'Ertuğrul Gazi',
+    mother: 'Hayme Ana (rivayete göre)',
+    spouses: 'Malhun Hatun (rivayete göre Şeyh Edebali\'nin kızı)',
+    children: 'Orhan Gazi (halefi), Alaeddin Paşa (ilk vezirlerden)',
+    residence: 'Söğüt, Bilecik çevresi',
+    text:
+      'Osmanlı Devleti\'nin kurucusu Osman Gazi, Söğüt ve Domaniç yaylaları arasında konar-göçer bir hayat süren küçük bir Türkmen aşiretinin başına geçti. Babası Ertuğrul Gazi\'den devraldığı topraklar, bugünün ölçeğiyle küçük bir bölgeden ibaretti; Osman Gazi\'nin ömrü, çevresindeki Bizans tekfurluklarına karşı sürdürülen "gaza" akınlarıyla geçti.\n\nEşi Malhun Hatun\'un, dönemin önde gelen Ahi şeyhlerinden Şeyh Edebali\'nin kızı olduğu rivayet edilir; bu evlilik, Osman Bey\'in dini ve toplumsal çevrelerle kurduğu bağı güçlendirdiği için sıkça anlatılan bir efsane haline gelmiştir. Yaşamının son yıllarında hastalanan Osman Gazi, oğlu Orhan Bey\'in uzun süredir kuşattığı Bursa\'nın düştüğü haberini alamadan ya da alır almaz vefat ettiği anlatılır; Bursa\'daki Gümüşlü Kümbet\'te gömülüdür.',
+  },
+  'Orhan Gazi': {
+    born: '1281 civarı, Söğüt',
+    died: '1362, Bursa',
+    father: 'Osman Gazi',
+    mother: 'Malhun Hatun',
+    spouses: 'Nilüfer Hatun, Asporça Hatun, Theodora (Bizans prensesi)',
+    children: 'Süleyman Paşa, I. Murad (halefi), Şehzade İbrahim',
+    residence: 'Bursa (başkent yaptı)',
+    text:
+      'Orhan Gazi, babasının bıraktığı küçük beyliği devraldığında henüz genç bir komutandı; Bursa\'yı fethederek şehri beyliğin ilk gerçek başkenti yaptı ve burada bir darphane kurdurarak devletin kurumsallaşmasında önemli bir adım attı.\n\nEşlerinden Nilüfer Hatun\'un, bir Bizans tekfurunun kızı olduğu ve oğlu I. Murad\'ın annesi olduğu rivayet edilir; Theodora ile evliliği ise Bizans İmparatoru VI. Ioannis Kantakuzenos ile kurulan siyasi ittifakın bir parçasıydı. Oğlu Süleyman Paşa\'nın Rumeli\'ye ilk adımı atmasından kısa süre sonra genç yaşta ölmesi, tahtın diğer oğlu I. Murad\'a geçmesine yol açtı. Orhan Gazi, ömrünün büyük bölümünü geçirdiği Bursa\'da öldü ve babasının yanına gömüldü.',
+  },
+  'I. Murad (Hüdâvendigâr)': {
+    born: '1326, Bursa',
+    died: '1389, Kosova (savaş meydanında)',
+    father: 'Orhan Gazi',
+    mother: 'Nilüfer Hatun',
+    spouses: 'Gülçiçek Hatun ve diğer hasekiler',
+    children: 'Yakub Çelebi, I. Bayezid (Yıldırım, halefi)',
+    residence: 'Bursa, sonra Edirne',
+    text:
+      'I. Murad, tahta çıktığında devraldığı beyliği Rumeli\'nin derinliklerine taşıyan hükümdar oldu; Edirne\'yi fethederek burayı yeni başkent yaptı ve Osmanlı\'yı gerçek anlamda iki kıtalı bir devlete dönüştürdü. Saltanatı boyunca hem Anadolu\'daki beyliklerle hem Balkan güçleriyle mücadele etti.\n\nEşi Gülçiçek Hatun\'dan olan oğlu Yıldırım Bayezid\'i veliaht bıraktı; diğer oğlu Yakub Çelebi ise I. Kosova Savaşı\'nın hemen ardından, muhtemelen taht kavgasını önlemek amacıyla, kardeşinin emriyle öldürüldü — bu, Osmanlı tarihinde kardeş katlinin ilk örneklerinden sayılır. I. Murad\'ın kendisi de aynı savaş meydanında, galibiyet kesinleştikten sonra bir Sırp asilzadenin suikastine kurban gitti; naaşı Bursa\'ya götürülüp gömüldü.',
+  },
+  'I. Bayezid (Yıldırım)': {
+    born: '1360 civarı',
+    died: '1403, Akşehir (esarette)',
+    father: 'I. Murad',
+    mother: 'Gülçiçek Hatun',
+    spouses: 'Devlet Hatun (Germiyanoğlu prensesi), Olivera (Despina) Hatun (Sırp Prensi Lazar\'ın kızı, siyasi evlilik)',
+    children: 'Süleyman Çelebi, İsa Çelebi, Musa Çelebi, I. Mehmed (Çelebi, halefi), Mustafa Çelebi',
+    residence: 'Bursa, Edirne',
+    text:
+      'Hızlı asker sevkiyatlarıyla "Yıldırım" lakabını kazanan I. Bayezid, saltanatının ilk yıllarında Anadolu beyliklerinin çoğunu topraklarına kattı ve Niğbolu\'da büyük bir Haçlı ordusunu bozguna uğrattı. Sırp Prensi Lazar\'ın kızı Olivera ile evliliği, Balkanlar\'daki güç dengesini gözeten tipik bir siyasi ittifaktı.\n\nBeş oğlundan dördü (Süleyman, İsa, Musa, Mehmed) babalarının Ankara Savaşı\'nda Timur\'a yenilip esir düşmesinin ardından on bir yıl sürecek bir taht kavgasına (Fetret Devri) giriştiler; bu kavgayı kazanan Mehmed Çelebi, devleti yeniden birleştirdi. Bayezid\'in kendisi esaret altında, Timur\'un ordugâhında yaklaşık sekiz ay geçirdikten sonra Akşehir\'de öldü; naaşı sonradan Bursa\'ya getirilip gömüldü.',
+  },
+  'I. Mehmed (Çelebi)': {
+    born: '1386 civarı',
+    died: '1421, Edirne',
+    father: 'I. Bayezid',
+    mother: 'Devlet Hatun',
+    spouses: 'Emine Hatun (Dulkadiroğlu prensesi) ve diğer hasekiler',
+    children: 'II. Murad (halefi), Şehzade Mustafa, Şehzade Yusuf',
+    residence: 'Amasya (Fetret Devri\'nde), sonra Bursa ve Edirne',
+    text:
+      'Kardeşleri arasındaki on bir yıllık taht mücadelesini kazanan I. Mehmed, dağılmanın eşiğindeki devleti yeniden tek çatı altında topladığı için "İkinci Kurucu" olarak anılır. Saltanatının büyük bölümünü iç isyanları (özellikle Şeyh Bedreddin ayaklanmasını) bastırmaya ve devlet düzenini onarmaya adadı.\n\nBursa\'da yaptırdığı Yeşil Cami ve kendi türbesi olan Yeşil Türbe, onun döneminin en görkemli mimari eserleri arasında sayılır. Oğlu II. Murad\'a, kendisinden çok daha istikrarlı ve bütünleşmiş bir devlet bıraktı; Edirne\'de vefat etti, naaşı Bursa\'daki Yeşil Türbe\'ye defnedildi.',
+  },
+  'II. Murad': {
+    born: '1404, Amasya',
+    died: '1451, Edirne',
+    father: 'I. Mehmed',
+    mother: 'Emine Hatun',
+    spouses: 'Hüma Hatun, Mara Branković (Sırp prensesi, siyasi evlilik)',
+    children: 'II. Mehmed (Fatih, halefi), Şehzade Alaeddin Ali',
+    residence: 'Edirne',
+    text:
+      'II. Murad, saltanatı boyunca hem Anadolu\'daki beylikleri hem Balkanlar\'daki Haçlı ittifaklarını (Varna dahil) bertaraf ederek babasından devraldığı devleti güçlendirdi. Kendine özgü bir tavırla, saltanatını iki kez oğlu II. Mehmed\'e bırakıp manastır hayatına benzer bir inzivaya çekildi; ancak her iki seferinde de devletin karşılaştığı büyük tehditler (Varna\'daki Haçlı seferi ve ardından yeniçeri isyanı) onu tekrar tahta dönmeye zorladı.\n\nEşi Hüma Hatun\'dan olan oğlu II. Mehmed\'i genç yaşta devlet işlerine hazırladı; bu tecrübe, II. Mehmed\'in sonradan İstanbul\'u fethettiğinde yirmi bir yaşında olmasına rağmen olgun bir hükümdar gibi hareket edebilmesinin temelini oluşturdu. II. Murad, Edirne\'de öldü; Bursa\'daki Muradiye Külliyesi\'nde gömülüdür.',
+  },
+  'II. Mehmed (Fatih)': {
+    born: '1432, Edirne',
+    died: '1481, Hünkârçayırı (sefer yolunda)',
+    father: 'II. Murad',
+    mother: 'Hüma Hatun',
+    spouses: 'Gülbahar Hatun, Sittişah Hatun, Gülşah Hatun',
+    children: 'II. Bayezid (halefi), Cem Sultan, Şehzade Mustafa',
+    residence: 'Edirne, sonra İstanbul (yeni başkent)',
+    text:
+      'İstanbul\'u fetheden padişah olarak tarihe geçen II. Mehmed, saltanatı boyunca hem Anadolu\'da Türkmen beyliklerini hem Balkanlar\'da Bizans\'ın son kalıntılarını (Trabzon, Mora) ortadan kaldırarak imparatorluğun sınırlarını üç kıtaya yaydı. Fethettiği İstanbul\'u yeniden imar ederek çok dinli, çok kültürlü bir başkente dönüştürdü.\n\nOğulları II. Bayezid ile Cem Sultan arasındaki rekabet, kendi ölümünden sonra imparatorluğu bir taht kavgasına sürükleyecekti; bu kavgayı kaybeden Cem Sultan, yıllarca Avrupa\'da bir diplomatik rehin olarak tutuldu. Fatih, yeni bir sefer hazırlığı sırasında, sebebi tam olarak bilinmeyen ani bir hastalıkla (zehirlendiği de rivayet edilir) Gebze yakınlarında öldü; İstanbul\'daki kendi adını taşıyan Fatih Camii külliyesinde gömülüdür.',
+  },
+  'II. Bayezid (Veli)': {
+    born: '1447, Dimetoka',
+    died: '1512, yol üzerinde (tahttan çekildikten kısa süre sonra)',
+    father: 'II. Mehmed (Fatih)',
+    mother: 'Gülbahar Hatun',
+    spouses: 'Gülruh Hatun, Ayşe Hatun (Dulkadiroğlu prensesi)',
+    children: 'I. Selim (Yavuz, halefi), Şehzade Ahmed, Şehzade Korkut',
+    residence: 'İstanbul',
+    text:
+      'Babasının fetih siyasetinden farklı olarak II. Bayezid, saltanatı boyunca daha çok iç istikrarı ve mevcut toprakların konsolidasyonunu önceledi; bu ihtiyatlı tutumu nedeniyle "Veli" (dindar, ihtiyatlı) lakabıyla anıldı. Oğulları Ahmed, Korkut ve Selim arasındaki taht rekabeti, saltanatının son yıllarına damgasını vurdu.\n\nBu mücadeleyi kazanan oğlu Selim (sonradan Yavuz), babasını tahttan çekilmeye zorladı; II. Bayezid, memleketi Dimetoka\'ya doğru yola çıktıktan kısa süre sonra, zehirlendiği yönünde güçlü rivayetler eşliğinde öldü. İstanbul\'da kendi adını taşıyan Bayezid Camii\'nde gömülüdür.',
+  },
+  'I. Selim (Yavuz)': {
+    born: '1470, Amasya',
+    died: '1520, Çorlu yakınları (sefer yolunda)',
+    father: 'II. Bayezid',
+    mother: 'Ayşe Hatun (rivayete göre)',
+    spouses: 'Hafsa Sultan (Kanuni\'nin annesi) ve diğer hasekiler',
+    children: 'I. Süleyman (Kanuni, tek yaşayan erkek evladı)',
+    residence: 'Trabzon (şehzadeliğinde), sonra İstanbul',
+    text:
+      'Kardeşleriyle giriştiği taht mücadelesini kazanıp babasını tahttan indiren I. Selim, sekiz yıl gibi kısa bir saltanatta imparatorluğun topraklarını neredeyse ikiye katladı; Çaldıran, Mısır ve Suriye fetihleriyle devletin hem sınırlarını hem dini otoritesini büyüttü. Sert ve kararlı kişiliği nedeniyle "Yavuz" lakabıyla anıldı.\n\nTahta geçişinde olası taht rakiplerini (kardeşleri ve yeğenlerini) tasfiye ederek, geride tek erkek evladı olan Süleyman\'ı sorunsuz bir veliaht olarak bıraktı — bu, kendisinden sonra gelecek en uzun ve en istikrarlı saltanatlardan birinin zeminini hazırladı. Yeni bir sefer hazırlığı sırasında, muhtemelen kanser ya da şarbon kaynaklı bir hastalıktan Çorlu yakınlarında öldü; İstanbul\'daki Yavuz Selim Camii\'nde gömülüdür.',
+  },
+  'I. Süleyman (Kanuni)': {
+    born: '1494, Trabzon',
+    died: '1566, Zigetvar (sefer sırasında)',
+    father: 'I. Selim (Yavuz)',
+    mother: 'Hafsa Sultan',
+    spouses: 'Mahidevran Sultan, Hürrem Sultan (Roksolana, resmî nikahla evlendiği hasekisi)',
+    children: 'Şehzade Mustafa (Mahidevran\'dan), II. Selim (halefi), Şehzade Bayezid, Şehzade Cihangir, Şehzade Mehmed (Hürrem\'den)',
+    residence: 'İstanbul (Topkapı Sarayı)',
+    text:
+      'Kırk altı yıllık saltanatıyla Osmanlı tarihinin en uzun süre tahtta kalan padişahı olan Kanuni Sultan Süleyman, imparatorluğu hem askeri hem hukuki açıdan zirveye taşıdı; Avrupa\'da "Muhteşem" olarak anılırken kendi halkı arasında hazırlattığı kanunnameler nedeniyle "Kanuni" lakabıyla tanındı.\n\nUkraynalı asıllı cariyesi Hürrem Sultan ile resmî nikahla evlenmesi, Osmanlı saray geleneğinde bir istisnaydı ve dönemin Avrupa diplomatik yazışmalarında büyük yankı uyandırdı. İlk hasekisi Mahidevran Sultan\'dan olan oğlu Şehzade Mustafa\'yı, asker arasındaki popülaritesinin bir tehdit olarak görülmesi üzerine 1553\'te bizzat idam ettirdi — bu olay, saray tarihinin en trajik anlarından biri olarak anılır. Kanuni, Zigetvar Kalesi kuşatması sırasında, kale düşmeden hemen önce öldü; İstanbul\'daki Süleymaniye Külliyesi\'nde gömülüdür.',
+  },
+  'II. Selim': {
+    born: '1524, İstanbul',
+    died: '1574, İstanbul (Topkapı Sarayı)',
+    father: 'I. Süleyman (Kanuni)',
+    mother: 'Hürrem Sultan',
+    spouses: 'Nurbanu Sultan',
+    children: 'III. Murad (halefi) ve kız kardeşleri',
+    residence: 'İstanbul (Topkapı Sarayı)',
+    text:
+      'Kanuni ile Hürrem Sultan\'ın oğlu olan II. Selim, üvey kardeşi Şehzade Mustafa\'nın idamının ardından fiilen tek veliaht kalarak tahta çıktı. Sarışın görünüşü nedeniyle "Sarı Selim", içki düşkünlüğü nedeniyle de halk arasında "Sarhoş Selim" olarak anıldı.\n\nSaltanatı, Kıbrıs\'ın fethi gibi bir başarıyla birlikte İnebahtı\'daki ağır deniz yenilgisine de sahne oldu. Rivayete göre bir hamamda düşüp aldığı yaralar sonucu öldü; Mimar Sinan\'ın Ayasofya\'nın yanına inşa ettiği türbesinde gömülüdür.',
+  },
+  'III. Murad': {
+    born: '1546, Manisa',
+    died: '1595, İstanbul',
+    father: 'II. Selim',
+    mother: 'Nurbanu Sultan',
+    spouses: 'Safiye Sultan (hasekisi) ve kalabalık bir harem',
+    children: 'III. Mehmed (halefi) ve rivayete göre yaklaşık yirmi kadar diğer çocuk',
+    residence: 'İstanbul (Topkapı Sarayı)',
+    text:
+      'III. Murad döneminde Osmanlı sarayının haremi, önceki dönemlere kıyasla belirgin biçimde büyüdü; padişahın çok sayıda çocuğu olduğu, ancak bunların büyük kısmının erken yaşta öldüğü rivayet edilir. Hasekisi Safiye Sultan, saltanatının siyasi hayatında da etkili bir isimdi.\n\nDönemi, Avusturya ile başlayan ve on üç yıl sürecek "Uzun Savaş"ın da başlangıcına sahne oldu. III. Murad, Ayasofya\'daki türbesinde, babası ve dedesinin yakınında gömülüdür.',
+  },
+  'III. Mehmed': {
+    born: '1566, Manisa',
+    died: '1603, İstanbul',
+    father: 'III. Murad',
+    mother: 'Safiye Sultan',
+    spouses: 'Handan Sultan (hasekisi)',
+    children: 'I. Ahmed (halefi), Şehzade Mahmud (idam edildi) ve diğerleri',
+    residence: 'İstanbul (Topkapı Sarayı)',
+    text:
+      'III. Mehmed, tahta çıktığında geleneksel kardeş katli uygulamasının en uç örneğini sergileyerek on dokuz erkek kardeşinin tamamını idam ettirdi; bu olay, Osmanlı tarihinde toplu kardeş katlinin son ve en büyük örneği olarak kayıtlara geçti ve kamuoyunda derin bir üzüntüye yol açtı.\n\nHaçova Meydan Savaşı\'na bizzat katılan son padişahlardan biri oldu; savaşın ilk saatlerindeki bozgun eşiğine rağmen zaferle döndü. Saltanatının son yıllarında oğlu Şehzade Mahmud\'u da isyan şüphesiyle idam ettirdi. Hastalıktan öldü, Ayasofya\'da gömülüdür.',
+  },
+  'I. Ahmed': {
+    born: '1590, Manisa',
+    died: '1617, İstanbul',
+    father: 'III. Mehmed',
+    mother: 'Handan Sultan',
+    spouses: 'Kösem Sultan (hasekisi, sonradan çok etkili bir valide sultan oldu)',
+    children: 'IV. Murad, Sultan İbrahim, Şehzade Osman (II. Osman) ve diğerleri',
+    residence: 'İstanbul (Topkapı Sarayı)',
+    text:
+      'I. Ahmed, on üç yaşında tahta çıkan genç bir padişahtı ve döneminin en kalıcı kurumsal değişikliklerinden birine imza attı: kardeş katli geleneğini sona erdirip, şehzadelerin öldürülmek yerine sarayda "kafes" adı verilen özel dairelerde gözetim altında tutulmasını başlattı. Bu değişiklik, sonraki iki yüzyıl boyunca Osmanlı taht geçişlerinin doğasını kökten değiştirdi.\n\nİstanbul\'un simgelerinden Sultanahmet Camii\'ni yaptıran padişah olarak da bilinir. Eşi Kösem Sultan, iki oğlu (IV. Murad, İbrahim) ve torununun (IV. Mehmed) saltanatları boyunca devlet işlerinde belirleyici bir rol oynayacaktı. I. Ahmed, henüz yirmi yedi yaşındayken tifodan öldü; kendi camisinin bahçesindeki türbede gömülüdür.',
+  },
+  'I. Mustafa': {
+    born: '1591, Manisa',
+    died: '1639, İstanbul (kafeste)',
+    father: 'I. Ahmed',
+    mother: 'bilinmiyor (bir cariye olduğu düşünülüyor)',
+    spouses: 'evlenmediği bilinmektedir',
+    children: 'çocuğu olmadı',
+    residence: 'İstanbul (Topkapı Sarayı, "kafes" dairesi)',
+    text:
+      'I. Mustafa, kardeşi I. Ahmed\'in ölümünün ardından, henüz genç yaşta uzun süre kapalı kaldığı "kafes"ten çıkarılarak tahta çıkarıldı; ancak zihinsel dengesinin bozuk olduğu gerekçesiyle kısa süre sonra tahttan indirildi. Genç Osman\'ın öldürülmesinin ardından ikinci kez tahta çıkarıldıysa da bu ikinci saltanatı da uzun sürmedi.\n\nHayatının büyük bölümünü kafeste geçirdiği için hiç evlenmedi ve çocuğu olmadı. Tahttan kesin olarak indirildikten sonra yıllarca sarayda gözetim altında yaşadı ve orada öldü.',
+  },
+  'II. Osman (Genç Osman)': {
+    born: '1604, İstanbul',
+    died: '1622, İstanbul (yeniçerilerce katledildi)',
+    father: 'I. Ahmed',
+    mother: 'Mahfiruz Hatun',
+    spouses: 'Akile Hanım Sultan (rivayete göre)',
+    children: 'bilinen bir çocuğu yok',
+    residence: 'İstanbul (Topkapı Sarayı)',
+    text:
+      'On dört yaşında tahta çıkan II. Osman, gençliğine rağmen Yeniçeri Ocağı\'nı ıslah etmeye ve yerine daha disiplinli, Anadolu kökenli yeni bir ordu kurmaya çalışan cesur bir reformcuydu. Bu girişimlerini hayata geçirmek için hac bahanesiyle İstanbul\'dan ayrılıp Anadolu\'da yeni kuvvetler toplamayı planladı.\n\nBu plan yeniçeriler tarafından öğrenilince büyük bir isyan patlak verdi; II. Osman tahttan indirilip hapsedildi ve on sekiz yaşındayken öldürüldü. Bir padişahın kendi askeri gücünce katledilmesi Osmanlı tarihinde bir ilkti ve derin bir sarsıntı yarattı; Sultanahmet Camii avlusunda gömülüdür.',
+  },
+  'IV. Murad': {
+    born: '1612, İstanbul',
+    died: '1640, İstanbul',
+    father: 'I. Ahmed',
+    mother: 'Kösem Sultan',
+    spouses: 'Ayşe Sultan (rivayete göre)',
+    children: 'bilinen sağ kalan bir erkek evladı yok',
+    residence: 'İstanbul (Topkapı Sarayı)',
+    text:
+      'On bir yaşında tahta çıkan IV. Murad, annesi Kösem Sultan\'ın naipliği altında geçen ilk yıllardan sonra otoritesini eline aldı ve sert, disiplinli bir yönetim anlayışıyla devleti yeniden toparladı; kahvehane, tütün ve alkol yasakları, denetim gezileri sırasında kılık değiştirerek bizzat halkı gözetlemesiyle bilinir.\n\nBağdat\'ı Safeviler\'den geri alan son büyük fatih padişahlardan biri oldu. Soyunun devamı konusundaki kaygılarına rağmen kardeşi İbrahim dışındaki erkek kardeşlerini idam ettirdi; bu da hanedanın soyunu tek bir (ve akıl sağlığı tartışmalı) şehzadeye bağlı bıraktı. IV. Murad, yirmi sekiz yaşında sirozdan öldü; Sultanahmet Camii\'nde gömülüdür.',
+  },
+  'Sultan İbrahim': {
+    born: '1615, İstanbul',
+    died: '1648, İstanbul (tahttan indirilip boğduruldu)',
+    father: 'I. Ahmed',
+    mother: 'Kösem Sultan',
+    spouses: 'Turhan Hatice Sultan (hasekisi), Hümaşah Sultan ve diğerleri',
+    children: 'IV. Mehmed (halefi), II. Süleyman, II. Ahmed',
+    residence: 'İstanbul (Topkapı Sarayı)',
+    text:
+      'Ağabeyi IV. Murad\'ın hanedanın tek erkek evladı olarak hayatta bıraktığı İbrahim, kardeşinin ölümüyle beklenmedik biçimde tahta çıktı; uzun yıllar kafeste, sürekli bir ölüm korkusuyla geçirdiği gençliğinin zihinsel dengesi üzerinde ağır bir etki bıraktığı düşünülür.\n\nSaltanatı boyunca büyük ölçüde annesi Kösem Sultan\'ın ve saray çevresinin etkisi altında kaldı; Girit Savaşı\'nın başlamasına rağmen devlet işlerindeki tutarsızlığı giderek artan bir hoşnutsuzluğa yol açtı. Sonunda yeniçeriler ve devlet erkânı tarafından tahttan indirilip kısa süre sonra boğduruldu; üç oğlu (IV. Mehmed, II. Süleyman, II. Ahmed) sırasıyla tahta çıkacaktı.',
+  },
+  'IV. Mehmed (Avcı)': {
+    born: '1642, İstanbul',
+    died: '1693, Edirne (sürgünde)',
+    father: 'Sultan İbrahim',
+    mother: 'Turhan Hatice Sultan',
+    spouses: 'Gülnuş Sultan (hasekisi) ve diğerleri',
+    children: 'II. Mustafa, III. Ahmed (ikisi de sonradan padişah oldu)',
+    residence: 'İstanbul, av tutkusu nedeniyle sık sık Edirne',
+    text:
+      'Altı yaşında tahta çıkan IV. Mehmed\'in ilk yıllarında annesi Turhan Hatice Sultan ve büyükannesi Kösem Sultan arasındaki güç mücadelesi belirleyici oldu; Köprülü Mehmed Paşa\'nın sadrazamlığa getirilmesiyle devlet otoritesi yeniden tesis edildi ve saltanatının uzun bir bölümü Köprülüler\'in yönetiminde geçti.\n\nAv tutkusuyla tanındığı için "Avcı" lakabıyla anılan padişah, zamanının büyük bölümünü Edirne\'de geçirmeyi tercih etti. II. Viyana bozgununun ardından devlet erkânınca tahttan indirildi ve kalan yıllarını Edirne\'de sürgün hayatı sürerek geçirdi; oğulları II. Mustafa ve III. Ahmed de sonradan sırasıyla tahta çıktı.',
+  },
+  'II. Süleyman': {
+    born: '1642, İstanbul',
+    died: '1691, Edirne',
+    father: 'Sultan İbrahim',
+    mother: 'Saliha Dilaşub Sultan',
+    spouses: 'bilgi sınırlı',
+    children: 'bilinen bir çocuğu yok',
+    residence: 'İstanbul, sonra Edirne',
+    text:
+      'Kırk altı yıl gibi olağanüstü uzun bir süre kafeste yaşadıktan sonra kırk beş yaşında tahta çıkan II. Süleyman, bu uzun tecrit döneminin etkisiyle sağlığı zayıf ve içe kapanık bir hükümdardı. Buna rağmen Köprülü Fazıl Mustafa Paşa gibi yetenekli sadrazamlara geniş yetkiler vererek devletin Kutsal İttifak savaşlarındaki durumunu bir ölçüde toparlamasına imkân tanıdı.\n\nKısa saltanatı boyunca sağlık sorunlarıyla boğuştu ve Edirne\'de doğal bir ölümle hayatını kaybetti.',
+  },
+  'II. Ahmed': {
+    born: '1643, İstanbul',
+    died: '1695, Edirne',
+    father: 'Sultan İbrahim',
+    mother: 'Muazzez Sultan',
+    spouses: 'bilgi sınırlı',
+    children: 'Şehzade İbrahim (genç yaşta öldü)',
+    residence: 'İstanbul, sonra Edirne',
+    text:
+      'Kardeşi II. Süleyman gibi uzun yıllar kafeste geçiren II. Ahmed, kırk sekiz yaşında tahta çıktı. Saltanatı, Kutsal İttifak savaşlarının en yoğun döneminde geçti; Salankamen\'de yetenekli sadrazamı Köprülü Fazıl Mustafa Paşa\'nın savaş meydanında hayatını kaybetmesi, dönemin en ağır kayıplarından biri oldu.\n\nKısa süren saltanatının ardından Edirne\'de öldü; yerini kardeşinin oğlu II. Mustafa\'ya bıraktı.',
+  },
+  'II. Mustafa': {
+    born: '1664, Edirne',
+    died: '1703, İstanbul',
+    father: 'IV. Mehmed (Avcı)',
+    mother: 'Gülnuş Sultan',
+    spouses: 'Saliha Sultan (I. Mahmud\'un annesi), Şehsuvar Sultan (III. Osman\'ın annesi)',
+    children: 'I. Mahmud, III. Osman (ikisi de sonradan padişah oldu)',
+    residence: 'İstanbul, sonra Edirne',
+    text:
+      'Babası IV. Mehmed\'in tahttan indirilişinden sonra amcalarının saltanatlarını izleyen II. Mustafa, otuz bir yaşında tahta çıktığında bizzat sefere çıkan bir padişah olmayı seçti; ancak Karlofça Antlaşması ile sonuçlanan ağır yenilgiler, devletin Avrupa karşısındaki üstünlüğünün artık geri dönülemez biçimde sarsıldığını gösterdi.\n\nSaltanatının son yıllarında giderek Edirne\'ye yerleşip İstanbul\'dan uzaklaşması, 1703\'teki "Edirne Vakası" adıyla bilinen büyük bir isyana yol açtı; bu isyan sonucunda tahttan indirildi ve kısa süre sonra öldü. İki oğlu, I. Mahmud ve III. Osman, ileride sırasıyla tahta çıkacaktı.',
+  },
+  'III. Ahmed': {
+    born: '1673, Edirne',
+    died: '1736, İstanbul (kafeste)',
+    father: 'IV. Mehmed (Avcı)',
+    mother: 'Gülnuş Sultan',
+    spouses: 'Emetullah Kadın ve diğer hasekiler',
+    children: 'Kızı Fatma Sultan, Sadrazam Nevşehirli Damat İbrahim Paşa ile evlendi',
+    residence: 'İstanbul (Topkapı ve Sadabad Kasrı)',
+    text:
+      'Kardeşi II. Mustafa\'nın Edirne Vakası ile tahttan indirilmesinin ardından tahta çıkan III. Ahmed, saltanatının ilk yıllarında Prut Seferi\'nde Rus Çarı I. Petro\'yu kritik bir anda kuşatma altına aldı. Ancak adı, daha çok sadrazamı Nevşehirli Damat İbrahim Paşa ile birlikte yürüttüğü "Lale Devri" kültürel açılımıyla anılır.\n\nKızı Fatma Sultan\'ı bu sadrazamla evlendirerek saray ile devlet yönetimi arasındaki bağı güçlendirdi. Lale Devri\'nin getirdiği lüks harcamalara duyulan tepki, 1730\'daki Patrona Halil İsyanı ile sonuçlandı; III. Ahmed tahttan indirildi ve kalan yıllarını kafeste geçirip orada öldü.',
+  },
+  'I. Mahmud': {
+    born: '1696, Edirne',
+    died: '1754, İstanbul',
+    father: 'II. Mustafa',
+    mother: 'Saliha Sabkati Sultan',
+    spouses: 'evlenmediği bilinmektedir (kafeste geçirdiği yıllar nedeniyle)',
+    children: 'çocuğu olmadı',
+    residence: 'İstanbul (Topkapı Sarayı)',
+    text:
+      'Patrona Halil İsyanı sonucunda amcası III. Ahmed\'in tahttan indirilmesiyle tahta çıkan I. Mahmud, ilk icraatlarından biri olarak isyanın elebaşlarını bir saray daveti bahanesiyle tuzağa düşürüp öldürterek otoriteyi yeniden tesis etti.\n\nUzun kafes yıllarının etkisiyle hiç evlenmedi ve çocuğu olmadı. Saltanatı boyunca Avrupa tarzı askeri ıslahatlara ilk adımları attı (Humbaracı Ahmed Paşa\'nın topçu reformları gibi). Bir Cuma namazı çıkışında geçirdiği bir felç sonucu İstanbul sokaklarında öldüğü rivayet edilir.',
+  },
+  'III. Osman': {
+    born: '1699, Edirne',
+    died: '1757, İstanbul',
+    father: 'II. Mustafa',
+    mother: 'Şehsuvar Sultan',
+    spouses: 'evlenmediği bilinmektedir',
+    children: 'çocuğu olmadı',
+    residence: 'İstanbul (Topkapı Sarayı)',
+    text:
+      'Elli bir yıl gibi Osmanlı tarihinin en uzun kafes sürelerinden birini yaşadıktan sonra elli beş yaşında tahta çıkan III. Osman, bu denli uzun bir tecritin ardından dışa kapanık ve sert mizaçlı bir hükümdar olarak tanındı; sarayda kadınların ve gayrimüslimlerin dolaşımını kısıtlayan katı kurallar koydurduğu bilinir.\n\nHiç evlenmedi ve çocuğu olmadı. Kısa ve sakin geçen saltanatının sonunda doğal bir ölümle hayatını kaybetti.',
+  },
+  'III. Mustafa': {
+    born: '1717, İstanbul',
+    died: '1774, İstanbul',
+    father: 'III. Ahmed',
+    mother: 'Mihrişah Kadın',
+    spouses: 'Mihrişah Sultan (III. Selim\'in annesi)',
+    children: 'III. Selim (halefi)',
+    residence: 'İstanbul (Topkapı Sarayı)',
+    text:
+      'III. Mustafa, tahta çıktığında devletin Avrupa karşısındaki askeri geriliğinin farkındaydı ve Baron de Tott gibi yabancı uzmanlardan yararlanarak topçu ve istihkam alanında ıslahat girişimlerine öncülük etti. Bu reformcu yaklaşımı, oğlu III. Selim\'in daha sonra başlatacağı çok daha kapsamlı Nizam-ı Cedid hareketinin ilk tohumlarını attı.\n\nSaltanatının sonlarına doğru patlak veren Rusya ile savaşın kötü gidişatı, padişahı derinden etkiledi; savaşın sonucunu göremeden doğal bir ölümle öldü, yerini oğlu III. Selim\'e bıraktı.',
+  },
+  'I. Abdülhamid': {
+    born: '1725, İstanbul',
+    died: '1789, İstanbul',
+    father: 'III. Ahmed',
+    mother: 'Rabia Şermi Kadın',
+    spouses: 'Ayşe Sineperver Sultan (IV. Mustafa\'nın annesi), Nakşidil Sultan (rivayete göre)',
+    children: 'IV. Mustafa, II. Mahmud',
+    residence: 'İstanbul (Topkapı Sarayı)',
+    text:
+      'Kırk üç yıl kafeste geçirdikten sonra elli yaşında tahta çıkan I. Abdülhamid, devraldığı devletin Rusya karşısında peş peşe ağır yenilgiler aldığı bir dönemde saltanat sürdü; Küçük Kaynarca ve Yaş antlaşmalarıyla Kırım\'ın kaybı onun döneminde kesinleşti.\n\nBu ağır kayıplara rağmen sınırlı da olsa mali ve askeri düzenlemeler yapmaya çalıştı. İki oğlu, IV. Mustafa ve II. Mahmud, ileride sırasıyla tahta çıkacaktı. I. Abdülhamid, yeni bir savaşın ortasında doğal bir ölümle İstanbul\'da hayatını kaybetti.',
+  },
+  'III. Selim': {
+    born: '1761, İstanbul',
+    died: '1808, İstanbul (tahttan indirildikten sonra katledildi)',
+    father: 'III. Mustafa',
+    mother: 'Mihrişah Sultan',
+    spouses: 'resmî bir hasekisi olmadı, çocuğu da olmadı',
+    children: 'çocuğu olmadı',
+    residence: 'İstanbul (Topkapı Sarayı)',
+    text:
+      'Babası III. Mustafa\'nın başlattığı ıslahat fikirlerini çok daha kapsamlı bir programa dönüştüren III. Selim, Avrupa tarzı eğitilmiş yeni bir ordu (Nizam-ı Cedid) kurmaya, mali sistemi düzenlemeye ve Avrupa başkentlerine kalıcı elçilikler açmaya girişti. Müzisyenliği ve besteciliğiyle de tanınır; klasik Türk müziğine bugün hâlâ icra edilen eserler bıraktı.\n\nReformları, çıkarları tehdit edilen yeniçeriler ve muhafazakâr çevrelerin sert direnişiyle karşılaştı. Kabakçı Mustafa İsyanı ile tahttan indirilip hapsedildi; birkaç ay sonra, yerine geçen IV. Mustafa\'yı tahttan indirmeye çalışan bir hareket sırasında, IV. Mustafa\'nın emriyle katledildi.',
+  },
+  'IV. Mustafa': {
+    born: '1779, İstanbul',
+    died: '1808, İstanbul (boğdurularak öldürüldü)',
+    father: 'I. Abdülhamid',
+    mother: 'Ayşe Sineperver Sultan',
+    spouses: 'bilgi sınırlı',
+    children: 'bilinen bir çocuğu yok',
+    residence: 'İstanbul (Topkapı Sarayı)',
+    text:
+      'Kabakçı Mustafa İsyanı sonucunda kuzeni III. Selim\'in tahttan indirilmesiyle tahta çıkan IV. Mustafa, muhafazakâr çevrelerin desteğiyle Nizam-ı Cedid reformlarının büyük kısmını rafa kaldırdı.\n\nSaltanatı yalnızca bir yıl sürdü: Alemdar Mustafa Paşa, III. Selim\'i yeniden tahta çıkarmak amacıyla İstanbul\'a yürüdüğünde, IV. Mustafa III. Selim\'in ve kardeşi II. Mahmud\'un öldürülmesini emretti; III. Selim bu emirle öldürüldü, II. Mahmud ise güçlükle kurtuldu. Bu olayın hemen ardından IV. Mustafa da tahttan indirilip kısa süre sonra boğduruldu.',
+  },
+  'II. Mahmud': {
+    born: '1785, İstanbul',
+    died: '1839, İstanbul',
+    father: 'I. Abdülhamid',
+    mother: 'Nakşidil Sultan (rivayete göre)',
+    spouses: 'Bezmialem Sultan (Abdülmecid\'in annesi) ve diğerleri',
+    children: 'Abdülmecid (halefi), Abdülaziz (ikisi de sonradan padişah oldu)',
+    residence: 'İstanbul (Topkapı, sonra yeni saraylar)',
+    text:
+      'Alemdar Mustafa Paşa\'nın desteğiyle güçlükle hayatta kalıp tahta çıkan II. Mahmud, saltanatının başında Sened-i İttifak ile taşra ayanlarıyla bir denge kurmaya çalıştı; asıl kalıcı mirası ise 1826\'da Yeniçeri Ocağı\'nı kanlı bir operasyonla ortadan kaldırıp yerine Avrupa tarzı yeni bir ordu kurması oldu.\n\nBu köklü adımın ardından kıyafet, eğitim ve idari alanlarda geniş kapsamlı modernleşme reformlarına girişti; bu yüzden kendisine "Osmanlı\'nın Petro\'su" benzetmesi yapılır. İki oğlu Abdülmecid ve Abdülaziz de ileride sırasıyla tahta çıkacaktı. II. Mahmud, veremden İstanbul\'da öldü.',
+  },
+  Abdülmecid: {
+    born: '1823, İstanbul',
+    died: '1861, İstanbul',
+    father: 'II. Mahmud',
+    mother: 'Bezmialem Sultan',
+    spouses: 'Rahime Perestu Sultan ve çok sayıda kadın efendi',
+    children: 'V. Murad, II. Abdülhamid, V. Mehmed (Reşad) — üçü de sonradan padişah oldu',
+    residence: 'İstanbul (Topkapı, sonra yeni yaptırdığı Dolmabahçe Sarayı)',
+    text:
+      'On altı yaşında tahta çıkan Abdülmecid, babasının başlattığı reform çizgisini sürdürerek Tanzimat Fermanı\'nı ilan etti; bu ferman, tüm tebaanın din farkı gözetmeksizin can, mal ve hukuk güvenliğini vaat ederek Osmanlı\'da modern hukuk devletine geçişin başlangıcı sayıldı.\n\nBoğaz kıyısında yaptırdığı Dolmabahçe Sarayı, Batılı mimari üsluplarla Osmanlı saray geleneğini birleştiren bir simge yapı haline geldi. Üç oğlu — V. Murad, II. Abdülhamid ve V. Mehmed (Reşad) — ileride sırasıyla tahta çıkacaktı; bu, bir padişahın üç oğlunun da tahta çıktığı ender örneklerden biridir. Abdülmecid, otuz sekiz yaşında veremden öldü.',
+  },
+  Abdülaziz: {
+    born: '1830, İstanbul',
+    died: '1876, İstanbul (şüpheli koşullarda)',
+    father: 'II. Mahmud',
+    mother: 'Pertevniyal Sultan',
+    spouses: 'Dürrinev Kadın ve diğerleri',
+    children: 'Şehzade Yusuf İzzeddin, Abdülmecid Efendi (son halife) ve diğerleri',
+    residence: 'İstanbul (Dolmabahçe, Çırağan sarayları)',
+    text:
+      'Ağabeyi Abdülmecid\'in ölümüyle tahta çıkan Abdülaziz, güçlü bir donanma inşa etme tutkusuyla tanınır; saltanatı sonunda Osmanlı donanması dünyanın en büyük üçüncü deniz gücü haline gelmişti. Avrupa\'yı ziyaret eden ilk Osmanlı padişahı olarak da bilinir.\n\nAncak bu harcamalar mali krizi derinleştirdi; 1876\'da bir grup devlet adamı tarafından tahttan indirildi ve birkaç gün sonra Çırağan Sarayı\'nda şüpheli koşullarda öldü — intihar mı yoksa suikast mi olduğu tarihçiler arasında hâlâ tartışmalıdır. Oğlu Abdülmecid Efendi, imparatorluğun son halifesi olacaktı.',
+  },
+  'V. Murad': {
+    born: '1840, İstanbul',
+    died: '1904, İstanbul (Çırağan Sarayı\'nda, gözetim altında)',
+    father: 'Abdülmecid',
+    mother: 'Şevkefza Sultan',
+    spouses: 'birkaç kadın efendisi vardı',
+    children: 'birkaç çocuğu oldu, tahta çıkmadılar',
+    residence: 'İstanbul (Çırağan Sarayı)',
+    text:
+      'Amcası Abdülaziz\'in tahttan indirilmesiyle tahta çıkan V. Murad, Osmanlı tarihinin en kısa saltanatına (doksan üç gün) sahiptir; amcasının ölümünün yarattığı şok ve ardından gelen ağır bir sinirsel bunalım nedeniyle akıl sağlığı ciddi biçimde bozuldu.\n\nDevlet erkânı tarafından tahttan indirilip yerine kardeşi II. Abdülhamid geçirildi. V. Murad, kalan yaşamını Çırağan Sarayı\'nda sıkı bir gözetim altında geçirdi ve orada öldü.',
+  },
+  'II. Abdülhamid': {
+    born: '1842, İstanbul',
+    died: '1918, İstanbul (Beylerbeyi Sarayı)',
+    father: 'Abdülmecid',
+    mother: 'Tirimüjgan Kadın',
+    spouses: 'çok sayıda kadın efendisi (Bidar, Mezidiye ve diğerleri)',
+    children: 'çok sayıda kız ve erkek evladı',
+    residence: 'İstanbul (Yıldız Sarayı)',
+    text:
+      'Ağabeyi V. Murad\'ın akıl sağlığı nedeniyle tahttan indirilmesinin ardından tahta çıkan II. Abdülhamid, saltanatının ilk yılında Kanun-i Esasi\'yi ilan ederek anayasal monarşiye geçişi başlattı; ancak Osmanlı-Rus Savaşı\'nın patlak vermesiyle meclisi kapatıp otuz yılı aşkın süre otoriter bir yönetim sürdürdü.\n\nYıldız Sarayı\'nı âdeta bir kale gibi tahkim ettirip buradan yönetti; casusluk ağı ve sansür politikalarıyla bilinir, ama aynı zamanda demiryolu ve telgraf ağının genişlemesi gibi modernleşme adımlarını da destekledi. 1908\'de II. Meşrutiyet\'i yeniden ilan etmek zorunda kaldı, 1909\'daki 31 Mart Vakası\'nın ardından tahttan indirilerek önce Selanik\'e, sonra Beylerbeyi Sarayı\'na gönderildi; orada göz hapsinde yaşayıp öldü.',
+  },
+  'V. Mehmed (Reşad)': {
+    born: '1844, İstanbul',
+    died: '1918, İstanbul',
+    father: 'Abdülmecid',
+    mother: 'Gülcemal Kadın',
+    spouses: 'birkaç kadın efendisi vardı',
+    children: 'Şehzade Ziyaeddin, Şehzade Ömer Hilmi ve diğerleri',
+    residence: 'İstanbul (Dolmabahçe Sarayı)',
+    text:
+      'Kardeşi II. Abdülhamid\'in tahttan indirilmesinin ardından, altmış beş yaşında ve yıllarca sarayda geri planda tutulmuş bir şehzadeyken tahta çıkan V. Mehmed, İttihat ve Terakki Cemiyeti\'nin hâkim olduğu bir siyasi düzende büyük ölçüde sembolik bir hükümdardı.\n\nSaltanatı, Balkan Savaşları\'nın yıkımına ve I. Dünya Savaşı\'na Osmanlı\'nın girişine sahne oldu; ancak fiili kararlar büyük ölçüde İttihatçı liderlerin elindeydi. Savaşın sona ermesinden kısa süre önce İstanbul\'da öldü.',
+  },
+  'VI. Mehmed (Vahideddin)': {
+    born: '1861, İstanbul',
+    died: '1926, San Remo, İtalya (sürgünde)',
+    father: 'Abdülmecid',
+    mother: 'Gülistü Kadın',
+    spouses: 'birkaç kadın efendisi vardı',
+    children: 'Sabiha Sultan ve diğer çocukları',
+    residence: 'İstanbul (Dolmabahçe Sarayı), sonra sürgünde Malta ve İtalya',
+    text:
+      'Osmanlı Devleti\'nin son padişahı olan VI. Mehmed, I. Dünya Savaşı\'nın yenilgiyle sonuçlandığı ve imparatorluğun işgal altında olduğu en zor dönemde tahta çıktı; İstanbul Hükümeti\'nin İtilaf Devletleri\'ne karşı çaresizliği, Anadolu\'da gelişen Millî Mücadele\'yle giderek daha keskin bir tezat oluşturdu.\n\nTürkiye Büyük Millet Meclisi\'nin 1922\'de saltanatı kaldırmasının ardından bir İngiliz savaş gemisiyle ülkeyi terk etti; önce Malta\'ya, sonra İtalya\'ya yerleşti. Sürgünde geçirdiği yıllardan sonra San Remo\'da öldü; altı asırlık Osmanlı hanedan yönetiminin son padişahı olarak tarihe geçti.',
+  },
+};

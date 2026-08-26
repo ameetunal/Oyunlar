@@ -4,6 +4,7 @@ import { sultans } from './data/sultans';
 import { glossary } from './data/glossary';
 import { themesByPeriod } from './data/themes';
 import { wars } from './data/wars';
+import { sultanProfiles } from './data/sultanProfiles';
 import AdSlot from './components/AdSlot';
 import EraTimeline from './components/EraTimeline';
 import useAdSenseScript from './hooks/useAdSenseScript';
@@ -64,6 +65,11 @@ function buildPages(periods) {
     });
   });
   pages.push({ type: 'sultans' });
+  sultans
+    .filter((s) => sultanProfiles[s.name])
+    .forEach((sultan) => {
+      pages.push({ type: 'sultan-profile', sultan, profile: sultanProfiles[sultan.name] });
+    });
   pages.push({ type: 'wars' });
   pages.push({ type: 'glossary' });
   return pages;
@@ -169,6 +175,7 @@ export default function App() {
   if (page.type === 'intro') readingMinutes = estimateReadingMinutes(page.period.intro);
   else if (page.type === 'event') readingMinutes = estimateReadingMinutes(page.event.text);
   else if (page.type === 'theme') readingMinutes = estimateReadingMinutes(page.theme.text);
+  else if (page.type === 'sultan-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
 
   return (
     <div className="app">
@@ -411,7 +418,24 @@ export default function App() {
                       {sultans.map((s) => (
                         <tr key={s.name}>
                           <td>{s.order}</td>
-                          <td>{s.name}</td>
+                          <td>
+                            {sultanProfiles[s.name] ? (
+                              <button
+                                className="wars-table__link"
+                                onClick={() =>
+                                  goTo(
+                                    pages.findIndex(
+                                      (p) => p.type === 'sultan-profile' && p.sultan.name === s.name
+                                    )
+                                  )
+                                }
+                              >
+                                {s.name}
+                              </button>
+                            ) : (
+                              s.name
+                            )}
+                          </td>
                           <td>{s.reign}</td>
                           <td>{s.note}</td>
                         </tr>
@@ -419,6 +443,48 @@ export default function App() {
                     </tbody>
                   </table>
                 </div>
+              </>
+            )}
+
+            {page.type === 'sultan-profile' && (
+              <>
+                <p className="event-breadcrumb">
+                  Padişahlar Listesi <span aria-hidden="true">·</span> Sıra {page.sultan.order}
+                  {readingMinutes && <span className="reading-time"> · {readingMinutes} dk okuma</span>}
+                </p>
+                <h1 className="event-title">{page.sultan.name}</h1>
+                <p className="chapter-summary">{page.sultan.reign}</p>
+                <dl className="sultan-facts">
+                  <div>
+                    <dt>Doğum</dt>
+                    <dd>{page.profile.born}</dd>
+                  </div>
+                  <div>
+                    <dt>Ölüm</dt>
+                    <dd>{page.profile.died}</dd>
+                  </div>
+                  <div>
+                    <dt>Babası</dt>
+                    <dd>{page.profile.father}</dd>
+                  </div>
+                  <div>
+                    <dt>Annesi</dt>
+                    <dd>{page.profile.mother}</dd>
+                  </div>
+                  <div>
+                    <dt>Eşleri</dt>
+                    <dd>{page.profile.spouses}</dd>
+                  </div>
+                  <div>
+                    <dt>Çocukları</dt>
+                    <dd>{page.profile.children}</dd>
+                  </div>
+                  <div>
+                    <dt>Yaşadığı Yerler</dt>
+                    <dd>{page.profile.residence}</dd>
+                  </div>
+                </dl>
+                <Paragraphs text={page.profile.text} className="event-text" />
               </>
             )}
 
