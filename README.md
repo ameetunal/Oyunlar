@@ -8,8 +8,14 @@ dönemlere ve dönüm noktası olaylara ayrılmış sayfalar hâlinde okunur.
 ## İçerik
 
 - 5 tarihsel dönem: Kuruluş, Yükselme, Duraklama, Gerileme, Dağılma
-- Her dönem için bir "bölüm açılışı" ve döneme ait önemli olaylar
-- Sayfa çevirir gibi önceki/sonraki gezinme ve tıklanabilir içindekiler
+  (toplam 65 dönüm noktası olay, çok paragraflı belgesel anlatımıyla)
+- İki referans eki: Padişahlar Listesi (36 padişah) ve Terimler Sözlüğü
+- Sayfa çevirir gibi önceki/sonraki gezinme, tıklanabilir içindekiler,
+  klavye oklarıyla ve mobilde parmak kaydırmasıyla sayfa çevirme
+- Gece modu, ayarlanabilir yazı boyutu ve "kaldığınız sayfadan devam
+  edin" hatırlatıcısı (tercihler tarayıcıda `localStorage` ile saklanır)
+- Sayfa başına tahmini okuma süresi ve genel okuma ilerleme çubuğu
+- PWA manifest'i sayesinde telefonda ana ekrana eklenebilir
 - Reklamla gelir modeline hazır, şimdilik yer tutucu reklam alanları
   (`src/components/AdSlot.jsx`) — gerçek ağ (ör. AdSense) onayı
   alındığında buraya entegre edilecek
