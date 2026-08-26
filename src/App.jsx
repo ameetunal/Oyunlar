@@ -3,6 +3,7 @@ import { periods } from './data/periods';
 import { sultans } from './data/sultans';
 import { glossary } from './data/glossary';
 import { themesByPeriod } from './data/themes';
+import { wars } from './data/wars';
 import AdSlot from './components/AdSlot';
 import EraTimeline from './components/EraTimeline';
 import useAdSenseScript from './hooks/useAdSenseScript';
@@ -63,6 +64,7 @@ function buildPages(periods) {
     });
   });
   pages.push({ type: 'sultans' });
+  pages.push({ type: 'wars' });
   pages.push({ type: 'glossary' });
   return pages;
 }
@@ -299,6 +301,14 @@ export default function App() {
               </li>
               <li>
                 <button
+                  className={page.type === 'wars' ? 'active' : ''}
+                  onClick={() => goTo(pages.findIndex((p) => p.type === 'wars'))}
+                >
+                  Büyük Savaşlar
+                </button>
+              </li>
+              <li>
+                <button
                   className={page.type === 'glossary' ? 'active' : ''}
                   onClick={() => goTo(pages.findIndex((p) => p.type === 'glossary'))}
                 >
@@ -396,6 +406,53 @@ export default function App() {
                           <td>{s.name}</td>
                           <td>{s.reign}</td>
                           <td>{s.note}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+
+            {page.type === 'wars' && (
+              <>
+                <p className="chapter-label">Ek</p>
+                <h1 className="chapter-title">Büyük Savaşlar</h1>
+                <p className="chapter-summary">
+                  Osmanlı tarihi boyunca imparatorluğun kaderini belirleyen savaşlar, kuşatmalar ve
+                  meydan muharebeleri, kronolojik sırayla — bir satıra tıklayarak o savaşın
+                  anlatıldığı sayfaya gidebilirsiniz.
+                </p>
+                <div className="sultans-table-wrap">
+                  <table className="sultans-table wars-table">
+                    <thead>
+                      <tr>
+                        <th>Yıl</th>
+                        <th>Savaş</th>
+                        <th>Karşı Taraf</th>
+                        <th>Sonuç</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {wars.map((w) => (
+                        <tr key={w.eventTitle}>
+                          <td>{w.year}</td>
+                          <td>
+                            <button
+                              className="wars-table__link"
+                              onClick={() =>
+                                goTo(
+                                  pages.findIndex(
+                                    (p) => p.type === 'event' && p.event.title === w.eventTitle
+                                  )
+                                )
+                              }
+                            >
+                              {w.name}
+                            </button>
+                          </td>
+                          <td>{w.opponent}</td>
+                          <td>{w.result}</td>
                         </tr>
                       ))}
                     </tbody>

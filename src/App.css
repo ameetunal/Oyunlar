@@ -571,6 +571,24 @@ body {
   color: var(--muted);
 }
 
+.wars-table__link {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: var(--maroon);
+  cursor: pointer;
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-color: var(--gold);
+  text-underline-offset: 3px;
+}
+
+.wars-table__link:hover {
+  color: var(--gold);
+}
+
 /* Terimler sözlüğü */
 .glossary-list {
   margin: 0;

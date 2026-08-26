@@ -1,0 +1,36 @@
+// Osmanlı tarihindeki büyük savaş, kuşatma ve meydan muharebelerinin
+// kronolojik dizini. Her satırın "eventTitle" alanı, periods.js
+// içindeki ilgili olayın başlığıyla birebir eşleşir; App.jsx bu alanı
+// kullanarak satıra tıklandığında ilgili sayfaya atlar.
+export const wars = [
+  { year: '1302', name: 'Bafeus Savaşı', periodTitle: 'Kuruluş Dönemi', opponent: 'Bizans İmparatorluğu', result: 'Osmanlı zaferi', eventTitle: 'Bafeus Savaşı' },
+  { year: '1329', name: 'Palekanon Savaşı', periodTitle: 'Kuruluş Dönemi', opponent: 'Bizans İmparatorluğu', result: 'Osmanlı zaferi', eventTitle: 'Palekanon Savaşı' },
+  { year: '1389', name: 'I. Kosova Savaşı', periodTitle: 'Kuruluş Dönemi', opponent: 'Sırp öncülüğünde Balkan ittifakı', result: 'Osmanlı zaferi', eventTitle: 'I. Kosova Savaşı' },
+  { year: '1396', name: 'Niğbolu Savaşı', periodTitle: 'Kuruluş Dönemi', opponent: 'Avrupa Haçlı ittifakı', result: 'Osmanlı zaferi', eventTitle: 'Niğbolu Savaşı' },
+  { year: '1402', name: 'Ankara Savaşı', periodTitle: 'Kuruluş Dönemi', opponent: 'Timur İmparatorluğu', result: 'Osmanlı yenilgisi', eventTitle: 'Ankara Savaşı ve Fetret Devri' },
+  { year: '1444', name: 'Varna Savaşı', periodTitle: 'Kuruluş Dönemi', opponent: 'Macar-Polonya öncülüğünde Haçlı ittifakı', result: 'Osmanlı zaferi', eventTitle: 'Varna Savaşı' },
+  { year: '1453', name: 'İstanbul Kuşatması', periodTitle: 'Kuruluş Dönemi', opponent: 'Bizans İmparatorluğu', result: 'Osmanlı zaferi', eventTitle: 'İstanbul\'un Fethi' },
+  { year: '1514', name: 'Çaldıran Savaşı', periodTitle: 'Yükselme Dönemi', opponent: 'Safevi Devleti', result: 'Osmanlı zaferi', eventTitle: 'Çaldıran Savaşı' },
+  { year: '1517', name: 'Ridaniye Savaşı', periodTitle: 'Yükselme Dönemi', opponent: 'Memlük Devleti', result: 'Osmanlı zaferi', eventTitle: 'Mısır\'ın Fethi ve Halifelik' },
+  { year: '1526', name: 'Mohaç Savaşı', periodTitle: 'Yükselme Dönemi', opponent: 'Macaristan Krallığı', result: 'Osmanlı zaferi', eventTitle: 'Mohaç Savaşı' },
+  { year: '1529', name: 'I. Viyana Kuşatması', periodTitle: 'Yükselme Dönemi', opponent: 'Habsburg İmparatorluğu', result: 'Sonuçsuz, kuşatma kaldırıldı', eventTitle: 'I. Viyana Kuşatması' },
+  { year: '1538', name: 'Preveze Deniz Savaşı', periodTitle: 'Yükselme Dönemi', opponent: 'Haçlı donanması (Venedik, Papalık, İspanya)', result: 'Osmanlı zaferi', eventTitle: 'Preveze Deniz Savaşı' },
+  { year: '1571', name: 'Kıbrıs Kuşatması', periodTitle: 'Yükselme Dönemi', opponent: 'Venedik Cumhuriyeti', result: 'Osmanlı zaferi', eventTitle: 'Kıbrıs\'ın Fethi' },
+  { year: '1571', name: 'İnebahtı Deniz Savaşı', periodTitle: 'Duraklama Dönemi', opponent: 'Haçlı donanması (Kutsal İttifak)', result: 'Osmanlı yenilgisi', eventTitle: 'İnebahtı Deniz Savaşı' },
+  { year: '1596', name: 'Haçova Meydan Savaşı', periodTitle: 'Duraklama Dönemi', opponent: 'Avusturya (Habsburg)', result: 'Osmanlı zaferi', eventTitle: 'Haçova Meydan Savaşı' },
+  { year: '1638', name: 'Bağdat Kuşatması', periodTitle: 'Duraklama Dönemi', opponent: 'Safevi Devleti', result: 'Osmanlı zaferi', eventTitle: 'Bağdat\'ın Fethi' },
+  { year: '1645–1669', name: 'Girit (Kandiye) Savaşı', periodTitle: 'Duraklama Dönemi', opponent: 'Venedik Cumhuriyeti', result: 'Osmanlı zaferi', eventTitle: 'Kandiye\'nin Fethi' },
+  { year: '1683', name: 'II. Viyana Kuşatması', periodTitle: 'Duraklama Dönemi', opponent: 'Habsburg, Polonya ve Kutsal İttifak', result: 'Osmanlı yenilgisi', eventTitle: 'II. Viyana Kuşatması' },
+  { year: '1691', name: 'Salankamen Savaşı', periodTitle: 'Duraklama Dönemi', opponent: 'Habsburg İmparatorluğu', result: 'Osmanlı yenilgisi', eventTitle: 'Salankamen Savaşı' },
+  { year: '1711', name: 'Prut Seferi', periodTitle: 'Gerileme Dönemi', opponent: 'Rusya İmparatorluğu', result: 'Osmanlı zaferi', eventTitle: 'Prut Seferi' },
+  { year: '1768–1774', name: 'Osmanlı-Rus Savaşı (Çeşme dahil)', periodTitle: 'Gerileme Dönemi', opponent: 'Rusya İmparatorluğu', result: 'Osmanlı yenilgisi', eventTitle: 'Osmanlı-Rus Savaşı Başlıyor' },
+  { year: '1787–1792', name: 'Osmanlı-Rus ve Avusturya Savaşı', periodTitle: 'Gerileme Dönemi', opponent: 'Rusya ve Avusturya', result: 'Osmanlı yenilgisi', eventTitle: 'Yeni Bir Osmanlı-Rus Savaşı' },
+  { year: '1853–1856', name: 'Kırım Savaşı', periodTitle: 'Dağılma Dönemi', opponent: 'Rusya İmparatorluğu', result: 'Osmanlı ve müttefiklerinin zaferi', eventTitle: 'Kırım Savaşı' },
+  { year: '1877–1878', name: '93 Harbi (Osmanlı-Rus Savaşı)', periodTitle: 'Dağılma Dönemi', opponent: 'Rusya İmparatorluğu', result: 'Osmanlı yenilgisi', eventTitle: 'Berlin Antlaşması (93 Harbi\'nin Sonucu)' },
+  { year: '1912–1913', name: 'Balkan Savaşları', periodTitle: 'Dağılma Dönemi', opponent: 'Bulgaristan, Sırbistan, Yunanistan, Karadağ', result: 'Osmanlı yenilgisi', eventTitle: 'Balkan Savaşları' },
+  { year: '1914–1918', name: 'I. Dünya Savaşı', periodTitle: 'Dağılma Dönemi', opponent: 'İtilaf Devletleri', result: 'Osmanlı yenilgisi', eventTitle: 'I. Dünya Savaşı\'na Giriş' },
+  { year: '1915', name: 'Çanakkale Savaşı', periodTitle: 'Dağılma Dönemi', opponent: 'İtilaf Devletleri', result: 'Osmanlı zaferi', eventTitle: 'Çanakkale Savaşı' },
+  { year: '1921', name: 'İnönü Muharebeleri', periodTitle: 'Dağılma Dönemi', opponent: 'Yunanistan', result: 'Türk zaferi', eventTitle: 'İnönü Muharebeleri' },
+  { year: '1921', name: 'Sakarya Meydan Muharebesi', periodTitle: 'Dağılma Dönemi', opponent: 'Yunanistan', result: 'Türk zaferi', eventTitle: 'Sakarya Meydan Muharebesi' },
+  { year: '1922', name: 'Büyük Taarruz', periodTitle: 'Dağılma Dönemi', opponent: 'Yunanistan', result: 'Türk zaferi', eventTitle: 'Büyük Taarruz ve İzmir\'in Kurtuluşu' },
+];

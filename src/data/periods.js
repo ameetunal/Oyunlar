@@ -436,6 +436,24 @@ export const periods = [
           'İtilaf Devletleri\'nin İstanbul Hükümeti\'ne imzalattığı Sevr Antlaşması, Anadolu\'nun büyük bölümünü çeşitli devletler ve manda yönetimleri arasında paylaştırarak Osmanlı\'yı fiilen ortadan kaldırıyordu.\n\nAncak bu antlaşma hiçbir zaman uygulamaya konamadı; Anadolu\'da gelişen ve giderek güçlenen Millî Mücadele, antlaşmanın öngördüğü paylaşım planını fiilen geçersiz kılarak onu tarihe gömdü.\n\nAntlaşma, Doğu Anadolu\'da bağımsız bir Ermeni devleti ve olası bir Kürt özerk bölgesi öngörürken, İzmir ve çevresini Yunanistan yönetimine bırakıyor, Boğazlar\'ı uluslararası bir komisyonun denetimine veriyordu; imzalayan İstanbul Hükümeti temsilcileri bu yüzden kamuoyunda uzun süre "vatan haini" olarak anıldı.',
       },
       {
+        year: '1921',
+        title: 'İnönü Muharebeleri',
+        text:
+          'Yunan ordusunun Anadolu içlerine ilerleyişini durdurmak için Batı Cephesi Komutanı İsmet Bey (İnönü) komutasındaki düzenli Türk kuvvetleri, Ocak ve Nisan 1921\'de İnönü mevkiinde Yunan ordusuyla iki kez karşı karşıya geldi. Her iki çarpışmada da Yunan ilerleyişi durduruldu.\n\nI. İnönü zaferi, henüz yeni kurulmakta olan düzenli ordunun ilk büyük başarısı olması bakımından büyük önem taşıyordu; bu zafer aynı zamanda Türkiye Büyük Millet Meclisi\'nin uluslararası alanda tanınırlığını artırdı ve Sovyet Rusya ile Moskova Antlaşması\'nın imzalanmasına zemin hazırladı.\n\nİki ay sonra tekrarlanan Yunan taarruzu II. İnönü Savaşı\'nda bir kez daha püskürtüldü; Mustafa Kemal Paşa\'nın meclise gönderdiği ve "Siz orada yalnız düşmanı değil, milletin makûs talihini de yendiniz" sözleriyle anılan telgraf, bu ikinci zaferin ardından gönderildi.',
+      },
+      {
+        year: '1921',
+        title: 'Sakarya Meydan Muharebesi',
+        text:
+          'Yunan ordusunun Ankara\'ya yalnızca elli kilometre mesafeye kadar ilerlemesinin ardından, 23 Ağustos - 13 Eylül 1921 tarihleri arasında Sakarya Nehri boyunca yirmi iki gün gece gündüz süren kanlı bir savunma savaşı yaşandı. Mustafa Kemal Paşa, bu kritik dönemde Meclis\'ten aldığı Başkomutanlık yetkisiyle savaşı bizzat yönetti.\n\nSavaşın en zorlu anlarında sarf ettiği "Hattı müdafaa yoktur, sathı müdafaa vardır, o satıh bütün vatandır" sözü, cephe hattının kırılması durumunda bile her karış toprağın savunulacağı anlamına geliyordu ve ordunun moralini yeniden ayağa kaldırdı. Savaş sonunda Yunan ordusu geri çekilmek zorunda kaldı.\n\nSakarya zaferi, Yunan ordusunun Anadolu\'daki ileri harekâtının kesin olarak durdurulduğu dönüm noktası oldu; Türkiye Büyük Millet Meclisi bu zaferin ardından Mustafa Kemal\'e "Gazi" unvanı ve mareşallik rütbesini verdi. Savaştan sonra cephe bir yıl boyunca nispeten sakin kaldı, bu süre yeni bir taarruz için hazırlığa ayrıldı.',
+      },
+      {
+        year: '1922',
+        title: 'Büyük Taarruz ve İzmir\'in Kurtuluşu',
+        text:
+          'Sakarya\'daki savunma zaferinin ardından bir yıl süren hazırlığın ardından, Türk ordusu 26 Ağustos 1922\'de Afyon cephesinden büyük bir taarruza geçti. Mustafa Kemal Paşa\'nın bizzat yönettiği bu harekât, kısa sürede Yunan savunma hatlarını çökertti.\n\n30 Ağustos\'ta Dumlupınar\'da kazanılan ve "Başkomutanlık Meydan Muharebesi" olarak da anılan zaferle Yunan ordusunun büyük bölümü imha edildi ya da esir alındı; Mustafa Kemal\'in "Ordular, ilk hedefiniz Akdeniz\'dir, ileri!" emri bu zaferin ardından verildi.\n\nSadece dokuz gün sonra, 9 Eylül 1922\'de Türk kuvvetleri İzmir\'e girerek Anadolu\'nun Yunan işgalinden tamamen kurtuluşunu tamamladı. Bu askeri zafer, birkaç ay sonra imzalanacak Mudanya Mütarekesi ve ardından Lozan Antlaşması\'nın önünü açan belirleyici gelişme oldu.',
+      },
+      {
         year: '1922',
         title: 'Saltanatın Kaldırılması',
         text:
