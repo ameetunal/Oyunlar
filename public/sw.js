@@ -1,8 +1,9 @@
-// Basit "stale-while-revalidate" servis çalışanı: aynı origin'den gelen
-// GET isteklerini önbelleğe alır, çevrimdışıyken önbellekten sunar,
-// çevrimiçiyken arka planda önbelleği günceller. Uygulamanın güncellenmiş
-// bir sürümünü zorlamak için CACHE_NAME değerini artırın.
-const CACHE_NAME = 'osmanli-hikayesi-v1';
+// Ağ öncelikli servis çalışanı: çevrimiçiyken her istek için önce ağı
+// dener, böylece yeni bir yayın (deploy) sonraki açılışta hemen görünür
+// — eski "stale-while-revalidate" mantığı yeni içeriği bir tur geriden
+// gösteriyordu. Ağ başarısız olursa (çevrimdışı) önbellekten sunulur.
+// CACHE_NAME değişince eski önbellekler otomatik silinir.
+const CACHE_NAME = 'osmanli-hikayesi-v2';
 
 self.addEventListener('install', () => {
   self.skipWaiting();
@@ -26,17 +27,16 @@ self.addEventListener('fetch', (event) => {
 
   event.respondWith(
     caches.open(CACHE_NAME).then(async (cache) => {
-      const cached = await cache.match(request);
-      const networkFetch = fetch(request)
-        .then((response) => {
-          if (response && response.status === 200) {
-            cache.put(request, response.clone());
-          }
-          return response;
-        })
-        .catch(() => cached || (request.mode === 'navigate' ? cache.match(self.registration.scope) : undefined));
-
-      return cached || networkFetch;
+      try {
+        const response = await fetch(request);
+        if (response && response.status === 200) {
+          cache.put(request, response.clone());
+        }
+        return response;
+      } catch {
+        const cached = await cache.match(request);
+        return cached || (request.mode === 'navigate' ? cache.match(self.registration.scope) : undefined);
+      }
     })
   );
 });
