@@ -635,6 +635,58 @@ body {
   color: var(--gold);
 }
 
+/* Dar ekranda tablo yerine kart listesi — yatay kaydırmaya gerek kalmaz */
+@media (max-width: 600px) {
+  .sultans-table thead {
+    display: none;
+  }
+
+  .sultans-table,
+  .sultans-table tbody,
+  .sultans-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .sultans-table tr {
+    border: 1px solid var(--paper-shadow);
+    border-radius: 8px;
+    padding: 0.65rem 0.8rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .sultans-table tr:last-child {
+    margin-bottom: 0;
+  }
+
+  .sultans-table td {
+    display: block;
+    border-bottom: none;
+    padding: 0.15rem 0;
+    white-space: normal;
+  }
+
+  .sultans-table td:first-child {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--maroon-deep);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.05rem 0.5rem;
+    border-radius: 999px;
+    margin-bottom: 0.35rem;
+  }
+
+  .sultans-table td:nth-child(2) {
+    font-size: 1.02rem;
+  }
+
+  .sultans-table td:nth-child(3),
+  .sultans-table td:nth-child(4) {
+    font-size: 0.85rem;
+  }
+}
+
 /* Terimler sözlüğü */
 .glossary-list {
   margin: 0;
