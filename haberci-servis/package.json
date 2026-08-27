@@ -1,0 +1,22 @@
+{
+  "name": "haberci-servis",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Üretim takip sistemini salt-okunur izleyip PWA'ya bildirim tetikleyen servis",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "mssql": "^11.0.1"
+  },
+  "devDependencies": {
+    "@types/mssql": "^9.1.5",
+    "@types/node": "^20.14.9",
+    "tsx": "^4.16.2",
+    "typescript": "^5.5.3"
+  }
+}

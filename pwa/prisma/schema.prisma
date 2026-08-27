@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Bildirim alacak kişi (kalite çalışanı, bölüm şefi, yönetici, vb.)
+model User {
+  id            String             @id @default(cuid())
+  name          String
+  role          String
+  createdAt     DateTime           @default(now())
+  subscriptions PushSubscription[]
+  routingRules  RoutingRule[]
+}
+
+/// Bir kullanıcının telefonuna bağlı push aboneliği.
+/// Aynı kişi birden fazla cihaz ekleyebilir.
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+}
+
+/// "Bu kullanıcı, şu tezgahtaki şu olay türünü görsün" kuralı.
+/// tezgah = null  -> tüm tezgahlar
+/// eventType = "hepsi" -> tüm olay türleri
+model RoutingRule {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  eventType String
+  tezgah    String?
+  createdAt DateTime @default(now())
+}

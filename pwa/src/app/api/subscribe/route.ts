@@ -1,0 +1,36 @@
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/db";
+
+/**
+ * Bir çalışan kendi kişisel /join/[userId] bağlantısını açıp bildirimlere
+ * izin verdiğinde, tarayıcının ürettiği push aboneliğini o kullanıcıya bağlar.
+ */
+export async function POST(req: NextRequest) {
+  const { userId, subscription } = await req.json();
+
+  if (!userId || !subscription?.endpoint || !subscription?.keys) {
+    return NextResponse.json({ error: "Eksik alan" }, { status: 400 });
+  }
+
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) {
+    return NextResponse.json({ error: "Kullanıcı bulunamadı" }, { status: 404 });
+  }
+
+  await prisma.pushSubscription.upsert({
+    where: { endpoint: subscription.endpoint },
+    update: {
+      userId,
+      p256dh: subscription.keys.p256dh,
+      auth: subscription.keys.auth,
+    },
+    create: {
+      userId,
+      endpoint: subscription.endpoint,
+      p256dh: subscription.keys.p256dh,
+      auth: subscription.keys.auth,
+    },
+  });
+
+  return NextResponse.json({ ok: true });
+}
