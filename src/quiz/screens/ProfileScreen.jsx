@@ -23,6 +23,7 @@ function writeNotifPref(value) {
 const BADGE_ICONS = {
   'ilk-quiz': TrophyIcon,
   'seri-7': FlameIcon,
+  'mukemmel-skor': TrophyIcon,
 };
 
 export default function ProfileScreen({ stats }) {
@@ -40,6 +41,8 @@ export default function ProfileScreen({ stats }) {
     Icon: BADGE_ICONS[key] ?? ShieldIcon,
   }));
 
+  const accuracy = stats.totalAnswered > 0 ? Math.round((stats.totalCorrect / stats.totalAnswered) * 100) : null;
+
   return (
     <div className="screen">
       <div className="profile-header">
@@ -49,6 +52,26 @@ export default function ProfileScreen({ stats }) {
       </div>
 
       <div className="screen__body profile-body">
+        {accuracy !== null && (
+          <section>
+            <div className="section-label">İSTATİSTİKLERİN</div>
+            <div className="result-stats">
+              <div>
+                <div className="result-stats__num">{stats.totalAnswered}</div>
+                <div className="result-stats__label">Çözülen Soru</div>
+              </div>
+              <div>
+                <div className="result-stats__num">%{accuracy}</div>
+                <div className="result-stats__label">Doğruluk</div>
+              </div>
+              <div>
+                <div className="result-stats__num">{stats.badges.length}</div>
+                <div className="result-stats__label">Rozet</div>
+              </div>
+            </div>
+          </section>
+        )}
+
         <section>
           <div className="section-label">ROZETLER</div>
           {earnedBadges.length === 0 ? (

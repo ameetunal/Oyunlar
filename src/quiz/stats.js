@@ -12,6 +12,8 @@ const DEFAULT_STATS = {
   lastPlayedDate: null,
   solvedIds: [],
   badges: [],
+  totalAnswered: 0,
+  totalCorrect: 0,
 };
 
 export function loadStats() {
@@ -68,6 +70,8 @@ export function recordQuizResult({ categoryKey, correctCount, solvedIds }) {
   const newlyEarned = [];
 
   stats.totalPoints += correctCount * 10;
+  stats.totalAnswered += solvedIds.length;
+  stats.totalCorrect += correctCount;
 
   if (stats.lastPlayedDate === todayKey()) {
     // aynı gün içinde ikinci kez oynanıyor, seriyi değiştirme
@@ -100,6 +104,12 @@ export function recordQuizResult({ categoryKey, correctCount, solvedIds }) {
     }
   }
 
+  const perfectBadge = { key: 'mukemmel-skor', label: 'Mükemmel Skor' };
+  if (solvedIds.length > 0 && correctCount === solvedIds.length && !stats.badges.includes(perfectBadge.key)) {
+    stats.badges.push(perfectBadge.key);
+    newlyEarned.push(perfectBadge);
+  }
+
   const masterBadge = { key: 'osmanli-tarihi-ustasi', label: 'Osmanlı Tarihi Ustası' };
   if (!stats.badges.includes(masterBadge.key)) {
     const allCategoriesMastered = ALL_CATEGORY_KEYS.every((key) =>
@@ -127,5 +137,6 @@ export const ALL_BADGE_LABELS = {
   'ilk-quiz': 'İlk Quiz',
   'seri-7': '7 Günlük Seri',
   'osmanli-tarihi-ustasi': 'Osmanlı Tarihi Ustası',
+  'mukemmel-skor': 'Mükemmel Skor',
   ...Object.fromEntries(Object.values(CATEGORY_BADGES).map((b) => [b.key, b.label])),
 };
