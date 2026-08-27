@@ -130,3 +130,20 @@ export function RefreshIcon({ color = 'currentColor', size = 20 }) {
     </svg>
   );
 }
+
+export function BoltIcon({ color = 'currentColor', size = 20 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" stroke={color} {...base}>
+      <path d="M13 3L4 14h6l-1 7 9-11h-6l1-7z" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function ClockIcon({ color = 'currentColor', size = 18 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" stroke={color} {...base}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3.5 2" />
+    </svg>
+  );
+}

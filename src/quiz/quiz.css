@@ -192,6 +192,42 @@
   color: #d8c6ac;
 }
 
+.quiz-app .timeattack-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--gold);
+  border: none;
+  border-radius: 16px;
+  padding: 16px 18px;
+  width: 100%;
+  text-align: left;
+}
+
+.quiz-app .timeattack-card__icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quiz-app .timeattack-card__title {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--maroon-deep);
+}
+
+.quiz-app .timeattack-card__subtitle {
+  font-size: 13px;
+  color: var(--maroon-deep);
+  opacity: 0.8;
+  margin-top: 2px;
+}
+
 .quiz-app .review-card {
   display: flex;
   align-items: center;
@@ -330,6 +366,21 @@
   font-size: 13px;
   color: var(--muted);
   white-space: nowrap;
+}
+
+.quiz-app .quiz-top__timer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--maroon-deep);
+  font-variant-numeric: tabular-nums;
+}
+
+.quiz-app .quiz-top__timer-num--urgent {
+  color: var(--maroon);
 }
 
 .quiz-app .quiz-category-label {

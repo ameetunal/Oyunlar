@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import BottomNav from './components/BottomNav.jsx';
 import HomeScreen from './screens/HomeScreen.jsx';
 import CategoriesScreen from './screens/CategoriesScreen.jsx';
@@ -11,6 +11,7 @@ import { questions } from './data/questions.js';
 import { loadStats, recordQuizResult } from './stats.js';
 
 const ROUND_SIZE = 10;
+const TIME_ATTACK_SECONDS = 60;
 const TAB_SCREENS = new Set(['home', 'categories', 'leaderboard', 'profile']);
 
 function shuffle(array) {
@@ -22,8 +23,8 @@ function shuffle(array) {
   return copy;
 }
 
-function buildRoundFromPool(pool) {
-  const picked = shuffle(pool).slice(0, Math.min(ROUND_SIZE, pool.length));
+function buildRoundFromPool(pool, limit = ROUND_SIZE) {
+  const picked = shuffle(pool).slice(0, Math.min(limit, pool.length));
   return picked.map((q) => {
     const order = shuffle(q.options.map((_, i) => i));
     return {
@@ -48,6 +49,7 @@ export default function QuizApp({ onExit }) {
 
   const startQuiz = (categoryKey) => {
     setSession({
+      mode: 'normal',
       categoryKey,
       roundQuestions: buildRound(categoryKey),
       index: 0,
@@ -64,6 +66,7 @@ export default function QuizApp({ onExit }) {
     const pool = questions.filter((q) => stats.wrongIds.includes(q.id));
     if (pool.length === 0) return;
     setSession({
+      mode: 'normal',
       categoryKey: null,
       roundQuestions: buildRoundFromPool(pool),
       index: 0,
@@ -75,6 +78,54 @@ export default function QuizApp({ onExit }) {
     });
     setScreen('quiz');
   };
+
+  const startTimeAttack = () => {
+    setSession({
+      mode: 'timeAttack',
+      categoryKey: null,
+      roundQuestions: buildRoundFromPool(questions, questions.length),
+      index: 0,
+      correctCount: 0,
+      solvedIds: [],
+      wrongIds: [],
+      selected: null,
+      answered: false,
+      timeLeft: TIME_ATTACK_SECONDS,
+    });
+    setScreen('quiz');
+  };
+
+  const finishTimeAttack = () => {
+    setSession((prev) => {
+      if (!prev) return prev;
+      const { stats: newStats } = recordQuizResult({
+        categoryKey: null,
+        correctCount: prev.correctCount,
+        solvedIds: prev.solvedIds,
+        wrongIds: prev.wrongIds,
+        timeAttackScore: prev.correctCount,
+      });
+      setStats(newStats);
+      setLastPointsEarned(prev.correctCount * 10);
+      setScreen('result');
+      return prev;
+    });
+  };
+
+  // Zaman Yarışı geri sayımı: her saniye azalır; ekran veya mod değişince durur.
+  useEffect(() => {
+    if (!session || session.mode !== 'timeAttack' || screen !== 'quiz') return;
+    const id = setInterval(() => {
+      setSession((prev) => (prev && prev.timeLeft > 0 ? { ...prev, timeLeft: prev.timeLeft - 1 } : prev));
+    }, 1000);
+    return () => clearInterval(id);
+  }, [session?.mode, screen]);
+
+  useEffect(() => {
+    if (session?.mode === 'timeAttack' && screen === 'quiz' && session.timeLeft === 0) {
+      finishTimeAttack();
+    }
+  }, [session?.timeLeft, session?.mode, screen]);
 
   const selectAnswer = (index) => {
     setSession((prev) => {
@@ -97,6 +148,16 @@ export default function QuizApp({ onExit }) {
       if (!prev) return prev;
       const nextIndex = prev.index + 1;
       if (nextIndex >= prev.roundQuestions.length) {
+        if (prev.mode === 'timeAttack') {
+          // Süre bitmeden havuz tükenirse yeniden karıştırıp devam et.
+          return {
+            ...prev,
+            roundQuestions: buildRoundFromPool(questions, questions.length),
+            index: 0,
+            selected: null,
+            answered: false,
+          };
+        }
         const { stats: newStats } = recordQuizResult({
           categoryKey: prev.categoryKey ?? prev.roundQuestions[0]?.category,
           correctCount: prev.correctCount,
@@ -148,6 +209,7 @@ export default function QuizApp({ onExit }) {
             onOpenStory={openStoryFromHome}
             onExit={onExit}
             onStartReview={startReview}
+            onStartTimeAttack={startTimeAttack}
           />
         );
       case 'categories':
@@ -170,6 +232,7 @@ export default function QuizApp({ onExit }) {
             session={session}
             pointsEarned={lastPointsEarned}
             onStartQuiz={startQuiz}
+            onStartTimeAttack={startTimeAttack}
             onGoHome={() => navigate('home')}
           />
         );

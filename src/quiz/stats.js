@@ -15,6 +15,7 @@ const DEFAULT_STATS = {
   totalAnswered: 0,
   totalCorrect: 0,
   wrongIds: [],
+  bestTimeAttackScore: 0,
 };
 
 export function loadStats() {
@@ -66,7 +67,7 @@ const ALL_CATEGORY_KEYS = Object.keys(CATEGORY_BADGES);
 // Bir quiz turunun sonunda çağrılır; puanı, seriyi, çözülen soruları ve
 // hak edilen yeni rozetleri günceller. Yeni kazanılan rozetlerin
 // listesini döndürür (ekranda "yeni rozet!" göstermek için kullanılabilir).
-export function recordQuizResult({ categoryKey, correctCount, solvedIds, wrongIds = [] }) {
+export function recordQuizResult({ categoryKey, correctCount, solvedIds, wrongIds = [], timeAttackScore = null }) {
   const stats = loadStats();
   const newlyEarned = [];
 
@@ -132,6 +133,15 @@ export function recordQuizResult({ categoryKey, correctCount, solvedIds, wrongId
     }
   }
 
+  if (timeAttackScore !== null) {
+    stats.bestTimeAttackScore = Math.max(stats.bestTimeAttackScore || 0, timeAttackScore);
+    const speedBadge = { key: 'hiz-ustasi', label: 'Hız Ustası' };
+    if (timeAttackScore >= 15 && !stats.badges.includes(speedBadge.key)) {
+      stats.badges.push(speedBadge.key);
+      newlyEarned.push(speedBadge);
+    }
+  }
+
   saveStats(stats);
   return { stats, newlyEarned };
 }
@@ -149,5 +159,6 @@ export const ALL_BADGE_LABELS = {
   'seri-7': '7 Günlük Seri',
   'osmanli-tarihi-ustasi': 'Osmanlı Tarihi Ustası',
   'mukemmel-skor': 'Mükemmel Skor',
+  'hiz-ustasi': 'Hız Ustası',
   ...Object.fromEntries(Object.values(CATEGORY_BADGES).map((b) => [b.key, b.label])),
 };

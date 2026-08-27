@@ -1,4 +1,4 @@
-import { FlameIcon, ChevronRightIcon, RefreshIcon } from '../components/Icons.jsx';
+import { FlameIcon, ChevronRightIcon, RefreshIcon, BoltIcon } from '../components/Icons.jsx';
 import { questions } from '../data/questions.js';
 import { resolveStory } from '../data/storyResolver.js';
 import { categories } from '../data/categories.js';
@@ -11,7 +11,7 @@ function dayOfYear() {
   return Math.floor(diff / 86400000);
 }
 
-export default function HomeScreen({ stats, onStartQuiz, onOpenStory, onExit, onStartReview }) {
+export default function HomeScreen({ stats, onStartQuiz, onOpenStory, onExit, onStartReview, onStartTimeAttack }) {
   const dailyQuestion = questions[dayOfYear() % questions.length];
   const dailyStory = resolveStory(dailyQuestion.storyRef);
   const teaser = dailyStory.text ? dailyStory.text.split('\n\n')[0].slice(0, 150) + '…' : '';
@@ -55,6 +55,20 @@ export default function HomeScreen({ stats, onStartQuiz, onOpenStory, onExit, on
         <button className="cta-card" onClick={() => onStartQuiz(null)}>
           <div className="cta-card__title">Bugünkü Quiz&rsquo;e Başla</div>
           <div className="cta-card__subtitle">10 soru &middot; ~3 dakika</div>
+        </button>
+
+        <button className="timeattack-card" onClick={onStartTimeAttack}>
+          <div className="timeattack-card__icon">
+            <BoltIcon size={20} color="var(--maroon-deep)" />
+          </div>
+          <div className="review-card__text">
+            <div className="timeattack-card__title">Zaman Yarışı</div>
+            <div className="timeattack-card__subtitle">
+              60 saniyede kaç soru bilebilirsin?
+              {stats.bestTimeAttackScore > 0 ? ` · En iyi: ${stats.bestTimeAttackScore}` : ''}
+            </div>
+          </div>
+          <ChevronRightIcon size={16} color="var(--maroon-deep)" />
         </button>
 
         {wrongCount > 0 && (
