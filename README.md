@@ -65,7 +65,7 @@ Detaylar için `haberci-servis/README.md` ve `pwa/README.md` dosyalarına bakın
 
 - [x] Salt-okunur SQL Server kullanıcısı (`haberci_readonly`) oluşturuldu
 - [x] Postgres veritabanı (Neon) oluşturuldu, tablolar kuruldu
-- [x] PWA, Vercel'e bağlandı (Root Directory: `pwa`)
+- [x] PWA, Vercel'e bağlandı (Root Directory: `pwa`, Framework Preset: Next.js)
 - [x] Vercel ortam değişkenleri girildi
 - [ ] `haberci-servis`, üretim ağındaki bir makinede çalıştırılıyor
 - [ ] Alt domain (`bildirim.uretimermak.com`) bağlandı
