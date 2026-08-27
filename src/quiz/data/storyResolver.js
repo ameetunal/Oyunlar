@@ -1,11 +1,11 @@
 // Yanlış cevaplanan bir sorunun "Bunu Öğrenelim" ekranında gösterilecek
-// tam anlatımı, ana Osmanlı sitesinin (../../../src/data) gerçek içerik
-// dosyalarından okur — içerik burada tekrar yazılmaz, tek kaynaktan gelir.
-import { sultanProfiles } from '../../../src/data/sultanProfiles.js';
-import { vizierProfiles } from '../../../src/data/vizierProfiles.js';
-import { scientistProfiles } from '../../../src/data/scientistProfiles.js';
-import { wars } from '../../../src/data/wars.js';
-import { periods } from '../../../src/data/periods.js';
+// tam anlatımı, ana sitenin (../../data) gerçek içerik dosyalarından
+// okur — içerik burada tekrar yazılmaz, tek kaynaktan gelir.
+import { sultanProfiles } from '../../data/sultanProfiles.js';
+import { vizierProfiles } from '../../data/vizierProfiles.js';
+import { scientistProfiles } from '../../data/scientistProfiles.js';
+import { wars } from '../../data/wars.js';
+import { periods } from '../../data/periods.js';
 
 const allEvents = periods.flatMap((p) => p.events);
 

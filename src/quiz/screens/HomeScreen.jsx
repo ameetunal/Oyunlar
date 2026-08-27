@@ -11,7 +11,7 @@ function dayOfYear() {
   return Math.floor(diff / 86400000);
 }
 
-export default function HomeScreen({ stats, onStartQuiz, onOpenStory }) {
+export default function HomeScreen({ stats, onStartQuiz, onOpenStory, onExit }) {
   const dailyQuestion = questions[dayOfYear() % questions.length];
   const dailyStory = resolveStory(dailyQuestion.storyRef);
   const teaser = dailyStory.text ? dailyStory.text.split('\n\n')[0].slice(0, 150) + '…' : '';
@@ -29,7 +29,12 @@ export default function HomeScreen({ stats, onStartQuiz, onOpenStory }) {
   return (
     <div className="screen screen--home">
       <header className="top-bar">
-        <div className="brand-word">OSMANLI</div>
+        <div>
+          <div className="brand-word">OSMANLI</div>
+          <button className="exit-link" onClick={onExit}>
+            &larr; Kitaba Dön
+          </button>
+        </div>
         <div className="streak-chip">
           <FlameIcon size={16} color="var(--gold)" />
           <span>{stats.streak} gün</span>

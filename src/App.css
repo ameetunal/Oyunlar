@@ -135,6 +135,18 @@ body {
   background: rgba(255, 255, 255, 0.16);
 }
 
+.reader-controls__btn--quiz {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--maroon-deep);
+  font-weight: 700;
+}
+
+.reader-controls__btn--quiz:hover {
+  background: var(--gold);
+  opacity: 0.85;
+}
+
 .reader-controls__label {
   display: none;
 }

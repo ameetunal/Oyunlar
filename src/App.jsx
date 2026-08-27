@@ -21,10 +21,13 @@ import { poetProfiles } from './data/poetProfiles';
 import AdSlot from './components/AdSlot';
 import EraTimeline from './components/EraTimeline';
 import useAdSenseScript from './hooks/useAdSenseScript';
+import QuizApp from './quiz/QuizApp.jsx';
 import './App.css';
+import './quiz/quiz.css';
 
 const PROGRESS_KEY = 'osmanli-hikayesi:progress';
 const THEME_KEY = 'osmanli-hikayesi:theme';
+const MODE_KEY = 'osmanli-hikayesi:mode';
 const FONT_KEY = 'osmanli-hikayesi:font-size';
 const FONT_SIZES = ['sm', 'md', 'lg'];
 const FONT_LABELS = { sm: 'Küçük', md: 'Orta', lg: 'Büyük' };
@@ -136,6 +139,7 @@ export default function App() {
   const [tocOpen, setTocOpen] = useState(false);
   const [theme, setTheme] = useState(() => readStorage(THEME_KEY) || 'light');
   const [fontSize, setFontSize] = useState(() => readStorage(FONT_KEY) || 'md');
+  const [mode, setMode] = useState(() => readStorage(MODE_KEY) || 'book');
   const [resumeIndex, setResumeIndex] = useState(() => {
     const saved = Number(readStorage(PROGRESS_KEY));
     return Number.isInteger(saved) && saved > 0 ? saved : null;
@@ -166,6 +170,10 @@ export default function App() {
     document.documentElement.setAttribute('data-theme', theme);
     writeStorage(THEME_KEY, theme);
   }, [theme]);
+
+  useEffect(() => {
+    writeStorage(MODE_KEY, mode);
+  }, [mode]);
 
   useEffect(() => {
     writeStorage(FONT_KEY, fontSize);
@@ -237,6 +245,19 @@ export default function App() {
   else if (page.type === 'admiral-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
   else if (page.type === 'poet-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
 
+  if (mode === 'quiz') {
+    return (
+      <div className="app">
+        <a className="skip-link" href="#main-content">
+          İçeriğe geç
+        </a>
+        <main id="main-content">
+          <QuizApp onExit={() => setMode('book')} />
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="app">
       <a className="skip-link" href="#main-content">
@@ -260,6 +281,15 @@ export default function App() {
               Çevrimdışı
             </span>
           )}
+          <button
+            className="reader-controls__btn reader-controls__btn--quiz"
+            onClick={() => setMode('quiz')}
+            title="Quiz moduna geç"
+            aria-label="Quiz moduna geç"
+          >
+            <span aria-hidden="true">🎯</span>
+            <span className="reader-controls__label">Quiz</span>
+          </button>
           <button
             className="reader-controls__btn"
             onClick={cycleFontSize}

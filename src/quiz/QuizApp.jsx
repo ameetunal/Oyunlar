@@ -35,7 +35,7 @@ function buildRound(categoryKey) {
   });
 }
 
-export default function App() {
+export default function QuizApp({ onExit }) {
   const [screen, setScreen] = useState('home');
   const [stats, setStats] = useState(loadStats);
   const [session, setSession] = useState(null);
@@ -118,7 +118,14 @@ export default function App() {
   function renderScreen() {
     switch (screen) {
       case 'home':
-        return <HomeScreen stats={stats} onStartQuiz={startQuiz} onOpenStory={openStoryFromHome} />;
+        return (
+          <HomeScreen
+            stats={stats}
+            onStartQuiz={startQuiz}
+            onOpenStory={openStoryFromHome}
+            onExit={onExit}
+          />
+        );
       case 'categories':
         return <CategoriesScreen stats={stats} onStartQuiz={startQuiz} />;
       case 'quiz':
@@ -152,7 +159,7 @@ export default function App() {
   }
 
   return (
-    <div className="app-shell">
+    <div className="quiz-app">
       {renderScreen()}
       {TAB_SCREENS.has(screen) && <BottomNav active={screen} onNavigate={navigate} />}
     </div>
