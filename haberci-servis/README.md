@@ -46,11 +46,11 @@ cp .env.example .env      # değerleri kendi ortamınıza göre doldurun
 
 - `MSSQL_*`: `sql/create-readonly-user.sql` ile oluşturduğunuz salt-okunur
   kullanıcının bağlantı bilgileri (veritabanı adı: `ERMAK_URETIM`).
-- `PWA_NOTIFY_URL`: PWA'nızın yayınlandığı adres + `/api/notify`
-  (örn. `https://bildirim.sizin-domaininiz.com/api/notify`).
-- `PWA_API_KEY`: PWA tarafındaki `HABERCI_API_KEY` ile **birebir aynı** olmalı
-  (rastgele, uzun bir değer üretin — bu iki servis arasındaki tek kimlik
-  doğrulamadır).
+- `PWA_NOTIFY_URL`: PWA `/admin` panelindeki "haberci-servis Kurulumu"
+  kartında gösterilir (örn. `https://bildirim.sizin-domaininiz.com/api/notify`).
+- `PWA_API_KEY`: PWA `/admin` panelindeki "haberci-servis Kurulumu"
+  kartında gösterilen, **size özel** gizli anahtar — bu iki servis
+  arasındaki tek kimlik doğrulamadır, kimseyle paylaşmayın.
 
 ## Çalıştırma
 

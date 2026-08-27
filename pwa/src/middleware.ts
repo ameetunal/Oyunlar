@@ -1,16 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ADMIN_COOKIE_NAME } from "@/lib/auth";
+import { SESSION_COOKIE_NAME, verifySessionToken } from "@/lib/session";
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   const isAdminPage = pathname.startsWith("/admin") && pathname !== "/admin/login";
   const isAdminApi =
-    pathname.startsWith("/api/users") || pathname.startsWith("/api/routing");
+    pathname.startsWith("/api/users") ||
+    pathname.startsWith("/api/routing") ||
+    pathname.startsWith("/api/billing");
 
   if (isAdminPage || isAdminApi) {
-    const cookie = req.cookies.get(ADMIN_COOKIE_NAME);
-    if (!cookie || cookie.value !== process.env.ADMIN_PASSWORD) {
+    const token = req.cookies.get(SESSION_COOKIE_NAME)?.value;
+    const tenantId = await verifySessionToken(token);
+    if (!tenantId) {
       if (isAdminApi) {
         return NextResponse.json({ error: "Yetkisiz" }, { status: 401 });
       }
@@ -22,5 +25,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/users/:path*", "/api/routing/:path*"],
+  matcher: ["/admin/:path*", "/api/users/:path*", "/api/routing/:path*", "/api/billing/:path*"],
 };

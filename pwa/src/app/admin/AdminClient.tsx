@@ -57,10 +57,28 @@ const KNOWN_MAKINE_SUGGESTIONS = [
   "TOPPER",
 ];
 
-export default function AdminClient({ initialUsers }: { initialUsers: User[] }) {
+type Tenant = { companyName: string; apiKey: string };
+
+export default function AdminClient({
+  initialUsers,
+  tenant,
+}: {
+  initialUsers: User[];
+  tenant: Tenant;
+}) {
   const [users, setUsers] = useState<User[]>(initialUsers);
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
+  const [apiKeyCopied, setApiKeyCopied] = useState(false);
+
+  const notifyUrl =
+    typeof window !== "undefined" ? `${window.location.origin}/api/notify` : "/api/notify";
+
+  function copyApiKey() {
+    navigator.clipboard.writeText(tenant.apiKey);
+    setApiKeyCopied(true);
+    setTimeout(() => setApiKeyCopied(false), 1500);
+  }
 
   async function refresh() {
     const res = await fetch("/api/users");
@@ -110,10 +128,38 @@ export default function AdminClient({ initialUsers }: { initialUsers: User[] }) 
   return (
     <>
       <div className="row" style={{ justifyContent: "space-between" }}>
-        <h1>Yönetim Paneli</h1>
-        <button className="secondary" onClick={logout}>
-          Çıkış
-        </button>
+        <h1>{tenant.companyName}</h1>
+        <div className="row">
+          <a className="secondary-link" href="/admin/billing">
+            Abonelik
+          </a>
+          <button className="secondary" onClick={logout}>
+            Çıkış
+          </button>
+        </div>
+      </div>
+
+      <div className="card">
+        <h2>haberci-servis Kurulumu</h2>
+        <p className="muted">
+          Üretim ağınızdaki <code>haberci-servis</code>&apos;in <code>.env</code> dosyasına şu
+          değerleri girin:
+        </p>
+        <p className="muted" style={{ marginBottom: 4 }}>
+          <code>PWA_NOTIFY_URL</code>
+        </p>
+        <div className="link-box">{notifyUrl}</div>
+        <p className="muted" style={{ marginTop: 12, marginBottom: 4 }}>
+          <code>PWA_API_KEY</code> (bu sadece size özel, gizli bir anahtardır — kimseyle paylaşmayın)
+        </p>
+        <div className="row">
+          <div className="link-box" style={{ flex: 1 }}>
+            {tenant.apiKey}
+          </div>
+          <button className="secondary" onClick={copyApiKey}>
+            {apiKeyCopied ? "Kopyalandı" : "Kopyala"}
+          </button>
+        </div>
       </div>
 
       <form className="card" onSubmit={addUser}>
