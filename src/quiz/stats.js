@@ -51,7 +51,14 @@ const CATEGORY_BADGES = {
   wars: { key: 'savas-uzmani', label: 'Savaş Uzmanı' },
   viziers: { key: 'sadrazam-bilgini', label: 'Sadrazam Bilgini' },
   scientists: { key: 'bilim-meraklisi', label: 'Bilim Meraklısı' },
+  architects: { key: 'sanat-ustasi', label: 'Sanat ve Mimari Ustası' },
+  dailyLife: { key: 'gunluk-yasam-bilgini', label: 'Günlük Yaşam Bilgini' },
+  haremWomen: { key: 'kadin-sultanlar-bilgini', label: 'Kadın Sultanlar Bilgini' },
+  admirals: { key: 'derya-kaptani', label: 'Derya Kaptanı' },
+  poets: { key: 'divan-siir-ustasi', label: 'Divan Şiiri Ustası' },
 };
+
+const ALL_CATEGORY_KEYS = Object.keys(CATEGORY_BADGES);
 
 // Bir quiz turunun sonunda çağrılır; puanı, seriyi, çözülen soruları ve
 // hak edilen yeni rozetleri günceller. Yeni kazanılan rozetlerin
@@ -93,6 +100,17 @@ export function recordQuizResult({ categoryKey, correctCount, solvedIds }) {
     }
   }
 
+  const masterBadge = { key: 'osmanli-tarihi-ustasi', label: 'Osmanlı Tarihi Ustası' };
+  if (!stats.badges.includes(masterBadge.key)) {
+    const allCategoriesMastered = ALL_CATEGORY_KEYS.every((key) =>
+      stats.badges.includes(CATEGORY_BADGES[key].key)
+    );
+    if (allCategoriesMastered) {
+      stats.badges.push(masterBadge.key);
+      newlyEarned.push(masterBadge);
+    }
+  }
+
   saveStats(stats);
   return { stats, newlyEarned };
 }
@@ -108,5 +126,6 @@ export function categoryProgress(stats, categoryKey) {
 export const ALL_BADGE_LABELS = {
   'ilk-quiz': 'İlk Quiz',
   'seri-7': '7 Günlük Seri',
+  'osmanli-tarihi-ustasi': 'Osmanlı Tarihi Ustası',
   ...Object.fromEntries(Object.values(CATEGORY_BADGES).map((b) => [b.key, b.label])),
 };
