@@ -8,8 +8,7 @@ GO
 CREATE LOGIN [haberci_readonly] WITH PASSWORD = N'BURAYA_GUCLU_BIR_SIFRE_YAZIN!';
 GO
 
--- Aşağıdaki veritabanı adını gerçek üretim takip veritabanınızın adıyla değiştirin
-USE [ERMAK_UretimTakip];
+USE [ERMAK_URETIM];
 GO
 
 CREATE USER [haberci_readonly] FOR LOGIN [haberci_readonly];
