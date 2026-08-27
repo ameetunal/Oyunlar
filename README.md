@@ -35,7 +35,9 @@ tezgah bazlı **tek yönlü** telefon bildirimleri gönderen sistem.
 
 ## Güvenlik ilkeleri
 
-1. Üretim veritabanına bağlanan kullanıcı **sadece SELECT** yetkisine sahiptir
+1. Üretim veritabanına bağlanan kullanıcı **sadece `dbo.BILDIRIM_LOG`
+   tablosunda SELECT** yetkisine sahiptir — veritabanındaki başka hiçbir
+   tabloyu (parça, müşteri, kullanıcı, kalite kararı detayları vb.) okuyamaz
    (bkz. `haberci-servis/sql/create-readonly-user.sql`).
 2. `haberci-servis` **hiçbir portu dinlemez** — yalnızca dışarıya HTTPS isteği
    atar. Üretim ağı seviyesinde de bu makine için sadece **outbound 443**
