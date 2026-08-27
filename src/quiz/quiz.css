@@ -610,6 +610,15 @@
   color: var(--muted);
 }
 
+.quiz-app .result-message {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 19px;
+  color: var(--maroon);
+  max-width: 280px;
+  line-height: 1.35;
+}
+
 .quiz-app .ornament-divider {
   display: flex;
   align-items: center;

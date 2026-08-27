@@ -3,6 +3,19 @@ import { ShareIcon } from '../components/Icons.jsx';
 import { categories } from '../data/categories.js';
 import { generateShareImage } from '../shareImage.js';
 
+function resultMessage({ isTimeAttack, correct, total }) {
+  if (isTimeAttack) {
+    if (correct >= 15) return 'İnanılmaz hız — Osmanlı tarihini adeta ezbere biliyorsun.';
+    if (correct >= 8) return 'Güçlü bir performans, pratik yaptıkça daha da hızlanacaksın.';
+    return 'İlk denemen bu kadarsa daha neler olacak — tekrar dene.';
+  }
+  const percent = total > 0 ? (correct / total) * 100 : 0;
+  if (percent === 100) return 'Mükemmel — tek bir soruda bile takılmadın.';
+  if (percent >= 80) return 'Çok iyi gidiyorsun, ustalığa çok yakınsın.';
+  if (percent >= 50) return 'Fena değil — yanlışlarını tekrar edip ilerleyebilirsin.';
+  return 'Bu bir başlangıç; hikayeleri okuyarak hızla öğreneceksin.';
+}
+
 function downloadBlob(blob, filename) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -72,6 +85,7 @@ export default function ResultScreen({ session, pointsEarned, onStartQuiz, onSta
           {correct}
           <span>{isTimeAttack ? ' doğru' : <>{' '}/ {total}</>}</span>
         </div>
+        <div className="result-message">{resultMessage({ isTimeAttack, correct, total })}</div>
         <div className="ornament-divider">
           <span />
           <i />
