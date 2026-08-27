@@ -43,9 +43,29 @@ async function ensureFonts() {
   }
 }
 
-export async function generateShareImage({ correct, total, modeLabel, isTimeAttack }) {
-  await ensureFonts();
+function wrapLines(ctx, text, maxWidth, maxLines) {
+  const words = text.split(' ');
+  const lines = [];
+  let current = '';
+  for (const word of words) {
+    const test = current ? `${current} ${word}` : word;
+    if (ctx.measureText(test).width > maxWidth && current) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = test;
+    }
+    if (lines.length >= maxLines) break;
+  }
+  if (current && lines.length < maxLines) lines.push(current);
+  if (lines.length === maxLines) {
+    const last = lines[maxLines - 1];
+    lines[maxLines - 1] = last.length > 3 ? `${last.slice(0, -1)}…` : last;
+  }
+  return lines;
+}
 
+function createBrandedCanvas() {
   const canvas = document.createElement('canvas');
   canvas.width = SIZE;
   canvas.height = SIZE;
@@ -66,21 +86,37 @@ export async function generateShareImage({ correct, total, modeLabel, isTimeAtta
   ctx.strokeRect(64, 64, SIZE - 128, SIZE - 128);
 
   ctx.textAlign = 'center';
+  return { canvas, ctx, cx };
+}
 
-  // Üst etiket
-  ctx.fillStyle = COLORS.gold;
-  ctx.font = '700 30px "Source Sans 3", sans-serif';
+function toPngBlob(canvas) {
+  return new Promise((resolve) => {
+    canvas.toBlob((blob) => resolve(blob), 'image/png', 0.95);
+  });
+}
+
+function withLetterSpacing(ctx, value, draw) {
   try {
-    ctx.letterSpacing = '6px';
+    ctx.letterSpacing = value;
   } catch {
     // desteklenmiyorsa harf aralığı olmadan devam eder
   }
-  ctx.fillText('OSMANLI TARİHİ QUIZ', cx, 220);
+  draw();
   try {
     ctx.letterSpacing = '0px';
   } catch {
     // no-op
   }
+}
+
+export async function generateShareImage({ correct, total, modeLabel, isTimeAttack }) {
+  await ensureFonts();
+  const { canvas, ctx, cx } = createBrandedCanvas();
+
+  // Üst etiket
+  ctx.fillStyle = COLORS.gold;
+  ctx.font = '700 30px "Source Sans 3", sans-serif';
+  withLetterSpacing(ctx, '6px', () => ctx.fillText('OSMANLI TARİHİ QUIZ', cx, 220));
 
   drawOrnamentDivider(ctx, cx, 270);
 
@@ -126,7 +162,52 @@ export async function generateShareImage({ correct, total, modeLabel, isTimeAtta
   ctx.font = '600 26px "Source Sans 3", sans-serif';
   ctx.fillText(window.location.hostname, cx, 980);
 
-  return new Promise((resolve) => {
-    canvas.toBlob((blob) => resolve(blob), 'image/png', 0.95);
+  return toPngBlob(canvas);
+}
+
+// Ana sayfadaki 'Günün Bilgisi' veya bir hikaye ekranındaki anekdotu
+// paylaşılabilir bir kart haline getirir.
+export async function generateFactShareImage({ breadcrumb, title, excerpt }) {
+  await ensureFonts();
+  const { canvas, ctx, cx } = createBrandedCanvas();
+
+  ctx.fillStyle = COLORS.gold;
+  ctx.font = '700 28px "Source Sans 3", sans-serif';
+  withLetterSpacing(ctx, '6px', () => ctx.fillText((breadcrumb || 'OSMANLI TARİHİ').toUpperCase(), cx, 210));
+
+  drawOrnamentDivider(ctx, cx, 258);
+
+  ctx.fillStyle = COLORS.paper;
+  ctx.font = '700 68px "Cormorant Garamond", serif';
+  const titleLines = wrapLines(ctx, title, SIZE - 240, 2);
+  let y = 400;
+  titleLines.forEach((line) => {
+    ctx.fillText(line, cx, y);
+    y += 78;
   });
+
+  y += 50;
+  ctx.fillStyle = COLORS.paper;
+  ctx.globalAlpha = 0.9;
+  ctx.font = '400 32px "Source Sans 3", sans-serif';
+  const excerptLines = wrapLines(ctx, excerpt, SIZE - 280, 3);
+  excerptLines.forEach((line) => {
+    ctx.fillText(line, cx, y);
+    y += 46;
+  });
+  ctx.globalAlpha = 1;
+
+  drawOrnamentDivider(ctx, cx, 830);
+
+  ctx.fillStyle = COLORS.gold;
+  ctx.font = '600 34px "Cormorant Garamond", serif';
+  ctx.fillText('Bunu biliyor muydun?', cx, 890);
+
+  ctx.fillStyle = COLORS.gold;
+  ctx.font = '600 24px "Source Sans 3", sans-serif';
+  ctx.globalAlpha = 0.85;
+  ctx.fillText(window.location.hostname, cx, 930);
+  ctx.globalAlpha = 1;
+
+  return toPngBlob(canvas);
 }

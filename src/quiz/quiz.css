@@ -522,6 +522,7 @@
 }
 
 .quiz-app .story-top__breadcrumb {
+  flex: 1;
   font-weight: 700;
   font-size: 12px;
   letter-spacing: 1px;
@@ -530,6 +531,12 @@
 
 .quiz-app .story-body {
   gap: 16px;
+}
+
+.quiz-app .story-share-status {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gold);
 }
 
 .quiz-app .story-title {
