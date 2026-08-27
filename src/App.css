@@ -179,11 +179,14 @@ body {
 /* Dönem zaman şeridi */
 .era-timeline {
   display: flex;
+  width: 100%;
+  min-width: 0;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0.75rem 1.5rem 0;
   gap: 0.4rem;
   overflow-x: auto;
+  box-sizing: border-box;
 }
 
 .era-timeline__item {
@@ -296,13 +299,41 @@ body {
   overflow-y: auto;
 }
 
+.toc__header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0 0 0.75rem;
+  border-bottom: 2px solid var(--gold);
+  padding-bottom: 0.4rem;
+}
+
 .toc__heading {
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.2rem;
   color: var(--maroon);
-  margin: 0 0 0.75rem;
-  border-bottom: 2px solid var(--gold);
-  padding-bottom: 0.4rem;
+  margin: 0;
+}
+
+.toc__close {
+  display: none;
+  flex-shrink: 0;
+  width: 1.9rem;
+  height: 1.9rem;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  color: var(--maroon);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.toc-backdrop {
+  display: none;
 }
 
 .toc__period {
@@ -860,6 +891,22 @@ ins.adsbygoogle.ad-slot--inline {
 
   .toc--open {
     transform: translateX(0);
+  }
+
+  .toc__close {
+    display: inline-flex;
+  }
+
+  .toc-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    border: none;
+    padding: 0;
+    margin: 0;
+    z-index: 19;
+    cursor: default;
   }
 
   .page-sheet {

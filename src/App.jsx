@@ -330,12 +330,28 @@ export default function App() {
       )}
 
       <div className="layout">
+        {tocOpen && (
+          <button
+            className="toc-backdrop"
+            onClick={() => setTocOpen(false)}
+            aria-label="İçindekileri kapat"
+          />
+        )}
         <nav
           ref={tocRef}
           className={`toc ${tocOpen ? 'toc--open' : ''}`}
           aria-label="İçindekiler"
         >
-          <h2 className="toc__heading">İçindekiler</h2>
+          <div className="toc__header-row">
+            <h2 className="toc__heading">İçindekiler</h2>
+            <button
+              className="toc__close"
+              onClick={() => setTocOpen(false)}
+              aria-label="İçindekileri kapat"
+            >
+              ✕
+            </button>
+          </div>
           {periods.map((period) => (
             <div key={period.id} className="toc__period">
               <button
