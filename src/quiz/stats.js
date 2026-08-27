@@ -14,6 +14,7 @@ const DEFAULT_STATS = {
   badges: [],
   totalAnswered: 0,
   totalCorrect: 0,
+  wrongIds: [],
 };
 
 export function loadStats() {
@@ -65,13 +66,23 @@ const ALL_CATEGORY_KEYS = Object.keys(CATEGORY_BADGES);
 // Bir quiz turunun sonunda çağrılır; puanı, seriyi, çözülen soruları ve
 // hak edilen yeni rozetleri günceller. Yeni kazanılan rozetlerin
 // listesini döndürür (ekranda "yeni rozet!" göstermek için kullanılabilir).
-export function recordQuizResult({ categoryKey, correctCount, solvedIds }) {
+export function recordQuizResult({ categoryKey, correctCount, solvedIds, wrongIds = [] }) {
   const stats = loadStats();
   const newlyEarned = [];
 
   stats.totalPoints += correctCount * 10;
   stats.totalAnswered += solvedIds.length;
   stats.totalCorrect += correctCount;
+
+  // Bu turda yanlış yapılan sorular "tekrar et" listesine eklenir; daha
+  // önce yanlış yapılıp bu kez doğru cevaplanan sorular listeden düşer.
+  const wrongSet = new Set(stats.wrongIds || []);
+  const wrongThisRound = new Set(wrongIds);
+  solvedIds.forEach((id) => {
+    if (wrongThisRound.has(id)) wrongSet.add(id);
+    else wrongSet.delete(id);
+  });
+  stats.wrongIds = Array.from(wrongSet);
 
   if (stats.lastPlayedDate === todayKey()) {
     // aynı gün içinde ikinci kez oynanıyor, seriyi değiştirme

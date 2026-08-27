@@ -22,8 +22,7 @@ function shuffle(array) {
   return copy;
 }
 
-function buildRound(categoryKey) {
-  const pool = categoryKey ? questions.filter((q) => q.category === categoryKey) : questions;
+function buildRoundFromPool(pool) {
   const picked = shuffle(pool).slice(0, Math.min(ROUND_SIZE, pool.length));
   return picked.map((q) => {
     const order = shuffle(q.options.map((_, i) => i));
@@ -33,6 +32,11 @@ function buildRound(categoryKey) {
       shuffledCorrectIndex: order.indexOf(q.correctIndex),
     };
   });
+}
+
+function buildRound(categoryKey) {
+  const pool = categoryKey ? questions.filter((q) => q.category === categoryKey) : questions;
+  return buildRoundFromPool(pool);
 }
 
 export default function QuizApp({ onExit }) {
@@ -49,6 +53,23 @@ export default function QuizApp({ onExit }) {
       index: 0,
       correctCount: 0,
       solvedIds: [],
+      wrongIds: [],
+      selected: null,
+      answered: false,
+    });
+    setScreen('quiz');
+  };
+
+  const startReview = () => {
+    const pool = questions.filter((q) => stats.wrongIds.includes(q.id));
+    if (pool.length === 0) return;
+    setSession({
+      categoryKey: null,
+      roundQuestions: buildRoundFromPool(pool),
+      index: 0,
+      correctCount: 0,
+      solvedIds: [],
+      wrongIds: [],
       selected: null,
       answered: false,
     });
@@ -66,6 +87,7 @@ export default function QuizApp({ onExit }) {
         answered: true,
         correctCount: prev.correctCount + (isCorrect ? 1 : 0),
         solvedIds: [...prev.solvedIds, question.id],
+        wrongIds: isCorrect ? prev.wrongIds : [...prev.wrongIds, question.id],
       };
     });
   };
@@ -79,6 +101,7 @@ export default function QuizApp({ onExit }) {
           categoryKey: prev.categoryKey ?? prev.roundQuestions[0]?.category,
           correctCount: prev.correctCount,
           solvedIds: prev.solvedIds,
+          wrongIds: prev.wrongIds,
         });
         setStats(newStats);
         setLastPointsEarned(prev.correctCount * 10);
@@ -124,6 +147,7 @@ export default function QuizApp({ onExit }) {
             onStartQuiz={startQuiz}
             onOpenStory={openStoryFromHome}
             onExit={onExit}
+            onStartReview={startReview}
           />
         );
       case 'categories':
