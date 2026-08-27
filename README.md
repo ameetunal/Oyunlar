@@ -67,5 +67,7 @@ Detaylar için `haberci-servis/README.md` ve `pwa/README.md` dosyalarına bakın
 - [x] Postgres veritabanı (Neon) oluşturuldu, tablolar kuruldu
 - [x] PWA, Vercel'e bağlandı (Root Directory: `pwa`, Framework Preset: Next.js)
 - [x] Vercel ortam değişkenleri girildi
-- [ ] `haberci-servis`, üretim ağındaki bir makinede çalıştırılıyor
+- [x] PWA canlıda çalışıyor (oyunlar-psi.vercel.app)
 - [ ] Alt domain (`bildirim.uretimermak.com`) bağlandı
+- [ ] `haberci-servis`, üretim ağındaki bir makinede çalıştırılıyor
+- [ ] `/admin` panelinden ilk kullanıcı eklenip test bildirimi gönderildi
