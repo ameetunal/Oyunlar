@@ -3,6 +3,7 @@ import { ShieldIcon, FlameIcon, TrophyIcon } from '../components/Icons.jsx';
 import { ALL_BADGE_LABELS } from '../stats.js';
 
 const NOTIF_KEY = 'osmanli-quiz:notif-pref';
+const VIBRATE_KEY = 'osmanli-quiz:vibrate-pref';
 
 function readNotifPref() {
   try {
@@ -20,6 +21,22 @@ function writeNotifPref(value) {
   }
 }
 
+function readVibratePref() {
+  try {
+    return window.localStorage.getItem(VIBRATE_KEY) !== 'off';
+  } catch {
+    return true;
+  }
+}
+
+function writeVibratePref(value) {
+  try {
+    window.localStorage.setItem(VIBRATE_KEY, value ? 'on' : 'off');
+  } catch {
+    // yok say
+  }
+}
+
 const BADGE_ICONS = {
   'ilk-quiz': TrophyIcon,
   'seri-7': FlameIcon,
@@ -28,11 +45,18 @@ const BADGE_ICONS = {
 
 export default function ProfileScreen({ stats }) {
   const [notifOn, setNotifOn] = useState(readNotifPref);
+  const [vibrateOn, setVibrateOn] = useState(readVibratePref);
 
   function toggleNotif() {
     const next = !notifOn;
     setNotifOn(next);
     writeNotifPref(next);
+  }
+
+  function toggleVibrate() {
+    const next = !vibrateOn;
+    setVibrateOn(next);
+    writeVibratePref(next);
   }
 
   const earnedBadges = stats.badges.map((key) => ({
@@ -102,10 +126,21 @@ export default function ProfileScreen({ stats }) {
                 <span className="toggle__knob" />
               </button>
             </div>
-          </div>
-          <div className="settings-note">
-            Bildirim tercihin kaydedildi. Gerçek zamanında hatırlatmalar, mağaza uygulaması
-            sürümüyle birlikte tam olarak devreye girecek.
+            <div className="settings-note">
+              Bildirim tercihin kaydedildi. Gerçek zamanında hatırlatmalar, mağaza uygulaması
+              sürümüyle birlikte tam olarak devreye girecek.
+            </div>
+            <div className="settings-row">
+              <span>Titreşim</span>
+              <button
+                className={`toggle ${vibrateOn ? 'toggle--on' : ''}`}
+                onClick={toggleVibrate}
+                aria-pressed={vibrateOn}
+                aria-label="Cevap titreşimini aç/kapat"
+              >
+                <span className="toggle__knob" />
+              </button>
+            </div>
           </div>
         </section>
       </div>

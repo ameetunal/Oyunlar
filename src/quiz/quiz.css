@@ -796,11 +796,16 @@
   font-size: 15px;
 }
 
+.quiz-app .settings-row + .settings-row,
+.quiz-app .settings-note + .settings-row {
+  border-top: 1px solid var(--paper-shadow);
+}
+
 .quiz-app .settings-note {
   font-size: 13px;
   line-height: 1.5;
   color: var(--muted);
-  margin-top: 8px;
+  padding: 0 16px 14px;
 }
 
 .quiz-app .toggle {

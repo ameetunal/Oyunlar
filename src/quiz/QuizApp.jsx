@@ -14,6 +14,22 @@ const ROUND_SIZE = 10;
 const TIME_ATTACK_SECONDS = 60;
 const TAB_SCREENS = new Set(['home', 'categories', 'leaderboard', 'profile']);
 
+// Destekleyen cihazlarda (çoğunlukla Android) dokunsal geri bildirim;
+// desteklenmiyorsa (iOS Safari, masaüstü) sessizce hiçbir şey yapmaz.
+// Profil > Ayarlar'dan kapatılabilir (varsayılan açık).
+const VIBRATE_PREF_KEY = 'osmanli-quiz:vibrate-pref';
+
+function vibrate(pattern) {
+  try {
+    if (window.localStorage.getItem(VIBRATE_PREF_KEY) === 'off') return;
+  } catch {
+    // localStorage okunamazsa varsayılan (açık) davranışla devam et
+  }
+  if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
+    navigator.vibrate(pattern);
+  }
+}
+
 function shuffle(array) {
   const copy = [...array];
   for (let i = copy.length - 1; i > 0; i--) {
@@ -132,6 +148,7 @@ export default function QuizApp({ onExit }) {
       if (!prev || prev.answered) return prev;
       const question = prev.roundQuestions[prev.index];
       const isCorrect = index === question.shuffledCorrectIndex;
+      vibrate(isCorrect ? 15 : [20, 40, 20]);
       return {
         ...prev,
         selected: index,
