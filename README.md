@@ -22,10 +22,12 @@ tezgah bazlı **tek yönlü** telefon bildirimleri gönderen sistem.
 ```
 
 - **haberci-servis/**: Üretim ağı içinde çalışan Node.js servisi. SQL Server'a
-  **salt-okunur** bağlanır, periyodik olarak yeni olayları (kalite kararı,
-  duruş, geciken iş) tespit eder ve **sadece dışarı, tek yönlü** olarak PWA'nın
-  bildirim API'sine "şunu bildir" isteği atar. Hiçbir gelen bağlantı kabul
-  etmez — üretim ağına internetten ulaşılabilecek hiçbir kapı açılmaz.
+  **salt-okunur** bağlanır, ERMAK'ın kendi `dbo.BILDIRIM_LOG` tablosunu (yeni
+  iş, tezgah duruşu, kalite kararı, uzun süredir çözülmemiş iş, vb. için
+  ERMAK'ın zaten ürettiği bildirim kayıtları) periyodik izler ve yeni
+  satırları **sadece dışarı, tek yönlü** olarak PWA'nın bildirim API'sine
+  iletir. Hiçbir gelen bağlantı kabul etmez — üretim ağına internetten
+  ulaşılabilecek hiçbir kapı açılmaz.
 - **pwa/**: Üretim ağının dışında, internete açık, ayrı bir yerde barınan
   Next.js tabanlı PWA + yönetim paneli. Kimin hangi tezgahın/olay türünün
   bildirimini alacağını burada tanımlarsınız. Telefonlar buraya bağlanıp push
@@ -48,13 +50,12 @@ tezgah bazlı **tek yönlü** telefon bildirimleri gönderen sistem.
 1. `pwa/` klasörünü kendi subdomain'inizin altında yayınlayın (bkz.
    `pwa/README.md`).
 2. `haberci-servis/sql/create-readonly-user.sql` scriptini üretim SQL
-   Server'ında çalıştırıp salt-okunur bir kullanıcı oluşturun.
-3. `haberci-servis/mapping.example.json` dosyasını gerçek tablo/kolon
-   isimlerinize göre düzenleyip `mapping.json` olarak kaydedin.
-4. `haberci-servis/`'i üretim ağındaki bir bilgisayarda (internete çıkışı
+   Server'ında (`ERMAK_URETIM` veritabanı) çalıştırıp salt-okunur bir
+   kullanıcı oluşturun.
+3. `haberci-servis/`'i üretim ağındaki bir bilgisayarda (internete çıkışı
    olmasa da yerel ağdaki SQL Server'a erişebilen) arka planda çalıştırın
    (bkz. `haberci-servis/README.md`).
-5. Yönetim panelinden (`/admin`) kullanıcıları ekleyin, her kullanıcıya
+4. Yönetim panelinden (`/admin`) kullanıcıları ekleyin, her kullanıcıya
    hangi tezgah + olay türünün bildirimini alacağını atayın, kendilerine
    kişisel bağlantı linkini gönderin.
 

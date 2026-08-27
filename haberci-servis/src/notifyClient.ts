@@ -1,8 +1,12 @@
-export type EventType = "kalite_karari" | "durus" | "geciken_is";
-
+/**
+ * eventType, ERMAK'ın BILDIRIM_LOG.TIP kolonundaki değerdir
+ * (örn. YENI_IS, TEZGAH_DURUS, KALITE_BITIS_ONAY, ESKALASYON, ...).
+ * Sistemde bu liste zamanla değişebileceği için sabit bir enum yerine
+ * serbest string olarak tutulur.
+ */
 export interface NotifyEvent {
-  eventType: EventType;
-  tezgah: string;
+  eventType: string;
+  tezgah: string | null;
   title: string;
   body: string;
   meta?: Record<string, unknown>;
@@ -29,7 +33,7 @@ export async function sendNotification(event: NotifyEvent): Promise<void> {
 
     if (!res.ok) {
       console.error(
-        `[notify] Bildirim gönderilemedi (${res.status}): ${event.eventType} / ${event.tezgah}`
+        `[notify] Bildirim gönderilemedi (${res.status}): ${event.eventType} / ${event.tezgah ?? "-"}`
       );
     }
   } catch (err) {

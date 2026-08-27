@@ -12,11 +12,49 @@ type User = {
   routingRules: RoutingRule[];
 };
 
+// ERMAK'ın BILDIRIM_LOG.TIP kolonunda gördüğümüz bilinen değerler.
+// Bu liste zamanla değişebilir/genişleyebilir — listede olmayan bir tip
+// için "Diğer (elle yaz)" seçilip TIP değeri elle girilebilir.
 const EVENT_TYPES = [
   { value: "hepsi", label: "Tüm olaylar" },
-  { value: "kalite_karari", label: "Kalite kararı" },
-  { value: "durus", label: "Uzun duruş" },
-  { value: "geciken_is", label: "Geciken iş" },
+  { value: "YENI_IS", label: "Yeni iş eklendi" },
+  { value: "YENI_TALEP", label: "Yeni iş talebi" },
+  { value: "TEZGAH_DURUS", label: "Tezgah duruşu başladı" },
+  { value: "UNUTULAN_IS", label: "Unutulan iş hatırlatması" },
+  { value: "ESKALASYON", label: "Uzun süredir çözülmemiş iş" },
+  { value: "ARA_KONTROL_ONAY", label: "Ara kontrol onaylandı" },
+  { value: "ARA_KONTROL_RED", label: "Ara kontrol reddedildi" },
+  { value: "KALITE_BITIS_ONAY", label: "Kalite bitiş onayı" },
+  { value: "KALITE_BITIS_RED", label: "Kalite bitiş reddi" },
+  { value: "ROTA_SONRAKI", label: "Sıradaki rota adımına geçti" },
+  { value: "SIPARIS_DEGISTI", label: "Sipariş adedi değişti" },
+  { value: "ANDON_AC", label: "Andon (yardım) çağrısı" },
+  { value: "DUYURU", label: "Genel duyuru" },
+  { value: "__custom__", label: "Diğer (elle yaz)" },
+];
+
+function eventTypeLabel(value: string): string {
+  return EVENT_TYPES.find((t) => t.value === value)?.label ?? value;
+}
+
+// TEZGAH_DURUM tablosunda görülen örnek makine adları — sadece otomatik
+// tamamlama önerisi içindir, tam liste değildir.
+const KNOWN_MAKINE_SUGGESTIONS = [
+  "1020-1",
+  "1020-2",
+  "1400",
+  "1600",
+  "ARION-1",
+  "ARION-2",
+  "B-HARTFORT",
+  "DV-13",
+  "DV-15",
+  "FELLER",
+  "FULLAND",
+  "K-HARTFORD",
+  "LAGUN",
+  "M-HARTFORD",
+  "TOPPER",
 ];
 
 export default function AdminClient({ initialUsers }: { initialUsers: User[] }) {
@@ -90,6 +128,14 @@ export default function AdminClient({ initialUsers }: { initialUsers: User[] }) 
       {users.map((user) => (
         <UserCard key={user.id} user={user} onAddRule={addRule} onDeleteRule={deleteRule} onDeleteUser={deleteUser} />
       ))}
+
+      {/* Bilinen tezgah adları için otomatik tamamlama önerisi.
+          Sistemde bunların dışında tezgah da olabilir — bu sadece kolaylık içindir. */}
+      <datalist id="tezgah-onerileri">
+        {KNOWN_MAKINE_SUGGESTIONS.map((m) => (
+          <option key={m} value={m} />
+        ))}
+      </datalist>
     </>
   );
 }
@@ -106,6 +152,7 @@ function UserCard({
   onDeleteUser: (id: string) => void;
 }) {
   const [eventType, setEventType] = useState("hepsi");
+  const [customEventType, setCustomEventType] = useState("");
   const [tezgah, setTezgah] = useState("");
   const [copied, setCopied] = useState(false);
 
@@ -154,7 +201,7 @@ function UserCard({
       {user.routingRules.map((rule) => (
         <div className="list-item" key={rule.id}>
           <span>
-            {EVENT_TYPES.find((t) => t.value === rule.eventType)?.label ?? rule.eventType}
+            {eventTypeLabel(rule.eventType)}
             {" — "}
             {rule.tezgah ? rule.tezgah : "Tüm tezgahlar"}
           </span>
@@ -172,16 +219,28 @@ function UserCard({
             </option>
           ))}
         </select>
+        {eventType === "__custom__" && (
+          <input
+            placeholder="TIP değeri (örn. YENI_URUN)"
+            value={customEventType}
+            onChange={(e) => setCustomEventType(e.target.value)}
+            style={{ flex: 1, marginBottom: 0 }}
+          />
+        )}
         <input
-          placeholder="Tezgah (boş = tümü)"
+          placeholder="Tezgah (boş = tümü, örn. ARION-1)"
+          list="tezgah-onerileri"
           value={tezgah}
           onChange={(e) => setTezgah(e.target.value)}
           style={{ flex: 1, marginBottom: 0 }}
         />
         <button
           onClick={() => {
-            onAddRule(user.id, eventType, tezgah);
+            const finalEventType = eventType === "__custom__" ? customEventType.trim() : eventType;
+            if (!finalEventType) return;
+            onAddRule(user.id, finalEventType, tezgah);
             setTezgah("");
+            setCustomEventType("");
           }}
         >
           Kural Ekle

@@ -1,24 +1,16 @@
 import "dotenv/config";
 import { getPool } from "./db";
-import { loadMapping } from "./config";
 import { loadState, saveState } from "./state";
-import { detectKaliteKararlari } from "./detectors/kaliteKararlari";
-import { detectDuruslar } from "./detectors/duruslar";
-import { detectGecikenIsler } from "./detectors/gecikenIsler";
+import { detectBildirimLog } from "./detectors/bildirimLog";
 import { sendNotification } from "./notifyClient";
 
 const POLL_INTERVAL_MS = Number(process.env.POLL_INTERVAL_MS ?? 20000);
 
 async function tick(): Promise<void> {
   const pool = await getPool();
-  const mapping = loadMapping();
   const state = loadState();
 
-  const events = [
-    ...(await detectKaliteKararlari(pool, mapping.kaliteKararlari, state)),
-    ...(await detectDuruslar(pool, mapping.duruslar, state)),
-    ...(await detectGecikenIsler(pool, mapping.isler, state)),
-  ];
+  const events = await detectBildirimLog(pool, state);
 
   for (const event of events) {
     await sendNotification(event);
