@@ -329,6 +329,32 @@
   opacity: 0.55;
 }
 
+.quiz-app .category-card--mastered {
+  border-color: var(--gold);
+  border-width: 2px;
+}
+
+.quiz-app .category-card--almost {
+  border-color: var(--maroon);
+}
+
+.quiz-app .category-card__badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.quiz-app .category-card__badge--mastered {
+  color: var(--gold);
+}
+
+.quiz-app .category-card__badge--almost {
+  color: var(--maroon);
+}
+
 .quiz-app .category-card__title {
   font-family: 'Cormorant Garamond', serif;
   font-weight: 600;
