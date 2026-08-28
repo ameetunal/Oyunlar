@@ -902,3 +902,11 @@ newGame();
 draw();
 showOverlay("Nokta Avcısı", "Tüm noktaları topla, hayaletlerden kaç! Güç topu yersen hayaletleri sen avlarsın.", "Başla");
 requestAnimationFrame(loop);
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {
+      // Service worker desteklenmiyorsa (ör. file:// üzerinden açılmışsa) sessizce geç.
+    });
+  });
+}
