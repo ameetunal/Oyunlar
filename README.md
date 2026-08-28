@@ -1,3 +1,17 @@
+# Oyunlar
+
+Bu depoda birbirinden bağımsız, ayrı ayrı deploy edilen üç proje bulunur.
+Her biri kendi klasöründe, kendi `README.md`'sinde belgelenmiştir ve
+Vercel'e ayrı bir proje olarak (Root Directory ile) bağlanır.
+
+| Klasör | Ne | Durum |
+|---|---|---|
+| `pwa/` + `haberci-servis/` | Üretim takip sistemlerine bildirim ekleyen çok-kiracılı SaaS | Canlıda (bkz. aşağı) |
+| `pacman/` | Neon görünümlü, kurulabilir Pac-Man tarzı tarayıcı oyunu ("Nokta Avcısı") | Deploy bekliyor — bkz. `pacman/README.md` |
+| `araclar/` | KDV/kredi/birim/yaş hesaplama, şifre/QR üretici — reklam gelirine yönelik araç sitesi ("Araç Kutusu") | Deploy bekliyor — bkz. `araclar/README.md` |
+
+---
+
 # Üretim Takip — Bildirim Sistemi
 
 Üretim takip sistemine (kapalı devre üretim ağı) dokunmadan, kişi/rol ve

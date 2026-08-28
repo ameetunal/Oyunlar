@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#05050c" />
+  <title>Kredi Taksit Hesaplama — Aylık Taksit ve Toplam Faiz | Araç Kutusu</title>
+  <meta name="description" content="Anapara, aylık faiz oranı ve vadeyi girin; aylık taksit tutarını, toplam geri ödemeyi ve toplam faizi anında hesaplayın." />
+  <link rel="icon" href="../icons/icon-192.png" type="image/png" />
+  <meta property="og:title" content="Kredi Taksit Hesaplama | Araç Kutusu" />
+  <meta property="og:description" content="Aylık taksit, toplam ödeme ve faiz tutarını anında hesaplayın." />
+  <meta property="og:image" content="../og-image.png" />
+  <link rel="stylesheet" href="../style.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Kredi Taksit Hesaplama",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TRY" }
+  }
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <div class="nav">
+      <a href="../" class="nav-brand"><span class="logo-dot"></span>Araç Kutusu</a>
+      <a href="../" class="nav-back">← Tüm Araçlar</a>
+    </div>
+
+    <div class="card">
+      <h1>Kredi Taksit <span class="accent">Hesaplama</span></h1>
+      <p class="lead">Anapara, aylık faiz oranı ve vadeyi girin — taksit tutarınızı görün.</p>
+
+      <label for="anapara">Anapara (₺)</label>
+      <input type="number" id="anapara" inputmode="decimal" placeholder="Örn. 50000" min="0" step="100" />
+
+      <div class="row">
+        <div>
+          <label for="faiz">Aylık faiz oranı (%)</label>
+          <input type="number" id="faiz" inputmode="decimal" placeholder="Örn. 3.5" min="0" step="0.01" />
+        </div>
+        <div>
+          <label for="vade">Vade (ay)</label>
+          <input type="number" id="vade" inputmode="numeric" placeholder="Örn. 12" min="1" step="1" />
+        </div>
+      </div>
+
+      <div class="result" id="result" style="display:none">
+        <div class="result-row">
+          <span class="label">Aylık Taksit</span>
+          <span class="value big" id="taksit-value">—</span>
+        </div>
+        <div class="result-row">
+          <span class="label">Toplam Geri Ödeme</span>
+          <span class="value" id="toplam-value">—</span>
+        </div>
+        <div class="result-row">
+          <span class="label">Toplam Faiz</span>
+          <span class="value" id="faiz-value">—</span>
+        </div>
+      </div>
+
+      <p class="note">
+        Bu araç yaklaşık bir tahmin sunar (eşit taksitli anüite formülü ile). BSMV, KKDF, dosya
+        masrafı gibi ek kalemler dahil değildir; bankanızın resmi teklifi farklılık gösterebilir.
+      </p>
+    </div>
+
+    <div class="other-tools">
+      <h2>Diğer araçlar</h2>
+      <div class="chip-row">
+        <a class="chip-link" href="../kdv-hesaplama/">KDV Hesaplama</a>
+        <a class="chip-link" href="../birim-cevirici/">Birim Çevirici</a>
+        <a class="chip-link" href="../yas-hesaplama/">Yaş Hesaplama</a>
+        <a class="chip-link" href="../sifre-olusturucu/">Şifre Oluşturucu</a>
+        <a class="chip-link" href="../metin-sayaci/">Metin Sayacı</a>
+        <a class="chip-link" href="../qr-kod-olusturucu/">QR Kod Oluşturucu</a>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <p>Tüm hesaplamalar tarayıcınızda yapılır, hiçbir veri sunucuya gönderilmez.</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

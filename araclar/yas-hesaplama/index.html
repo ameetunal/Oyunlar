@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#05050c" />
+  <title>Yaş Hesaplama — Doğum Tarihinden Tam Yaş Hesapla | Araç Kutusu</title>
+  <meta name="description" content="Doğum tarihinizi girin; tam yaşınızı yıl-ay-gün olarak, toplam yaşadığınız gün sayısını ve bir sonraki doğum gününüze kalan süreyi anında görün." />
+  <link rel="icon" href="../icons/icon-192.png" type="image/png" />
+  <meta property="og:title" content="Yaş Hesaplama | Araç Kutusu" />
+  <meta property="og:description" content="Doğum tarihinizden tam yaşınızı anında hesaplayın." />
+  <meta property="og:image" content="../og-image.png" />
+  <link rel="stylesheet" href="../style.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Yaş Hesaplama",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TRY" }
+  }
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <div class="nav">
+      <a href="../" class="nav-brand"><span class="logo-dot"></span>Araç Kutusu</a>
+      <a href="../" class="nav-back">← Tüm Araçlar</a>
+    </div>
+
+    <div class="card">
+      <h1>Yaş <span class="accent">Hesaplama</span></h1>
+      <p class="lead">Doğum tarihinizi seçin, tam yaşınızı anında görün.</p>
+
+      <label for="dogum-tarihi">Doğum tarihi</label>
+      <input type="date" id="dogum-tarihi" />
+
+      <div class="result" id="result" style="display:none">
+        <div class="result-row">
+          <span class="label">Tam yaşınız</span>
+          <span class="value big" id="yas-value">—</span>
+        </div>
+      </div>
+
+      <div class="stat-grid" id="stat-grid" style="display:none">
+        <div class="stat-tile">
+          <div class="num" id="toplam-gun">—</div>
+          <div class="lbl">Toplam gün</div>
+        </div>
+        <div class="stat-tile">
+          <div class="num" id="toplam-hafta">—</div>
+          <div class="lbl">Toplam hafta</div>
+        </div>
+        <div class="stat-tile">
+          <div class="num" id="sonraki-dogum">—</div>
+          <div class="lbl">Doğum gününe kalan</div>
+        </div>
+      </div>
+
+      <p class="note" id="haftanin-gunu"></p>
+    </div>
+
+    <div class="other-tools">
+      <h2>Diğer araçlar</h2>
+      <div class="chip-row">
+        <a class="chip-link" href="../kdv-hesaplama/">KDV Hesaplama</a>
+        <a class="chip-link" href="../kredi-hesaplama/">Kredi Taksit Hesaplama</a>
+        <a class="chip-link" href="../birim-cevirici/">Birim Çevirici</a>
+        <a class="chip-link" href="../sifre-olusturucu/">Şifre Oluşturucu</a>
+        <a class="chip-link" href="../metin-sayaci/">Metin Sayacı</a>
+        <a class="chip-link" href="../qr-kod-olusturucu/">QR Kod Oluşturucu</a>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <p>Tüm hesaplamalar tarayıcınızda yapılır, hiçbir veri sunucuya gönderilmez.</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
