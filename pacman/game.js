@@ -83,11 +83,14 @@ let frightenedTimer = 0;
 let ghostEatStreak = 0;
 let running = false;
 let gameOver = false;
+let paused = false;
 let respawnPause = 0;
 let banner = { text: "", timer: 0 };
 let shake = { timer: 0, magnitude: 0 };
 let floatingTexts = [];
 let particles = [];
+let muted = localStorage.getItem("nokta-avcisi-sessiz") === "1";
+let wakaToggle = false;
 
 const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
@@ -97,6 +100,8 @@ const highscoreEl = document.getElementById("highscore");
 const livesEl = document.getElementById("lives");
 const overlay = document.getElementById("overlay");
 const overlayTitle = document.getElementById("overlay-title");
+const btnMute = document.getElementById("btn-mute");
+const btnPause = document.getElementById("btn-pause");
 const overlayMessage = document.getElementById("overlay-message");
 const overlayBtn = document.getElementById("overlay-btn");
 
@@ -225,6 +230,7 @@ function newGame() {
   score = 0;
   lives = 3;
   gameOver = false;
+  paused = false;
   resetEntitiesAndMaze();
   updateHud();
 }
@@ -234,6 +240,7 @@ function goToNextLevel() {
   resetEntitiesAndMaze();
   respawnPause = 1.4;
   showBanner(`Bölüm ${level}!`, 1.4);
+  playSequence([392, 494, 587, 784], "triangle", 0.07, 0.1, 0.09);
   updateHud();
 }
 
@@ -368,24 +375,91 @@ overlayBtn.addEventListener("click", () => {
   startGame();
 });
 
-/* ---------- Ses (küçük WebAudio bip'leri, dosya gerekmez) ---------- */
+function togglePause() {
+  if (gameOver) return;
+  if (paused) {
+    startGame();
+  } else if (running) {
+    paused = true;
+    running = false;
+    btnPause.textContent = "▶";
+    showOverlay("Duraklatıldı", `Skor: ${score} · Bölüm: ${level}`, "Devam Et");
+  }
+}
+
+btnPause.addEventListener("click", togglePause);
+
+window.addEventListener("keydown", (e) => {
+  if (e.key === "p" || e.key === "P" || e.key === "Escape") {
+    e.preventDefault();
+    togglePause();
+  }
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden && running && !paused) togglePause();
+});
+
+/* ---------- Ses (küçük WebAudio efektleri, dosya gerekmez) ---------- */
 let audioCtx = null;
-function beep(freq, duration, type = "square", volume = 0.05) {
+function getAudioCtx() {
+  audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function beep(freq, duration, type = "square", volume = 0.05, delay = 0) {
+  if (muted) return;
   try {
-    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
+    const ctx2 = getAudioCtx();
+    const startAt = ctx2.currentTime + delay;
+    const osc = ctx2.createOscillator();
+    const gain = ctx2.createGain();
     osc.type = type;
     osc.frequency.value = freq;
     gain.gain.value = volume;
-    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
-    osc.connect(gain).connect(audioCtx.destination);
-    osc.start();
-    osc.stop(audioCtx.currentTime + duration);
+    gain.gain.setValueAtTime(volume, startAt);
+    gain.gain.exponentialRampToValueAtTime(0.0001, startAt + duration);
+    osc.connect(gain).connect(ctx2.destination);
+    osc.start(startAt);
+    osc.stop(startAt + duration);
   } catch {
     // Ses desteklenmiyorsa sessizce geç.
   }
 }
+
+function playSweep(fromFreq, toFreq, duration, type = "sawtooth", volume = 0.06) {
+  if (muted) return;
+  try {
+    const ctx2 = getAudioCtx();
+    const osc = ctx2.createOscillator();
+    const gain = ctx2.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(fromFreq, ctx2.currentTime);
+    osc.frequency.linearRampToValueAtTime(toFreq, ctx2.currentTime + duration);
+    gain.gain.setValueAtTime(volume, ctx2.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx2.currentTime + duration);
+    osc.connect(gain).connect(ctx2.destination);
+    osc.start();
+    osc.stop(ctx2.currentTime + duration);
+  } catch {
+    // Ses desteklenmiyorsa sessizce geç.
+  }
+}
+
+function playSequence(notes, type = "square", volume = 0.06, noteDuration = 0.11, gap = 0.09) {
+  notes.forEach((freq, i) => beep(freq, noteDuration, type, volume, i * gap));
+}
+
+function setMuted(next) {
+  muted = next;
+  localStorage.setItem("nokta-avcisi-sessiz", muted ? "1" : "0");
+  btnMute.textContent = muted ? "🔇" : "🔊";
+  btnMute.classList.toggle("is-off", muted);
+  btnMute.setAttribute("aria-label", muted ? "Sesi aç" : "Sesi kapat");
+}
+
+btnMute.addEventListener("click", () => setMuted(!muted));
+setMuted(muted);
 
 /* ---------- Hayalet yapay zekası ---------- */
 function ghostChooseDirection(ghost) {
@@ -465,7 +539,8 @@ function update(dt) {
   if (dots.has(key)) {
     dots.delete(key);
     score += 10;
-    beep(880, 0.04);
+    wakaToggle = !wakaToggle;
+    beep(wakaToggle ? 420 : 330, 0.05, "square", 0.045);
   }
   if (isPowerCell(pc.row, wpc)) {
     const center = cellCenter(wpc, pc.row);
@@ -480,7 +555,7 @@ function update(dt) {
         g.speed = FRIGHTENED_SPEED;
       }
     });
-    beep(220, 0.15, "sawtooth", 0.06);
+    playSweep(700, 160, 0.35, "sawtooth", 0.06);
   }
   updateHud();
 
@@ -529,7 +604,7 @@ function update(dt) {
         score += gained;
         spawnFloatingText(g.x, g.y, `+${gained}`, "#4dd9ff");
         spawnBurst(g.x, g.y, "77,217,255", 18);
-        beep(660, 0.12, "square", 0.07);
+        playSequence([660, 990], "square", 0.08, 0.08, 0.07);
         updateHud();
       } else {
         loseLife();
@@ -542,18 +617,24 @@ function update(dt) {
 function loseLife() {
   lives--;
   updateHud();
-  beep(120, 0.3, "sawtooth", 0.08);
+  playSequence([200, 130], "sawtooth", 0.09, 0.22, 0.16);
   triggerShake(6, 0.35);
   spawnBurst(player.x, player.y, "255,77,94", 20);
   if (lives <= 0) {
     gameOver = true;
     running = false;
-    if (score > highScore) {
+    const isNewRecord = score > highScore;
+    if (isNewRecord) {
       highScore = score;
       localStorage.setItem("nokta-avcisi-rekor", String(highScore));
       highscoreEl.textContent = highScore;
+      playSequence([523, 659, 784, 1046], "square", 0.07, 0.13, 0.11);
     }
-    showOverlay("Oyun Bitti", `Skor: ${score} · Bölüm: ${level}`, "Tekrar Oyna");
+    showOverlay(
+      isNewRecord ? "🏆 Yeni Rekor!" : "Oyun Bitti",
+      `Skor: ${score} · Bölüm: ${level}`,
+      "Tekrar Oyna"
+    );
     return;
   }
   resetPositionsAfterDeath();
@@ -803,6 +884,8 @@ function showOverlay(title, message, btnLabel) {
 function startGame() {
   overlay.classList.add("hidden");
   running = true;
+  paused = false;
+  btnPause.textContent = "⏸";
 }
 
 let lastTime = performance.now();
