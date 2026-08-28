@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Nokta Avcısı</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <header id="hud">
+      <div class="hud-item">Skor: <span id="score">0</span></div>
+      <div class="hud-item">Rekor: <span id="highscore">0</span></div>
+      <div class="hud-item">Can: <span id="lives">●●●</span></div>
+    </header>
+
+    <div id="board-wrap">
+      <canvas id="board" width="504" height="504"></canvas>
+      <div id="overlay" class="hidden">
+        <h1 id="overlay-title">Nokta Avcısı</h1>
+        <p id="overlay-message">Tüm noktaları topla, hayaletlerden kaç!</p>
+        <button id="overlay-btn">Başla</button>
+      </div>
+    </div>
+
+    <div id="touch-controls">
+      <button id="btn-up" class="pad-btn">▲</button>
+      <div class="pad-row">
+        <button id="btn-left" class="pad-btn">◀</button>
+        <button id="btn-down" class="pad-btn">▼</button>
+        <button id="btn-right" class="pad-btn">▶</button>
+      </div>
+    </div>
+
+    <p class="hint">Ok tuşları / WASD ile veya dokunmatik oklarla oyna. Kaydırma da çalışır.</p>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

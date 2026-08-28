@@ -1,0 +1,159 @@
+:root {
+  --bg: #0b0b12;
+  --panel: #14141f;
+  --border: #2a2a3d;
+  --text: #f2f2f7;
+  --muted: #8b8ba3;
+  --accent: #ffd23f;
+  --danger: #ff4d5e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overscroll-behavior: none;
+}
+
+#app {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 16px 12px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+#hud {
+  width: 100%;
+  max-width: 504px;
+  display: flex;
+  justify-content: space-between;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+}
+
+.hud-item {
+  color: var(--muted);
+}
+
+.hud-item span {
+  color: var(--text);
+  font-weight: 700;
+}
+
+#lives span {
+  color: var(--accent);
+  letter-spacing: 2px;
+}
+
+#board-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 504px;
+  aspect-ratio: 1 / 1;
+}
+
+#board {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: #000;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  touch-action: none;
+}
+
+#overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 5, 10, 0.88);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  gap: 12px;
+}
+
+#overlay.hidden {
+  display: none;
+}
+
+#overlay h1 {
+  margin: 0;
+  font-size: 1.6rem;
+  color: var(--accent);
+}
+
+#overlay p {
+  margin: 0;
+  color: var(--muted);
+  max-width: 320px;
+}
+
+#overlay button {
+  margin-top: 8px;
+  background: var(--accent);
+  color: #1a1400;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#touch-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+}
+
+.pad-row {
+  display: flex;
+  gap: 6px;
+}
+
+.pad-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  font-size: 1.3rem;
+  touch-action: manipulation;
+}
+
+.pad-btn:active {
+  background: var(--accent);
+  color: #1a1400;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-align: center;
+  margin: 0;
+}
+
+@media (min-width: 700px) {
+  #touch-controls {
+    display: none;
+  }
+}
