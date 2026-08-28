@@ -9,6 +9,7 @@ import LeaderboardScreen from './screens/LeaderboardScreen.jsx';
 import ProfileScreen from './screens/ProfileScreen.jsx';
 import { questions } from './data/questions.js';
 import { loadStats, recordQuizResult } from './stats.js';
+import { playAnswerSound } from './sound.js';
 
 const ROUND_SIZE = 10;
 const TIME_ATTACK_SECONDS = 60;
@@ -166,6 +167,7 @@ export default function QuizApp({ onExit }) {
       const question = prev.roundQuestions[prev.index];
       const isCorrect = index === question.shuffledCorrectIndex;
       vibrate(isCorrect ? 15 : [20, 40, 20]);
+      playAnswerSound(isCorrect);
       return {
         ...prev,
         selected: index,

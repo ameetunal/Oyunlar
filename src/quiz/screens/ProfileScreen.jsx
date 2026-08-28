@@ -4,6 +4,7 @@ import { ALL_BADGE_LABELS } from '../stats.js';
 
 const NOTIF_KEY = 'osmanli-quiz:notif-pref';
 const VIBRATE_KEY = 'osmanli-quiz:vibrate-pref';
+const SOUND_KEY = 'osmanli-quiz:sound-pref';
 
 function readNotifPref() {
   try {
@@ -37,6 +38,22 @@ function writeVibratePref(value) {
   }
 }
 
+function readSoundPref() {
+  try {
+    return window.localStorage.getItem(SOUND_KEY) !== 'off';
+  } catch {
+    return true;
+  }
+}
+
+function writeSoundPref(value) {
+  try {
+    window.localStorage.setItem(SOUND_KEY, value ? 'on' : 'off');
+  } catch {
+    // yok say
+  }
+}
+
 const BADGE_ICONS = {
   'ilk-quiz': TrophyIcon,
   'seri-7': FlameIcon,
@@ -46,6 +63,7 @@ const BADGE_ICONS = {
 export default function ProfileScreen({ stats }) {
   const [notifOn, setNotifOn] = useState(readNotifPref);
   const [vibrateOn, setVibrateOn] = useState(readVibratePref);
+  const [soundOn, setSoundOn] = useState(readSoundPref);
 
   function toggleNotif() {
     const next = !notifOn;
@@ -57,6 +75,12 @@ export default function ProfileScreen({ stats }) {
     const next = !vibrateOn;
     setVibrateOn(next);
     writeVibratePref(next);
+  }
+
+  function toggleSound() {
+    const next = !soundOn;
+    setSoundOn(next);
+    writeSoundPref(next);
   }
 
   const earnedBadges = stats.badges.map((key) => ({
@@ -137,6 +161,17 @@ export default function ProfileScreen({ stats }) {
                 onClick={toggleVibrate}
                 aria-pressed={vibrateOn}
                 aria-label="Cevap titreşimini aç/kapat"
+              >
+                <span className="toggle__knob" />
+              </button>
+            </div>
+            <div className="settings-row">
+              <span>Ses</span>
+              <button
+                className={`toggle ${soundOn ? 'toggle--on' : ''}`}
+                onClick={toggleSound}
+                aria-pressed={soundOn}
+                aria-label="Cevap sesini aç/kapat"
               >
                 <span className="toggle__knob" />
               </button>
