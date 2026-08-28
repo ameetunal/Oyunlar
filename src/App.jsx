@@ -48,6 +48,19 @@ function writeStorage(key, value) {
   }
 }
 
+// İlk ziyarette, kullanıcı daha önce bir tercih kaydetmediyse cihazın/
+// tarayıcının sistem genelindeki açık/koyu mod tercihini kullan.
+function getInitialTheme() {
+  const stored = readStorage(THEME_KEY);
+  if (stored === 'light' || stored === 'dark') return stored;
+  try {
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
+  } catch {
+    // matchMedia desteklenmiyorsa varsayılan (açık) ile devam et
+  }
+  return 'light';
+}
+
 // Çok paragraflı metinleri (\n\n ile ayrılmış) ayrı <p> etiketleri olarak render eder.
 function Paragraphs({ text, className }) {
   return text
@@ -190,7 +203,7 @@ export default function App() {
 
   const [pageIndex, setPageIndex] = useState(0);
   const [tocOpen, setTocOpen] = useState(false);
-  const [theme, setTheme] = useState(() => readStorage(THEME_KEY) || 'light');
+  const [theme, setTheme] = useState(getInitialTheme);
   const [fontSize, setFontSize] = useState(() => readStorage(FONT_KEY) || 'md');
   const [mode, setMode] = useState(() => readStorage(MODE_KEY) || 'book');
   const [resumeIndex, setResumeIndex] = useState(() => {
