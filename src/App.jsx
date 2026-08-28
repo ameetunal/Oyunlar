@@ -131,6 +131,59 @@ function buildPages(periods) {
   return pages;
 }
 
+const FEEDBACK_EMAIL = 'ameeet_unal@hotmail.com';
+
+const SECTION_LABELS = {
+  sultans: 'Padişahlar Listesi',
+  wars: 'Büyük Savaşlar',
+  viziers: 'Ünlü Sadrazamlar',
+  architects: 'Ünlü Mimarlar ve Sanatçılar',
+  'daily-life': 'Günlük Yaşam',
+  scientists: 'Ünlü Bilim İnsanları',
+  'harem-women': 'Kadın Sultanlar',
+  admirals: 'Kaptan-ı Deryalar',
+  poets: 'Divan Şairleri',
+  glossary: 'Terimler Sözlüğü',
+};
+
+function getPageLabel(page) {
+  switch (page.type) {
+    case 'intro':
+      return page.period.title;
+    case 'event':
+      return page.event.title;
+    case 'theme':
+      return page.theme.title;
+    case 'sultan-profile':
+      return page.sultan.name;
+    case 'vizier-profile':
+      return page.vizier.name;
+    case 'architect-profile':
+      return page.architect.name;
+    case 'daily-life-topic':
+      return page.entry.topic;
+    case 'scientist-profile':
+      return page.scientist.name;
+    case 'harem-woman-profile':
+      return page.woman.name;
+    case 'admiral-profile':
+      return page.admiral.name;
+    case 'poet-profile':
+      return page.poet.name;
+    default:
+      return SECTION_LABELS[page.type] ?? null;
+  }
+}
+
+function buildFeedbackMailto(page) {
+  const label = getPageLabel(page);
+  const subject = label
+    ? `Osmanlı Sitesi - Öneri / Eksik Bilgi: ${label}`
+    : 'Osmanlı Sitesi - Öneri / Eksik Bilgi';
+  const body = 'Merhaba,\n\nBu sayfa/bölümle ilgili eklemek istediğim:\n\n';
+  return `mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
 export default function App() {
   useAdSenseScript();
   const pages = useMemo(() => buildPages(periods), []);
@@ -1313,6 +1366,10 @@ export default function App() {
                 Sonraki Sayfa →
               </button>
             </div>
+
+            <a className="feedback-link" href={buildFeedbackMailto(page)}>
+              Bu sayfada eksik bir bilgi mi var, ya da bir bölüm mü önermek istiyorsun? Bize bildir
+            </a>
           </article>
         </main>
       </div>

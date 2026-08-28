@@ -777,6 +777,21 @@ body {
   color: var(--muted);
 }
 
+.feedback-link {
+  display: block;
+  margin-top: 1.25rem;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--muted);
+  text-decoration: underline;
+  text-decoration-color: var(--gold);
+  text-underline-offset: 3px;
+}
+
+.feedback-link:hover {
+  color: var(--maroon);
+}
+
 /* Reklam alanları: boyutlandırma sınıfları hem gerçek AdSense biriminde
    (<ins>) hem de onay öncesi yer tutucuda (<div>) ortak kullanılır. */
 .ad-slot--banner {
