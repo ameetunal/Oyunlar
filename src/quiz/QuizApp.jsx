@@ -95,6 +95,23 @@ export default function QuizApp({ onExit }) {
     setScreen('quiz');
   };
 
+  const startCategoryReview = (categoryKey) => {
+    const pool = questions.filter((q) => q.category === categoryKey && stats.wrongIds.includes(q.id));
+    if (pool.length === 0) return;
+    setSession({
+      mode: 'normal',
+      categoryKey,
+      roundQuestions: buildRoundFromPool(pool),
+      index: 0,
+      correctCount: 0,
+      solvedIds: [],
+      wrongIds: [],
+      selected: null,
+      answered: false,
+    });
+    setScreen('quiz');
+  };
+
   const startTimeAttack = () => {
     setSession({
       mode: 'timeAttack',
@@ -230,7 +247,9 @@ export default function QuizApp({ onExit }) {
           />
         );
       case 'categories':
-        return <CategoriesScreen stats={stats} onStartQuiz={startQuiz} />;
+        return (
+          <CategoriesScreen stats={stats} onStartQuiz={startQuiz} onStartCategoryReview={startCategoryReview} />
+        );
       case 'quiz':
         return (
           <QuizScreen
