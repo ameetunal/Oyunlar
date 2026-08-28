@@ -20,11 +20,18 @@ const FRIGHTENED_SPEED = 76;
 const FRIGHTENED_DURATION = 7; // saniye
 const GHOST_HOUSE = { r0: 9, r1: 11, c0: 8, c1: 12 };
 
+const GHOST_DEFS = [
+  { color: "#ff4d4d", glow: "rgba(255,77,77,0.8)", home: { col: 9, row: 10 } },
+  { color: "#ff8fe8", glow: "rgba(255,143,232,0.8)", home: { col: 10, row: 10 } },
+  { color: "#4dd9ff", glow: "rgba(77,217,255,0.8)", home: { col: 11, row: 10 } },
+  { color: "#ffb852", glow: "rgba(255,184,82,0.8)", home: { col: 10, row: 9 } },
+];
+
 /* ---------- Labirent üretimi ----------
- * İç köşeler (r%2===0 && c%2===0) sütun/kolon oluşturur, aralarındaki
- * tüm hücreler koridordur — böylece labirentin tamamen bağlı (her
- * noktaya ulaşılabilir) olduğu garanti edilir. Hayalet evi ve tünel
- * için birkaç hücre elle açılır.
+ * İç köşeler (r%2===0 && c%2===0) sütun oluşturur, aralarındaki tüm
+ * hücreler koridordur — böylece labirentin tamamen bağlı (her noktaya
+ * ulaşılabilir) olduğu garanti edilir. Hayalet evi ve tünel için birkaç
+ * hücre elle açılır.
  */
 function buildMaze() {
   const wall = Array.from({ length: ROWS }, () => Array(COLS).fill(false));
@@ -37,16 +44,13 @@ function buildMaze() {
     }
   }
 
-  // Hayalet evi: içini tamamen aç.
   for (let r = GHOST_HOUSE.r0; r <= GHOST_HOUSE.r1; r++) {
     for (let c = GHOST_HOUSE.c0; c <= GHOST_HOUSE.c1; c++) {
       wall[r][c] = false;
     }
   }
-  // Hayalet evi kapısı.
-  wall[GHOST_HOUSE.r0 - 1][10] = false;
+  wall[GHOST_HOUSE.r0 - 1][10] = false; // hayalet evi kapısı
 
-  // Sol-sağ tünel.
   wall[TUNNEL_ROW][0] = false;
   wall[TUNNEL_ROW][COLS - 1] = false;
 
@@ -73,17 +77,22 @@ let wallGrid, dots, totalDots;
 let player, ghosts;
 let score = 0;
 let lives = 3;
+let level = 1;
 let highScore = Number(localStorage.getItem("nokta-avcisi-rekor") || 0);
 let frightenedTimer = 0;
 let ghostEatStreak = 0;
 let running = false;
 let gameOver = false;
-let won = false;
 let respawnPause = 0;
+let banner = { text: "", timer: 0 };
+let shake = { timer: 0, magnitude: 0 };
+let floatingTexts = [];
+let particles = [];
 
 const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
 const scoreEl = document.getElementById("score");
+const levelEl = document.getElementById("level");
 const highscoreEl = document.getElementById("highscore");
 const livesEl = document.getElementById("lives");
 const overlay = document.getElementById("overlay");
@@ -93,12 +102,19 @@ const overlayBtn = document.getElementById("overlay-btn");
 
 highscoreEl.textContent = highScore;
 
+function fitCanvasForDisplay() {
+  const dpr = Math.max(window.devicePixelRatio || 1, 1);
+  canvas.width = COLS * TILE * dpr;
+  canvas.height = ROWS * TILE * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
 function cellCenter(col, row) {
   return { x: col * TILE + TILE / 2, y: row * TILE + TILE / 2 };
 }
 
 function isWalkable(col, row) {
-  if (row === TUNNEL_ROW && (col < 0 || col >= COLS)) return true; // tünelin dışı
+  if (row === TUNNEL_ROW && (col < 0 || col >= COLS)) return true;
   if (col < 0 || col >= COLS || row < 0 || row >= ROWS) return false;
   return !wallGrid[row][col];
 }
@@ -164,7 +180,11 @@ function stepMover(mover, dt) {
 }
 
 /* ---------- Kurulum ---------- */
-function setupLevel() {
+function ghostSpeedMultiplier() {
+  return Math.min(1 + (level - 1) * 0.06, 1.6);
+}
+
+function resetEntitiesAndMaze() {
   wallGrid = buildMaze();
   dots = new Set();
   totalDots = 0;
@@ -182,34 +202,107 @@ function setupLevel() {
   player = createMover(10, 15, PLAYER_SPEED);
   player.mouth = 0;
 
-  ghosts = [
-    { ...createMover(9, 10, GHOST_SPEED), color: "#ff4d4d", frightened: false, eaten: false, home: { col: 9, row: 10 } },
-    { ...createMover(10, 10, GHOST_SPEED), color: "#ffb8ff", frightened: false, eaten: false, home: { col: 10, row: 10 } },
-    { ...createMover(11, 10, GHOST_SPEED), color: "#00e5ff", frightened: false, eaten: false, home: { col: 11, row: 10 } },
-    { ...createMover(10, 9, GHOST_SPEED), color: "#ffb852", frightened: false, eaten: false, home: { col: 10, row: 9 } },
-  ];
-  ghosts.forEach((g) => (g.dir = "up"));
+  const mul = ghostSpeedMultiplier();
+  ghosts = GHOST_DEFS.map((def) => ({
+    ...createMover(def.home.col, def.home.row, GHOST_SPEED * mul),
+    dir: "up",
+    color: def.color,
+    glow: def.glow,
+    home: def.home,
+    frightened: false,
+    eaten: false,
+  }));
 
-  score = 0;
-  lives = 3;
   frightenedTimer = 0;
   ghostEatStreak = 0;
-  gameOver = false;
-  won = false;
   respawnPause = 0;
+  particles = [];
+  floatingTexts = [];
+}
+
+function newGame() {
+  level = 1;
+  score = 0;
+  lives = 3;
+  gameOver = false;
+  resetEntitiesAndMaze();
+  updateHud();
+}
+
+function goToNextLevel() {
+  level++;
+  resetEntitiesAndMaze();
+  respawnPause = 1.4;
+  showBanner(`Bölüm ${level}!`, 1.4);
   updateHud();
 }
 
 function updateHud() {
   scoreEl.textContent = score;
+  levelEl.textContent = level;
   livesEl.textContent = "●".repeat(Math.max(lives, 0)) || "—";
+}
+
+/* ---------- Efektler ---------- */
+function showBanner(text, duration) {
+  banner = { text, timer: duration };
+}
+
+function spawnFloatingText(x, y, text, color) {
+  floatingTexts.push({ x, y, text, color, life: 0.9, maxLife: 0.9 });
+}
+
+function spawnBurst(x, y, color, count = 14) {
+  for (let i = 0; i < count; i++) {
+    const angle = (Math.PI * 2 * i) / count + Math.random() * 0.4;
+    const speed = 60 + Math.random() * 90;
+    particles.push({
+      x,
+      y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      life: 0.5 + Math.random() * 0.3,
+      maxLife: 0.8,
+      color,
+      size: 1.5 + Math.random() * 2,
+    });
+  }
+}
+
+function triggerShake(magnitude, duration) {
+  shake = { timer: duration, magnitude };
+}
+
+function updateEffects(dt) {
+  if (banner.timer > 0) banner.timer = Math.max(0, banner.timer - dt);
+  if (shake.timer > 0) shake.timer = Math.max(0, shake.timer - dt);
+
+  floatingTexts = floatingTexts.filter((f) => f.life > 0);
+  floatingTexts.forEach((f) => {
+    f.life -= dt;
+    f.y -= dt * 26;
+  });
+
+  particles = particles.filter((p) => p.life > 0);
+  particles.forEach((p) => {
+    p.life -= dt;
+    p.x += p.vx * dt;
+    p.y += p.vy * dt;
+    p.vx *= 0.92;
+    p.vy *= 0.92;
+  });
 }
 
 /* ---------- Girdi ---------- */
 function setDesiredDir(dir) {
   if (!player) return;
   player.nextDir = dir;
-  if (!player.dir) player.dir = dir; // ilk hareket
+  if (!player.dir) player.dir = dir;
+}
+
+function handleInputStart(dir) {
+  setDesiredDir(dir);
+  if (!running && !gameOver) startGame();
 }
 
 const KEY_MAP = {
@@ -231,8 +324,7 @@ window.addEventListener("keydown", (e) => {
   const dir = KEY_MAP[e.key];
   if (dir) {
     e.preventDefault();
-    setDesiredDir(dir);
-    if (!running && !gameOver && !won) startGame();
+    handleInputStart(dir);
   }
 });
 
@@ -240,13 +332,9 @@ window.addEventListener("keydown", (e) => {
   const btn = document.getElementById(`btn-${dir}`);
   btn.addEventListener("touchstart", (e) => {
     e.preventDefault();
-    setDesiredDir(dir);
-    if (!running && !gameOver && !won) startGame();
+    handleInputStart(dir);
   });
-  btn.addEventListener("mousedown", () => {
-    setDesiredDir(dir);
-    if (!running && !gameOver && !won) startGame();
-  });
+  btn.addEventListener("mousedown", () => handleInputStart(dir));
 });
 
 let touchStart = null;
@@ -266,20 +354,17 @@ canvas.addEventListener(
     const dx = t.clientX - touchStart.x;
     const dy = t.clientY - touchStart.y;
     if (Math.abs(dx) > Math.abs(dy)) {
-      if (Math.abs(dx) > 18) setDesiredDir(dx > 0 ? "right" : "left");
-    } else {
-      if (Math.abs(dy) > 18) setDesiredDir(dy > 0 ? "down" : "up");
+      if (Math.abs(dx) > 18) handleInputStart(dx > 0 ? "right" : "left");
+    } else if (Math.abs(dy) > 18) {
+      handleInputStart(dy > 0 ? "down" : "up");
     }
     touchStart = null;
-    if (!running && !gameOver && !won) startGame();
   },
   { passive: true }
 );
 
 overlayBtn.addEventListener("click", () => {
-  if (gameOver || won) {
-    setupLevel();
-  }
+  if (gameOver) newGame();
   startGame();
 });
 
@@ -293,6 +378,7 @@ function beep(freq, duration, type = "square", volume = 0.05) {
     osc.type = type;
     osc.frequency.value = freq;
     gain.gain.value = volume;
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
     osc.connect(gain).connect(audioCtx.destination);
     osc.start();
     osc.stop(audioCtx.currentTime + duration);
@@ -307,7 +393,7 @@ function ghostChooseDirection(ghost) {
   const wcol = wrapCol(col);
 
   const options = Object.keys(DIRS).filter((dir) => {
-    if (ghost.dir && OPPOSITE[dir] === ghost.dir) return false; // geri dönme
+    if (ghost.dir && OPPOSITE[dir] === ghost.dir) return false;
     const d = DIRS[dir];
     return isWalkable(wcol + d.x, row + d.y);
   });
@@ -346,6 +432,7 @@ function resetPositionsAfterDeath() {
   player.dir = null;
   player.nextDir = null;
 
+  const mul = ghostSpeedMultiplier();
   ghosts.forEach((g) => {
     const gc = cellCenter(g.home.col, g.home.row);
     g.x = gc.x;
@@ -354,12 +441,14 @@ function resetPositionsAfterDeath() {
     g.nextDir = null;
     g.frightened = false;
     g.eaten = false;
+    g.baseSpeed = GHOST_SPEED * mul;
     g.speed = g.baseSpeed;
   });
   frightenedTimer = 0;
 }
 
 function update(dt) {
+  updateEffects(dt);
   if (!running) return;
 
   if (respawnPause > 0) {
@@ -379,7 +468,10 @@ function update(dt) {
     beep(880, 0.04);
   }
   if (isPowerCell(pc.row, wpc)) {
+    const center = cellCenter(wpc, pc.row);
     score += 50;
+    spawnFloatingText(center.x, center.y, "+50", "#ffe9a8");
+    spawnBurst(center.x, center.y, "255,233,168", 16);
     frightenedTimer = FRIGHTENED_DURATION;
     ghostEatStreak = 0;
     ghosts.forEach((g) => {
@@ -393,14 +485,7 @@ function update(dt) {
   updateHud();
 
   if (dots.size === 0) {
-    won = true;
-    running = false;
-    if (score > highScore) {
-      highScore = score;
-      localStorage.setItem("nokta-avcisi-rekor", String(highScore));
-      highscoreEl.textContent = highScore;
-    }
-    showOverlay("Kazandın!", `Tüm noktaları topladın. Skor: ${score}`, "Tekrar Oyna");
+    goToNextLevel();
     return;
   }
 
@@ -438,9 +523,12 @@ function update(dt) {
       if (g.frightened) {
         g.eaten = true;
         g.frightened = false;
-        g.speed = GHOST_SPEED * 1.6;
+        g.speed = g.baseSpeed * 1.6;
         ghostEatStreak++;
-        score += 100 * ghostEatStreak;
+        const gained = 100 * ghostEatStreak;
+        score += gained;
+        spawnFloatingText(g.x, g.y, `+${gained}`, "#4dd9ff");
+        spawnBurst(g.x, g.y, "77,217,255", 18);
         beep(660, 0.12, "square", 0.07);
         updateHud();
       } else {
@@ -455,6 +543,8 @@ function loseLife() {
   lives--;
   updateHud();
   beep(120, 0.3, "sawtooth", 0.08);
+  triggerShake(6, 0.35);
+  spawnBurst(player.x, player.y, "255,77,94", 20);
   if (lives <= 0) {
     gameOver = true;
     running = false;
@@ -463,7 +553,7 @@ function loseLife() {
       localStorage.setItem("nokta-avcisi-rekor", String(highScore));
       highscoreEl.textContent = highScore;
     }
-    showOverlay("Oyun Bitti", `Skor: ${score}`, "Tekrar Oyna");
+    showOverlay("Oyun Bitti", `Skor: ${score} · Bölüm: ${level}`, "Tekrar Oyna");
     return;
   }
   resetPositionsAfterDeath();
@@ -471,20 +561,70 @@ function loseLife() {
 }
 
 /* ---------- Çizim ---------- */
-function draw() {
-  ctx.fillStyle = "#000";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+function drawBackground() {
+  const w = COLS * TILE;
+  const h = ROWS * TILE;
+  const grad = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w * 0.75);
+  grad.addColorStop(0, "#0c0c1e");
+  grad.addColorStop(1, "#020205");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, w, h);
 
-  ctx.fillStyle = "#1b3a8a";
+  ctx.strokeStyle = "rgba(77, 217, 255, 0.04)";
+  ctx.lineWidth = 1;
+  for (let x = 0; x <= w; x += TILE) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, h);
+    ctx.stroke();
+  }
+  for (let y = 0; y <= h; y += TILE) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(w, y);
+    ctx.stroke();
+  }
+}
+
+function drawWalls() {
+  ctx.save();
+  ctx.shadowColor = "rgba(77, 217, 255, 0.55)";
+  ctx.shadowBlur = 6;
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
-      if (wallGrid[r][c]) {
-        ctx.fillRect(c * TILE + 1, r * TILE + 1, TILE - 2, TILE - 2);
-      }
+      if (!wallGrid[r][c]) continue;
+      const x = c * TILE + 2;
+      const y = r * TILE + 2;
+      const size = TILE - 4;
+      const g = ctx.createLinearGradient(x, y, x, y + size);
+      g.addColorStop(0, "#1c3f8f");
+      g.addColorStop(1, "#0e1f4a");
+      ctx.fillStyle = g;
+      roundRect(x, y, size, size, 5);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(120, 190, 255, 0.55)";
+      ctx.lineWidth = 1;
+      ctx.stroke();
     }
   }
+  ctx.restore();
+}
 
+function roundRect(x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+function drawDots() {
+  ctx.save();
   ctx.fillStyle = "#ffe9a8";
+  ctx.shadowColor = "rgba(255, 233, 168, 0.85)";
+  ctx.shadowBlur = 5;
   dots.forEach((key) => {
     const [r, c] = key.split(",").map(Number);
     const { x, y } = cellCenter(c, r);
@@ -492,43 +632,69 @@ function draw() {
     ctx.arc(x, y, 2.4, 0, Math.PI * 2);
     ctx.fill();
   });
+  ctx.restore();
 
-  const pulse = 3.5 + Math.sin(performance.now() / 150) * 1.5;
-  ctx.fillStyle = "#ffe9a8";
+  const pulse = 3.5 + Math.sin(performance.now() / 150) * 1.6;
+  ctx.save();
+  ctx.fillStyle = "#fff3c4";
+  ctx.shadowColor = "rgba(255, 233, 168, 0.95)";
+  ctx.shadowBlur = 14;
   POWER_CELLS.forEach(({ r, c }) => {
     const { x, y } = cellCenter(c, r);
     ctx.beginPath();
     ctx.arc(x, y, pulse, 0, Math.PI * 2);
     ctx.fill();
   });
+  ctx.restore();
+}
 
-  // Oyuncu
+function drawPlayer() {
   const mouthOpen = Math.abs(Math.sin(player.mouth)) * 0.22 + 0.04;
   const angle = { right: 0, down: Math.PI / 2, left: Math.PI, up: -Math.PI / 2 }[player.dir || "right"];
   ctx.save();
   ctx.translate(player.x, player.y);
   ctx.rotate(angle);
-  ctx.fillStyle = "#ffd23f";
+  ctx.shadowColor = "rgba(255, 210, 63, 0.9)";
+  ctx.shadowBlur = 12;
+  const g = ctx.createRadialGradient(-3, -3, 2, 0, 0, TILE / 2);
+  g.addColorStop(0, "#fff3c4");
+  g.addColorStop(1, "#ffb52e");
+  ctx.fillStyle = g;
   ctx.beginPath();
   ctx.arc(0, 0, TILE / 2 - 2, mouthOpen * Math.PI, (2 - mouthOpen) * Math.PI);
   ctx.lineTo(0, 0);
   ctx.fill();
   ctx.restore();
+}
 
-  // Hayaletler
+function drawGhosts() {
   ghosts.forEach((g) => {
-    const color = g.eaten ? "rgba(255,255,255,0.35)" : g.frightened ? "#3a3aff" : g.color;
-    ctx.fillStyle = color;
+    const flashing = g.frightened && frightenedTimer < 2 && Math.floor(frightenedTimer * 8) % 2 === 0;
+    const bodyColor = g.eaten ? "rgba(255,255,255,0.28)" : g.frightened ? (flashing ? "#e8ecff" : "#3a3aff") : g.color;
+
+    ctx.save();
+    if (!g.eaten) {
+      ctx.shadowColor = g.frightened ? "rgba(77,120,255,0.8)" : g.glow;
+      ctx.shadowBlur = 10;
+    }
     const r = TILE / 2 - 2;
+    const grad = ctx.createLinearGradient(g.x, g.y - r, g.x, g.y + r);
+    grad.addColorStop(0, bodyColor);
+    grad.addColorStop(1, shade(bodyColor, -18));
+    ctx.fillStyle = g.eaten ? bodyColor : grad;
+
     ctx.beginPath();
     ctx.arc(g.x, g.y - 2, r, Math.PI, 0);
     ctx.lineTo(g.x + r, g.y + r - 2);
-    for (let i = 0; i < 4; i++) {
-      const wx = g.x + r - (i * (2 * r)) / 3;
-      ctx.lineTo(wx, g.y + (i % 2 === 0 ? r - 2 : r - 7));
+    const waves = 4;
+    for (let i = 0; i <= waves; i++) {
+      const wx = g.x + r - (i * (2 * r)) / waves;
+      const wy = g.y + (i % 2 === 0 ? r - 2 : r - 8);
+      ctx.lineTo(wx, wy);
     }
     ctx.closePath();
     ctx.fill();
+    ctx.restore();
 
     if (!g.eaten) {
       ctx.fillStyle = "#fff";
@@ -536,13 +702,94 @@ function draw() {
       ctx.arc(g.x - 4, g.y - 3, 3, 0, Math.PI * 2);
       ctx.arc(g.x + 4, g.y - 3, 3, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = g.frightened ? "#3a3aff" : "#1a1a2e";
+      ctx.fillStyle = g.frightened ? "#1a1acc" : "#1a1a2e";
       ctx.beginPath();
       ctx.arc(g.x - 4, g.y - 3, 1.4, 0, Math.PI * 2);
       ctx.arc(g.x + 4, g.y - 3, 1.4, 0, Math.PI * 2);
       ctx.fill();
     }
   });
+}
+
+function shade(hexOrRgba, amt) {
+  if (hexOrRgba.startsWith("rgba") || hexOrRgba.startsWith("#") === false) return hexOrRgba;
+  const num = parseInt(hexOrRgba.slice(1), 16);
+  let r = (num >> 16) + amt;
+  let g = ((num >> 8) & 0x00ff) + amt;
+  let b = (num & 0x0000ff) + amt;
+  r = Math.max(Math.min(255, r), 0);
+  g = Math.max(Math.min(255, g), 0);
+  b = Math.max(Math.min(255, b), 0);
+  return `rgb(${r},${g},${b})`;
+}
+
+function drawParticles() {
+  particles.forEach((p) => {
+    const alpha = Math.max(p.life / p.maxLife, 0);
+    ctx.fillStyle = `rgba(${p.color},${alpha})`;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fill();
+  });
+}
+
+function drawFloatingTexts() {
+  ctx.font = "800 13px -apple-system, sans-serif";
+  ctx.textAlign = "center";
+  floatingTexts.forEach((f) => {
+    const alpha = Math.max(f.life / f.maxLife, 0);
+    ctx.fillStyle = f.color.startsWith("#") ? f.color : `rgb(${f.color})`;
+    ctx.globalAlpha = alpha;
+    ctx.fillText(f.text, f.x, f.y);
+  });
+  ctx.globalAlpha = 1;
+}
+
+function drawBanner() {
+  if (banner.timer <= 0) return;
+  const w = COLS * TILE;
+  const h = ROWS * TILE;
+  const alpha = Math.min(banner.timer / 0.3, 1);
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.font = "800 26px -apple-system, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.shadowColor = "rgba(77, 217, 255, 0.9)";
+  ctx.shadowBlur = 16;
+  ctx.fillStyle = "#e8f6ff";
+  ctx.fillText(banner.text, w / 2, h / 2);
+  ctx.restore();
+}
+
+function drawVignette() {
+  const w = COLS * TILE;
+  const h = ROWS * TILE;
+  const g = ctx.createRadialGradient(w / 2, h / 2, h * 0.35, w / 2, h / 2, h * 0.72);
+  g.addColorStop(0, "rgba(0,0,0,0)");
+  g.addColorStop(1, "rgba(0,0,0,0.55)");
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
+}
+
+function draw() {
+  ctx.save();
+  if (shake.timer > 0) {
+    const m = shake.magnitude * (shake.timer / 0.35);
+    ctx.translate((Math.random() - 0.5) * m, (Math.random() - 0.5) * m);
+  }
+
+  drawBackground();
+  drawWalls();
+  drawDots();
+  drawPlayer();
+  drawGhosts();
+  drawParticles();
+  drawFloatingTexts();
+  drawVignette();
+  drawBanner();
+
+  ctx.restore();
 }
 
 /* ---------- Döngü ---------- */
@@ -567,7 +814,8 @@ function loop(now) {
   requestAnimationFrame(loop);
 }
 
-setupLevel();
+fitCanvasForDisplay();
+newGame();
 draw();
 showOverlay("Nokta Avcısı", "Tüm noktaları topla, hayaletlerden kaç! Güç topu yersen hayaletleri sen avlarsın.", "Başla");
 requestAnimationFrame(loop);
