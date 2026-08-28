@@ -197,12 +197,17 @@ function buildFeedbackMailto(page) {
   return `mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
+function normalizeText(text) {
+  return text.toLocaleLowerCase('tr-TR');
+}
+
 export default function App() {
   useAdSenseScript();
   const pages = useMemo(() => buildPages(periods), []);
 
   const [pageIndex, setPageIndex] = useState(0);
   const [tocOpen, setTocOpen] = useState(false);
+  const [tocQuery, setTocQuery] = useState('');
   const [theme, setTheme] = useState(getInitialTheme);
   const [fontSize, setFontSize] = useState(() => readStorage(FONT_KEY) || 'md');
   const [mode, setMode] = useState(() => readStorage(MODE_KEY) || 'book');
@@ -220,6 +225,30 @@ export default function App() {
   const canPrev = pageIndex > 0;
   const canNext = pageIndex < pages.length - 1;
   const progressPercent = Math.round(((pageIndex + 1) / pages.length) * 100);
+
+  const tocQueryNorm = normalizeText(tocQuery.trim());
+
+  const filteredPeriods = useMemo(() => {
+    return periods
+      .map((period) => {
+        const periodMatches = !tocQueryNorm || normalizeText(period.title).includes(tocQueryNorm);
+        const events = periodMatches
+          ? period.events
+          : period.events.filter((event) => normalizeText(event.title).includes(tocQueryNorm));
+        const allThemes = themesByPeriod[period.id] || [];
+        const themes = periodMatches
+          ? allThemes
+          : allThemes.filter((theme) => normalizeText(theme.title).includes(tocQueryNorm));
+        return { period, events, themes, visible: periodMatches || events.length > 0 || themes.length > 0 };
+      })
+      .filter((item) => item.visible);
+  }, [tocQueryNorm]);
+
+  const filteredEklerItems = useMemo(() => {
+    const items = Object.entries(SECTION_LABELS).map(([type, label]) => ({ type, label }));
+    if (!tocQueryNorm) return items;
+    return items.filter((item) => normalizeText(item.label).includes(tocQueryNorm));
+  }, [tocQueryNorm]);
 
   const goTo = (index) => {
     if (index < 0 || index >= pages.length) return;
@@ -240,6 +269,10 @@ export default function App() {
   useEffect(() => {
     writeStorage(MODE_KEY, mode);
   }, [mode]);
+
+  useEffect(() => {
+    if (!tocOpen) setTocQuery('');
+  }, [tocOpen]);
 
   useEffect(() => {
     writeStorage(FONT_KEY, fontSize);
@@ -418,7 +451,17 @@ export default function App() {
               ✕
             </button>
           </div>
-          {periods.map((period) => (
+          <div className="toc__search">
+            <input
+              type="search"
+              className="toc__search-input"
+              placeholder="İçindekilerde ara..."
+              value={tocQuery}
+              onChange={(event) => setTocQuery(event.target.value)}
+              aria-label="İçindekilerde ara"
+            />
+          </div>
+          {filteredPeriods.map(({ period, events, themes }) => (
             <div key={period.id} className="toc__period">
               <button
                 className="toc__period-title"
@@ -428,7 +471,7 @@ export default function App() {
                 <span className="toc__range">{period.range}</span>
               </button>
               <ul>
-                {period.events.map((event) => (
+                {events.map((event) => (
                   <li key={event.title}>
                     <button
                       className={
@@ -446,12 +489,12 @@ export default function App() {
                     </button>
                   </li>
                 ))}
-                {(themesByPeriod[period.id] || []).length > 0 && (
+                {themes.length > 0 && (
                   <li className="toc__subheading" aria-hidden="true">
                     Derinlemesine
                   </li>
                 )}
-                {(themesByPeriod[period.id] || []).map((theme) => (
+                {themes.map((theme) => (
                   <li key={theme.title}>
                     <button
                       className={
@@ -473,93 +516,29 @@ export default function App() {
             </div>
           ))}
 
-          <div className="toc__period">
-            <p className="toc__period-title toc__period-title--static">
-              Ekler
-            </p>
-            <ul>
-              <li>
-                <button
-                  className={page.type === 'sultans' ? 'active' : ''}
-                  onClick={() => goTo(pages.findIndex((p) => p.type === 'sultans'))}
-                >
-                  Padişahlar Listesi
-                </button>
-              </li>
-              <li>
-                <button
-                  className={page.type === 'wars' ? 'active' : ''}
-                  onClick={() => goTo(pages.findIndex((p) => p.type === 'wars'))}
-                >
-                  Büyük Savaşlar
-                </button>
-              </li>
-              <li>
-                <button
-                  className={page.type === 'viziers' ? 'active' : ''}
-                  onClick={() => goTo(pages.findIndex((p) => p.type === 'viziers'))}
-                >
-                  Ünlü Sadrazamlar
-                </button>
-              </li>
-              <li>
-                <button
-                  className={page.type === 'architects' ? 'active' : ''}
-                  onClick={() => goTo(pages.findIndex((p) => p.type === 'architects'))}
-                >
-                  Ünlü Mimarlar ve Sanatçılar
-                </button>
-              </li>
-              <li>
-                <button
-                  className={page.type === 'daily-life' ? 'active' : ''}
-                  onClick={() => goTo(pages.findIndex((p) => p.type === 'daily-life'))}
-                >
-                  Günlük Yaşam
-                </button>
-              </li>
-              <li>
-                <button
-                  className={page.type === 'scientists' ? 'active' : ''}
-                  onClick={() => goTo(pages.findIndex((p) => p.type === 'scientists'))}
-                >
-                  Ünlü Bilim İnsanları
-                </button>
-              </li>
-              <li>
-                <button
-                  className={page.type === 'harem-women' ? 'active' : ''}
-                  onClick={() => goTo(pages.findIndex((p) => p.type === 'harem-women'))}
-                >
-                  Kadın Sultanlar
-                </button>
-              </li>
-              <li>
-                <button
-                  className={page.type === 'admirals' ? 'active' : ''}
-                  onClick={() => goTo(pages.findIndex((p) => p.type === 'admirals'))}
-                >
-                  Kaptan-ı Deryalar
-                </button>
-              </li>
-              <li>
-                <button
-                  className={page.type === 'poets' ? 'active' : ''}
-                  onClick={() => goTo(pages.findIndex((p) => p.type === 'poets'))}
-                >
-                  Divan Şairleri
-                </button>
-              </li>
-              <li>
-                <button
-                  className={page.type === 'glossary' ? 'active' : ''}
-                  onClick={() => goTo(pages.findIndex((p) => p.type === 'glossary'))}
-                >
-                  Terimler Sözlüğü
-                </button>
-              </li>
-            </ul>
-          </div>
+          {tocQueryNorm && filteredPeriods.length === 0 && filteredEklerItems.length === 0 && (
+            <p className="toc__no-results">&ldquo;{tocQuery.trim()}&rdquo; için sonuç bulunamadı.</p>
+          )}
+
+          {filteredEklerItems.length > 0 && (
+            <div className="toc__period">
+              <p className="toc__period-title toc__period-title--static">
+                Ekler
+              </p>
+              <ul>
+                {filteredEklerItems.map((item) => (
+                  <li key={item.type}>
+                    <button
+                      className={page.type === item.type ? 'active' : ''}
+                      onClick={() => goTo(pages.findIndex((p) => p.type === item.type))}
+                    >
+                      {item.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <AdSlot variant="sidebar" />
         </nav>

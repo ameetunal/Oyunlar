@@ -336,6 +336,39 @@ body {
   display: none;
 }
 
+.toc__search {
+  margin: 0 0 0.75rem;
+}
+
+.toc__search-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--paper-shadow);
+  border-radius: 6px;
+  background: var(--paper-shadow);
+  color: var(--ink);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.85rem;
+}
+
+.toc__search-input::placeholder {
+  color: var(--muted);
+}
+
+.toc__search-input:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+.toc__no-results {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.82rem;
+  color: var(--muted);
+  padding: 0.3rem 0.3rem 0.3rem 0.2rem;
+  margin: 0 0 0.5rem;
+}
+
 .toc__period {
   margin-bottom: 0.75rem;
 }
