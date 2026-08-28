@@ -52,10 +52,16 @@ python3 -m http.server 8080
    elle senkron tutulur).
 4. `araclar/index.html`'deki `tool-grid`e yeni bir kart ekleyin.
 
+## Deploy sonrası yapılacaklar
+
+- **`sitemap.xml`'deki `https://sizin-domaininiz.com` yer tutucusunu**
+  gerçek domain'inizle değiştirin, sonra Google Search Console'a hem
+  domain'i hem `sitemap.xml`'i ekleyin (`robots.txt` zaten sitemap'e
+  işaret ediyor).
+- Facebook Sharing Debugger ile `og-image.png`'in gerçek domain'de
+  doğru göründüğünü kontrol edin.
+
 ## Fikirler / sonraki adımlar
 
 - Google AdSense entegrasyonu (organik trafik oluşmaya başlayınca).
 - PDF birleştirme/bölme (ör. `pdf-lib` ile, tamamen istemci tarafında).
-- Google Search Console'a site ekleyip `sitemap.xml` oluşturmak.
-- Facebook Sharing Debugger ile `og-image.png`'in gerçek domain'de
-  doğru göründüğünü kontrol etmek.
