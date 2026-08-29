@@ -147,9 +147,17 @@ export default function HomePage() {
 
       <footer className="landing-footer">
         <span className="muted">Üretim Takip Bildirim</span>
-        <Link href="/admin/login" className="secondary-link">
-          Giriş Yap
-        </Link>
+        <div className="row">
+          <Link href="/gizlilik-politikasi" className="secondary-link">
+            Gizlilik Politikası
+          </Link>
+          <Link href="/kullanim-sartlari" className="secondary-link">
+            Kullanım Şartları
+          </Link>
+          <Link href="/admin/login" className="secondary-link">
+            Giriş Yap
+          </Link>
+        </div>
       </footer>
     </div>
   );

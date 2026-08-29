@@ -6,6 +6,20 @@
 gizli API anahtarını yönetir. Telefonlar buraya bağlanır; üretim SQL
 Server'ına hiçbir zaman doğrudan erişmez.
 
+## ⚠️ Canlıya almadan önce: yasal sayfalar
+
+`/gizlilik-politikasi` ve `/kullanim-sartlari` sayfaları eklendi (gerçek
+kişisel veri — isim, push aboneliği, e-posta — işleyen ücretli bir SaaS
+için KVKK gereği zorunlu). Ancak bunlar birer **taslaktır**:
+
+- `src/app/gizlilik-politikasi/page.tsx` içindeki
+  `[Firma/Şahıs Unvanınızı Buraya Yazın]` yer tutucusunu gerçek veri
+  sorumlusu bilginizle değiştirin.
+- Aynı dosyadaki `kvkk@sizin-domaininiz.com` placeholder'ını gerçek
+  e-postanızla değiştirin.
+- İdeally bir hukuk danışmanına son hâlini kontrol ettirin — bu metin
+  başlangıç noktasıdır, hukuki tavsiye değildir.
+
 ## Mimari özeti
 
 - **`Tenant`**: bir müşteri firma. Kendi e-posta/şifresi, kendi `apiKey`'i

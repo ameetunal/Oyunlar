@@ -59,6 +59,11 @@ export default function SignupPage() {
         <button type="submit" disabled={loading}>
           {loading ? "Hesap oluşturuluyor..." : "Ücretsiz Başla"}
         </button>
+        <p className="muted" style={{ marginTop: 10, fontSize: "0.78rem" }}>
+          Kayıt olarak{" "}
+          <Link href="/kullanim-sartlari">Kullanım Şartları</Link>'nı ve{" "}
+          <Link href="/gizlilik-politikasi">Gizlilik Politikası</Link>'nı kabul etmiş olursunuz.
+        </p>
         {error && <p className="status-error">{error}</p>}
         <p className="muted" style={{ marginTop: 16 }}>
           Zaten hesabınız var mı? <Link href="/admin/login">Giriş yapın</Link>

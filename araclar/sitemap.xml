@@ -37,4 +37,16 @@
     <loc>https://sizin-domaininiz.com/qr-kod-olusturucu/</loc>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://sizin-domaininiz.com/gizlilik-politikasi/</loc>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://sizin-domaininiz.com/kullanim-sartlari/</loc>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://sizin-domaininiz.com/iletisim/</loc>
+    <priority>0.3</priority>
+  </url>
 </urlset>

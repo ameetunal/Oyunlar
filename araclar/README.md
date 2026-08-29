@@ -25,6 +25,18 @@ gönderilmez (KDV/kredi hesaplamaları, girilen metinler, oluşturulan
 kütüphanesinin yerel bir kopyasıdır — CDN'e bağımlılığı ve olası
 kesinti/engelleme riskini azaltmak için depoya gömülüdür.
 
+## Yasal / kurumsal sayfalar
+
+`gizlilik-politikasi/`, `kullanim-sartlari/` ve `iletisim/` sayfaları
+eklendi — bunlar sadece "iyi olsun" diye değil, **Google AdSense'in bir
+siteyi onaylaması için gizlilik politikası sayfası zorunlu tuttuğu** için
+var. `404.html`, Vercel tarafından otomatik özel 404 sayfası olarak
+kullanılır.
+
+⚠️ **Deploy'dan önce mutlaka güncelleyin:** `iletisim/index.html` içindeki
+`iletisim@sizin-domaininiz.com` placeholder'ını kendi gerçek e-postanızla
+değiştirin.
+
 ## Yerelde çalıştırma
 
 ```bash
