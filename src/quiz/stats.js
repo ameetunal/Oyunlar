@@ -16,6 +16,7 @@ const DEFAULT_STATS = {
   totalCorrect: 0,
   wrongIds: [],
   bestTimeAttackScore: 0,
+  playedDates: [],
 };
 
 export function loadStats() {
@@ -94,6 +95,17 @@ export function recordQuizResult({ categoryKey, correctCount, solvedIds, wrongId
   }
   stats.lastPlayedDate = todayKey();
 
+  // Son 90 günün oynama geçmişi (haftalık aktivite görünümü için); daha
+  // eskisi atılır ki depolama sınırsız büyümesin.
+  const playedSet = new Set(stats.playedDates || []);
+  playedSet.add(todayKey());
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - 90);
+  const cutoffKey = cutoff.toISOString().slice(0, 10);
+  stats.playedDates = Array.from(playedSet)
+    .filter((key) => key >= cutoffKey)
+    .sort();
+
   const solvedSet = new Set(stats.solvedIds);
   solvedIds.forEach((id) => solvedSet.add(id));
   stats.solvedIds = Array.from(solvedSet);
@@ -144,6 +156,27 @@ export function recordQuizResult({ categoryKey, correctCount, solvedIds, wrongId
 
   saveStats(stats);
   return { stats, newlyEarned };
+}
+
+const DAY_LABELS_TR = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
+
+// Son `days` günün oynama durumunu (bugün dahil, en eskiden en yeniye) döndürür.
+// Profil ekranındaki haftalık aktivite şeridi için kullanılır.
+export function getRecentActivity(stats, days = 7) {
+  const playedSet = new Set(stats.playedDates || []);
+  const result = [];
+  for (let i = days - 1; i >= 0; i -= 1) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    result.push({
+      dateKey: key,
+      label: DAY_LABELS_TR[d.getDay()],
+      played: playedSet.has(key),
+      isToday: i === 0,
+    });
+  }
+  return result;
 }
 
 export function categoryProgress(stats, categoryKey) {

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ShieldIcon, FlameIcon, TrophyIcon } from '../components/Icons.jsx';
-import { ALL_BADGE_LABELS } from '../stats.js';
+import { ALL_BADGE_LABELS, getRecentActivity } from '../stats.js';
 
 const NOTIF_KEY = 'osmanli-quiz:notif-pref';
 const VIBRATE_KEY = 'osmanli-quiz:vibrate-pref';
@@ -90,6 +90,7 @@ export default function ProfileScreen({ stats }) {
   }));
 
   const accuracy = stats.totalAnswered > 0 ? Math.round((stats.totalCorrect / stats.totalAnswered) * 100) : null;
+  const recentActivity = getRecentActivity(stats, 7);
 
   return (
     <div className="screen">
@@ -119,6 +120,24 @@ export default function ProfileScreen({ stats }) {
             </div>
           </section>
         )}
+
+        <section>
+          <div className="section-label">SON 7 GÜN</div>
+          <div className="activity-strip">
+            {recentActivity.map(({ dateKey, label, played, isToday }) => (
+              <div key={dateKey} className="activity-strip__day">
+                <div
+                  className={`activity-strip__dot ${played ? 'activity-strip__dot--played' : ''} ${
+                    isToday ? 'activity-strip__dot--today' : ''
+                  }`}
+                >
+                  {played && <FlameIcon size={12} color="var(--paper)" />}
+                </div>
+                <span className="activity-strip__label">{label}</span>
+              </div>
+            ))}
+          </div>
+        </section>
 
         <section>
           <div className="section-label">ROZETLER</div>

@@ -774,6 +774,45 @@
   color: var(--muted);
 }
 
+.quiz-app .activity-strip {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.quiz-app .activity-strip__day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.quiz-app .activity-strip__dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 1.5px solid var(--paper-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quiz-app .activity-strip__dot--played {
+  background: var(--gold);
+  border-color: var(--gold);
+}
+
+.quiz-app .activity-strip__dot--today {
+  border-color: var(--maroon);
+}
+
+.quiz-app .activity-strip__label {
+  font-size: 10px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
 .quiz-app .badge-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
