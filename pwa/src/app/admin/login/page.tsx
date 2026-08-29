@@ -34,9 +34,16 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="container">
-      <form className="card" onSubmit={handleSubmit}>
+    <div className="auth-shell">
+      <Link href="/" className="auth-brand">
+        <span className="logo-dot" />
+        Üretim Takip Bildirim
+      </Link>
+      <form className="auth-card" onSubmit={handleSubmit}>
         <h1>Giriş Yap</h1>
+        <p className="muted" style={{ marginBottom: 20 }}>
+          Yönetim panelinize erişmek için giriş yapın.
+        </p>
         <label htmlFor="email">E-posta</label>
         <input
           id="email"
@@ -52,11 +59,11 @@ export default function AdminLoginPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit" disabled={loading}>
+        <button type="submit" disabled={loading} style={{ width: "100%" }}>
           {loading ? "Giriş yapılıyor..." : "Giriş Yap"}
         </button>
         {error && <p className="status-error">{error}</p>}
-        <p className="muted" style={{ marginTop: 16 }}>
+        <p className="muted auth-footer">
           Hesabınız yok mu? <Link href="/signup">Ücretsiz deneyin</Link>
         </p>
       </form>

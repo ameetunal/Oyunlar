@@ -35,10 +35,16 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="container">
-      <form className="card" onSubmit={handleSubmit}>
+    <div className="auth-shell">
+      <Link href="/" className="auth-brand">
+        <span className="logo-dot" />
+        Üretim Takip Bildirim
+      </Link>
+      <form className="auth-card" onSubmit={handleSubmit}>
         <h1>14 gün ücretsiz deneyin</h1>
-        <p className="muted">Kredi kartı gerekmez. İstediğiniz zaman iptal edebilirsiniz.</p>
+        <p className="muted" style={{ marginBottom: 20 }}>
+          Kredi kartı gerekmez. İstediğiniz zaman iptal edebilirsiniz.
+        </p>
 
         <label htmlFor="companyName">Firma adı</label>
         <input
@@ -56,16 +62,16 @@ export default function SignupPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit" disabled={loading}>
+        <button type="submit" disabled={loading} style={{ width: "100%" }}>
           {loading ? "Hesap oluşturuluyor..." : "Ücretsiz Başla"}
         </button>
-        <p className="muted" style={{ marginTop: 10, fontSize: "0.78rem" }}>
+        <p className="muted" style={{ marginTop: 12, fontSize: "0.78rem" }}>
           Kayıt olarak{" "}
           <Link href="/kullanim-sartlari">Kullanım Şartları</Link>'nı ve{" "}
           <Link href="/gizlilik-politikasi">Gizlilik Politikası</Link>'nı kabul etmiş olursunuz.
         </p>
         {error && <p className="status-error">{error}</p>}
-        <p className="muted" style={{ marginTop: 16 }}>
+        <p className="muted auth-footer">
           Zaten hesabınız var mı? <Link href="/admin/login">Giriş yapın</Link>
         </p>
       </form>
