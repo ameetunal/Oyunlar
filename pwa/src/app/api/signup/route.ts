@@ -3,9 +3,12 @@ import { prisma } from "@/lib/db";
 import { generateApiKey, hashPassword } from "@/lib/auth";
 import { createSessionToken, SESSION_COOKIE_NAME, SESSION_COOKIE_OPTIONS } from "@/lib/session";
 import { trialEndsAt } from "@/lib/tenant";
+import { readJsonBody } from "@/lib/http";
 
 export async function POST(req: NextRequest) {
-  const { companyName, email, password } = await req.json();
+  const { data, error } = await readJsonBody<{ companyName?: string; email?: string; password?: string }>(req);
+  if (error) return error;
+  const { companyName, email, password } = data;
 
   if (!companyName || !email || !password) {
     return NextResponse.json({ error: "Firma adı, e-posta ve şifre zorunlu" }, { status: 400 });

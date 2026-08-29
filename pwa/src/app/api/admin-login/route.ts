@@ -2,9 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { verifyPassword } from "@/lib/auth";
 import { createSessionToken, SESSION_COOKIE_NAME, SESSION_COOKIE_OPTIONS } from "@/lib/session";
+import { readJsonBody } from "@/lib/http";
 
 export async function POST(req: NextRequest) {
-  const { email, password } = await req.json();
+  const { data, error } = await readJsonBody<{ email?: string; password?: string }>(req);
+  if (error) return error;
+  const { email, password } = data;
 
   if (!password) {
     return NextResponse.json({ error: "Şifre zorunlu" }, { status: 400 });
