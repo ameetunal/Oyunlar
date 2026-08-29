@@ -1,3 +1,7 @@
+> Bu depo iki ayrı projeyi barındırıyor: aşağıdaki üretim takip sistemi
+> (`haberci-servis/`, `pwa/`) ve CS2 lineup rehberi (`cs2-lineups/` —
+> bkz. `cs2-lineups/README.md`).
+
 # Üretim Takip — Bildirim Sistemi
 
 ERMAK Üretim Takip Sistemi'ne (kapalı devre üretim ağı) dokunmadan, kişi/rol ve
