@@ -28,6 +28,7 @@ import './quiz/quiz.css';
 const PROGRESS_KEY = 'osmanli-hikayesi:progress';
 const THEME_KEY = 'osmanli-hikayesi:theme';
 const MODE_KEY = 'osmanli-hikayesi:mode';
+const BOOKMARKS_KEY = 'osmanli-hikayesi:bookmarks';
 const FONT_KEY = 'osmanli-hikayesi:font-size';
 const FONT_SIZES = ['sm', 'md', 'lg'];
 const FONT_LABELS = { sm: 'Küçük', md: 'Orta', lg: 'Büyük' };
@@ -201,6 +202,11 @@ function normalizeText(text) {
   return text.toLocaleLowerCase('tr-TR');
 }
 
+function getPageBookmarkId(page) {
+  const label = getPageLabel(page);
+  return label ? `${page.type}::${label}` : null;
+}
+
 export default function App() {
   useAdSenseScript();
   const pages = useMemo(() => buildPages(periods), []);
@@ -216,6 +222,15 @@ export default function App() {
     return Number.isInteger(saved) && saved > 0 ? saved : null;
   });
   const [isOffline, setIsOffline] = useState(() => !navigator.onLine);
+  const [bookmarkIds, setBookmarkIds] = useState(() => {
+    try {
+      const raw = readStorage(BOOKMARKS_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  });
 
   const touchStartX = useRef(null);
   const touchStartedInScrollable = useRef(false);
@@ -250,6 +265,29 @@ export default function App() {
     return items.filter((item) => normalizeText(item.label).includes(tocQueryNorm));
   }, [tocQueryNorm]);
 
+  const bookmarkedPages = useMemo(() => {
+    if (bookmarkIds.length === 0) return [];
+    const idSet = new Set(bookmarkIds);
+    return pages
+      .map((p, idx) => ({ index: idx, label: getPageLabel(p), id: getPageBookmarkId(p) }))
+      .filter(({ id }) => id && idSet.has(id));
+  }, [pages, bookmarkIds]);
+
+  const filteredBookmarkedPages = useMemo(() => {
+    if (!tocQueryNorm) return bookmarkedPages;
+    return bookmarkedPages.filter(({ label }) => normalizeText(label).includes(tocQueryNorm));
+  }, [bookmarkedPages, tocQueryNorm]);
+
+  const currentBookmarkId = getPageBookmarkId(page);
+  const isPageBookmarked = currentBookmarkId ? bookmarkIds.includes(currentBookmarkId) : false;
+
+  const toggleBookmark = () => {
+    if (!currentBookmarkId) return;
+    setBookmarkIds((prev) =>
+      prev.includes(currentBookmarkId) ? prev.filter((id) => id !== currentBookmarkId) : [...prev, currentBookmarkId]
+    );
+  };
+
   const goTo = (index) => {
     if (index < 0 || index >= pages.length) return;
     setPageIndex(index);
@@ -273,6 +311,10 @@ export default function App() {
   useEffect(() => {
     if (!tocOpen) setTocQuery('');
   }, [tocOpen]);
+
+  useEffect(() => {
+    writeStorage(BOOKMARKS_KEY, JSON.stringify(bookmarkIds));
+  }, [bookmarkIds]);
 
   useEffect(() => {
     writeStorage(FONT_KEY, fontSize);
@@ -461,6 +503,25 @@ export default function App() {
               aria-label="İçindekilerde ara"
             />
           </div>
+          {filteredBookmarkedPages.length > 0 && (
+            <div className="toc__period">
+              <p className="toc__period-title toc__period-title--static">
+                Yer İşaretlerim
+              </p>
+              <ul>
+                {filteredBookmarkedPages.map(({ index, label }) => (
+                  <li key={`bookmark-${index}`}>
+                    <button
+                      className={pageIndex === index ? 'active' : ''}
+                      onClick={() => goTo(index)}
+                    >
+                      {label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           {filteredPeriods.map(({ period, events, themes }) => (
             <div key={period.id} className="toc__period">
               <button
@@ -516,7 +577,10 @@ export default function App() {
             </div>
           ))}
 
-          {tocQueryNorm && filteredPeriods.length === 0 && filteredEklerItems.length === 0 && (
+          {tocQueryNorm &&
+            filteredPeriods.length === 0 &&
+            filteredEklerItems.length === 0 &&
+            filteredBookmarkedPages.length === 0 && (
             <p className="toc__no-results">&ldquo;{tocQuery.trim()}&rdquo; için sonuç bulunamadı.</p>
           )}
 
@@ -550,6 +614,17 @@ export default function App() {
             onTouchStart={onTouchStart}
             onTouchEnd={onTouchEnd}
           >
+            {currentBookmarkId && (
+              <button
+                className={`bookmark-toggle ${isPageBookmarked ? 'bookmark-toggle--active' : ''}`}
+                onClick={toggleBookmark}
+                aria-pressed={isPageBookmarked}
+                aria-label={isPageBookmarked ? 'Yer işaretini kaldır' : 'Bu sayfayı yer işaretle'}
+              >
+                {isPageBookmarked ? '★ Yer İşaretlendi' : '☆ Yer İşaretle'}
+              </button>
+            )}
+
             {resumeIndex !== null && resumeIndex !== pageIndex && (
               <div className="resume-banner">
                 <span>Kaldığınız sayfadan devam edebilirsiniz.</span>

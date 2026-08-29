@@ -536,6 +536,39 @@ body {
 }
 
 /* Resume banner */
+.bookmark-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: max-content;
+  margin: 0 0 0.75rem auto;
+  padding: 0.35rem 0.75rem;
+  background: transparent;
+  border: 1px solid var(--gold);
+  border-radius: 20px;
+  color: var(--muted);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.bookmark-toggle:hover {
+  color: var(--maroon);
+  border-color: var(--maroon);
+}
+
+.bookmark-toggle--active {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--paper);
+}
+
+.bookmark-toggle--active:hover {
+  color: var(--paper);
+  border-color: var(--maroon);
+  background: var(--maroon);
+}
+
 .resume-banner {
   display: flex;
   align-items: center;
