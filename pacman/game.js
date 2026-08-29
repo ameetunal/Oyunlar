@@ -335,40 +335,43 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
-["up", "down", "left", "right"].forEach((dir) => {
-  const btn = document.getElementById(`btn-${dir}`);
-  btn.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    handleInputStart(dir);
-  });
-  btn.addEventListener("mousedown", () => handleInputStart(dir));
-});
+// Kaydırma (swipe) ile kontrol: parmağı kaldırmayı beklemeden, eşik
+// aşılır aşılmaz yönü uygular ve referans noktasını sıfırlar — böylece
+// parmağınızı kaldırmadan sürekli yön değiştirebilirsiniz (bekleme hissi
+// olmadan, anlık tepki verir).
+const SWIPE_THRESHOLD = 14;
+let touchRef = null;
 
-let touchStart = null;
 canvas.addEventListener(
   "touchstart",
   (e) => {
     const t = e.changedTouches[0];
-    touchStart = { x: t.clientX, y: t.clientY };
+    touchRef = { x: t.clientX, y: t.clientY };
   },
   { passive: true }
 );
+
 canvas.addEventListener(
-  "touchend",
+  "touchmove",
   (e) => {
-    if (!touchStart) return;
+    if (!touchRef) return;
     const t = e.changedTouches[0];
-    const dx = t.clientX - touchStart.x;
-    const dy = t.clientY - touchStart.y;
+    const dx = t.clientX - touchRef.x;
+    const dy = t.clientY - touchRef.y;
+
+    if (Math.abs(dx) < SWIPE_THRESHOLD && Math.abs(dy) < SWIPE_THRESHOLD) return;
+
     if (Math.abs(dx) > Math.abs(dy)) {
-      if (Math.abs(dx) > 18) handleInputStart(dx > 0 ? "right" : "left");
-    } else if (Math.abs(dy) > 18) {
+      handleInputStart(dx > 0 ? "right" : "left");
+    } else {
       handleInputStart(dy > 0 ? "down" : "up");
     }
-    touchStart = null;
+    touchRef = { x: t.clientX, y: t.clientY };
   },
   { passive: true }
 );
+
+canvas.addEventListener("touchend", () => (touchRef = null), { passive: true });
 
 overlayBtn.addEventListener("click", () => {
   if (gameOver) newGame();
