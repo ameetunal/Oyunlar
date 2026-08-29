@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#05050c" />
+  <meta name="description" content="Nokta Avcısı — akıcı, neon görünümlü, ücretsiz Pac-Man tarzı tarayıcı oyunu." />
+  <title>Nokta Avcısı</title>
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon-192.png" type="image/png" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Nokta Avcısı" />
+  <meta name="mobile-web-app-capable" content="yes" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Nokta Avcısı" />
+  <meta property="og:description" content="Ücretsiz, neon görünümlü Pac-Man tarzı tarayıcı oyunu. Hemen oyna!" />
+  <meta property="og:image" content="og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Nokta Avcısı" />
+  <meta name="twitter:description" content="Ücretsiz, neon görünümlü Pac-Man tarzı tarayıcı oyunu. Hemen oyna!" />
+  <meta name="twitter:image" content="og-image.png" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <div class="brand-row">
+      <h1 class="brand">NOKTA <span>AVCISI</span></h1>
+      <div class="icon-actions">
+        <button id="btn-pause" class="icon-btn" aria-label="Duraklat">⏸</button>
+        <button id="btn-mute" class="icon-btn" aria-label="Sesi kapat">🔊</button>
+      </div>
+    </div>
+
+    <header id="hud">
+      <div class="hud-item">Skor<br /><span id="score">0</span></div>
+      <div class="hud-item">Bölüm<br /><span id="level">1</span></div>
+      <div class="hud-item">Rekor<br /><span id="highscore">0</span></div>
+      <div class="hud-item">Can<br /><span id="lives">●●●</span></div>
+    </header>
+
+    <div id="board-wrap">
+      <canvas id="board"></canvas>
+      <div id="overlay">
+        <h2 id="overlay-title">Nokta Avcısı</h2>
+        <p id="overlay-message">Tüm noktaları topla, hayaletlerden kaç!</p>
+        <button id="overlay-btn">Başla</button>
+      </div>
+    </div>
+
+    <div id="touch-controls">
+      <button id="btn-up" class="pad-btn" aria-label="Yukarı">▲</button>
+      <div class="pad-row">
+        <button id="btn-left" class="pad-btn" aria-label="Sol">◀</button>
+        <button id="btn-down" class="pad-btn" aria-label="Aşağı">▼</button>
+        <button id="btn-right" class="pad-btn" aria-label="Sağ">▶</button>
+      </div>
+    </div>
+
+    <p class="hint">Ok tuşları / WASD ile veya dokunmatik oklarla oyna. Kaydırma da çalışır.</p>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
