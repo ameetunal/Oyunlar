@@ -218,47 +218,9 @@ body {
   }
 }
 
-#touch-controls {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  user-select: none;
-}
-
-.pad-row {
-  display: flex;
-  gap: 6px;
-}
-
-.pad-btn {
-  width: 58px;
-  height: 58px;
-  border-radius: 14px;
-  border: 1px solid var(--border);
-  background: var(--panel);
-  backdrop-filter: blur(8px);
-  color: var(--text);
-  font-size: 1.3rem;
-  touch-action: manipulation;
-  box-shadow: 0 0 14px rgba(77, 217, 255, 0.1);
-}
-
-.pad-btn:active {
-  background: rgba(77, 217, 255, 0.35);
-  border-color: var(--neon);
-  box-shadow: 0 0 20px rgba(77, 217, 255, 0.5);
-}
-
 .hint {
   color: var(--muted);
   font-size: 0.78rem;
   text-align: center;
   margin: 0;
-}
-
-@media (min-width: 700px) {
-  #touch-controls {
-    display: none;
-  }
 }
