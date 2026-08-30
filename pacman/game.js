@@ -188,49 +188,52 @@ function resolveDirectionAtCenter(mover, wcol, row) {
   }
 }
 
+// Not: "distToCenter < dist" (kesin küçük) kullanan önceki sürüm, bu
+// karede tam merkeze ULAŞILACAK ama geçilmeyecek durumda (distToCenter
+// dist'e eşit ya da kayan noktalı hata payıyla ondan hafifçe büyük)
+// doğrulamayı atlıyor, oyuncuyu doğrulanmamış eski yönde bir hücre daha
+// (gerekirse duvarın içine) taşıyordu — yüksek hızda dist büyüdükçe bu
+// sınır durumu çok daha sık tetikleniyordu. Döngülü yapı ve "<=" ile bu
+// düzeltiliyor; merkeze tam snap'lendikten sonra distToCenter kesin 0
+// olduğundan aynı kesişim ikinci kez tetiklenip sonsuz döngüye girmez.
 function stepMover(mover, dt) {
-  const dist = mover.speed * dt;
+  let dist = mover.speed * dt;
+  let guard = 0;
 
-  if (!mover.dir) {
-    // Duruyor: zaten tam bir hücre merkezinde. Yeni yön denenebilir mi bak,
-    // dener ama sabit dursa da her karede yeniden doğrulanır (duvara doğru
-    // yön talep edilirse asla harekete geçmez).
+  while (dist > 0.0005 && guard++ < 12) {
+    if (!mover.dir) {
+      const { col, row } = currentCell(mover);
+      resolveDirectionAtCenter(mover, wrapCol(col), row);
+      if (!mover.dir) return;
+    }
+
     const { col, row } = currentCell(mover);
-    resolveDirectionAtCenter(mover, wrapCol(col), row);
-    if (!mover.dir) return;
-  }
+    const wcol = wrapCol(col);
+    const inTunnelOverflow = col < 0 || col >= COLS;
+    const center = cellCenter(wcol, row);
+    const d = DIRS[mover.dir];
+    const distToCenter = d.x !== 0
+      ? (inTunnelOverflow ? Infinity : (center.x - mover.x) * d.x)
+      : (center.y - mover.y) * d.y;
 
-  const { col, row } = currentCell(mover);
-  const wcol = wrapCol(col);
-  const inTunnelOverflow = col < 0 || col >= COLS;
-  const center = cellCenter(wcol, row);
-  const d = DIRS[mover.dir];
-  const distToCenter = d.x !== 0
-    ? (inTunnelOverflow ? Infinity : (center.x - mover.x) * d.x)
-    : (center.y - mover.y) * d.y;
+    if (distToCenter > 0.0005 && distToCenter <= dist + 1e-6) {
+      mover.x = center.x;
+      mover.y = center.y;
+      dist -= distToCenter;
+      resolveDirectionAtCenter(mover, wcol, row);
+      if (!mover.dir) return;
+      continue;
+    }
 
-  if (distToCenter > 0.0005 && distToCenter < dist) {
-    // Bu karede hücre merkezine ulaşıp geçecek: tam merkeze snap'le, yönü
-    // orada çöz/doğrula, kalan mesafeyi hemen (yeni) yönde uygula. Böylece
-    // hızlı hareket bile hiçbir kesişimi atlamaz.
-    mover.x = center.x;
-    mover.y = center.y;
-    resolveDirectionAtCenter(mover, wcol, row);
-    if (!mover.dir) return;
-
-    const remaining = dist - distToCenter;
-    const nd = DIRS[mover.dir];
-    mover.x += nd.x * remaining;
-    mover.y += nd.y * remaining;
-  } else {
     mover.x += d.x * dist;
     mover.y += d.y * dist;
-  }
 
-  if (row === TUNNEL_ROW) {
-    const w = COLS * TILE;
-    if (mover.x < -TILE / 2) mover.x = w + TILE / 2;
-    if (mover.x > w + TILE / 2) mover.x = -TILE / 2;
+    if (row === TUNNEL_ROW) {
+      const w = COLS * TILE;
+      if (mover.x < -TILE / 2) mover.x = w + TILE / 2;
+      if (mover.x > w + TILE / 2) mover.x = -TILE / 2;
+    }
+    dist = 0;
   }
 }
 
