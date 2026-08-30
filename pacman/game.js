@@ -332,8 +332,10 @@ function updateEffects(dt) {
 /* ---------- Girdi ---------- */
 function setDesiredDir(dir) {
   if (!player) return;
+  // Sadece istenen yönü kaydeder; asıl yönü stepMover, duvar kontrolünden
+  // geçirdikten sonra hücre merkezinde uygular. Burada doğrudan player.dir'i
+  // atamak duvar kontrolünü atlatıp oyuncunun duvardan geçmesine yol açardı.
   player.nextDir = dir;
-  if (!player.dir) player.dir = dir;
 }
 
 function handleInputStart(dir) {
