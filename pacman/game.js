@@ -152,57 +152,64 @@ function atCellCenter(mover) {
 // değişikliğinin bir sonraki kesişime kadar gecikmesine yol açardı. Bunun
 // yerine, bu karede merkezin "geçilip geçilmeyeceğini" hesaplayıp tam o
 // noktada yöne karar veriyoruz; böylece hiçbir kesişim atlanmaz.
-function stepMover(mover, dt) {
-  let dist = mover.speed * dt;
-  let guard = 0;
-
-  while (dist > 0.0001 && guard++ < 8) {
-    const { col, row } = currentCell(mover);
-    const wcol = wrapCol(col);
-    const inTunnelOverflow = col < 0 || col >= COLS;
-    const center = cellCenter(wcol, row);
-
-    // mover.dir yoksa zaten tam bir merkezde durur (sabit değişmez); bu
-    // durumda merkeze mesafe 0 kabul edilip aşağıdaki dal her zaman
-    // tetiklenir ve yön her karede yeniden doğrulanır — tıpkı dururken
-    // duvara çarpmadan yön değiştirilememesi gerektiği gibi.
-    const distToCenter = !mover.dir
-      ? 0
-      : DIRS[mover.dir].x !== 0
-      ? (inTunnelOverflow ? Infinity : (center.x - mover.x) * DIRS[mover.dir].x)
-      : (center.y - mover.y) * DIRS[mover.dir].y;
-
-    if (distToCenter <= dist + 0.001 && distToCenter !== Infinity) {
-      mover.x = inTunnelOverflow ? mover.x : center.x;
-      mover.y = center.y;
-      dist -= Math.max(distToCenter, 0);
-
-      if (mover.nextDir) {
-        const nd = DIRS[mover.nextDir];
-        if (isWalkable(wcol + nd.x, row + nd.y)) {
-          mover.dir = mover.nextDir;
-        }
-      }
-      if (mover.dir) {
-        const cd = DIRS[mover.dir];
-        if (!isWalkable(wcol + cd.x, row + cd.y)) {
-          mover.dir = null;
-        }
-      }
-      if (!mover.dir) break;
-      continue;
+function resolveDirectionAtCenter(mover, wcol, row) {
+  if (mover.nextDir) {
+    const nd = DIRS[mover.nextDir];
+    if (isWalkable(wcol + nd.x, row + nd.y)) {
+      mover.dir = mover.nextDir;
     }
+  }
+  if (mover.dir) {
+    const cd = DIRS[mover.dir];
+    if (!isWalkable(wcol + cd.x, row + cd.y)) {
+      mover.dir = null;
+    }
+  }
+}
 
-    const d = DIRS[mover.dir];
+function stepMover(mover, dt) {
+  const dist = mover.speed * dt;
+
+  if (!mover.dir) {
+    // Duruyor: zaten tam bir hücre merkezinde. Yeni yön denenebilir mi bak,
+    // dener ama sabit dursa da her karede yeniden doğrulanır (duvara doğru
+    // yön talep edilirse asla harekete geçmez).
+    const { col, row } = currentCell(mover);
+    resolveDirectionAtCenter(mover, wrapCol(col), row);
+    if (!mover.dir) return;
+  }
+
+  const { col, row } = currentCell(mover);
+  const wcol = wrapCol(col);
+  const inTunnelOverflow = col < 0 || col >= COLS;
+  const center = cellCenter(wcol, row);
+  const d = DIRS[mover.dir];
+  const distToCenter = d.x !== 0
+    ? (inTunnelOverflow ? Infinity : (center.x - mover.x) * d.x)
+    : (center.y - mover.y) * d.y;
+
+  if (distToCenter > 0.0005 && distToCenter < dist) {
+    // Bu karede hücre merkezine ulaşıp geçecek: tam merkeze snap'le, yönü
+    // orada çöz/doğrula, kalan mesafeyi hemen (yeni) yönde uygula. Böylece
+    // hızlı hareket bile hiçbir kesişimi atlamaz.
+    mover.x = center.x;
+    mover.y = center.y;
+    resolveDirectionAtCenter(mover, wcol, row);
+    if (!mover.dir) return;
+
+    const remaining = dist - distToCenter;
+    const nd = DIRS[mover.dir];
+    mover.x += nd.x * remaining;
+    mover.y += nd.y * remaining;
+  } else {
     mover.x += d.x * dist;
     mover.y += d.y * dist;
+  }
 
-    if (row === TUNNEL_ROW) {
-      const w = COLS * TILE;
-      if (mover.x < -TILE / 2) mover.x = w + TILE / 2;
-      if (mover.x > w + TILE / 2) mover.x = -TILE / 2;
-    }
-    dist = 0;
+  if (row === TUNNEL_ROW) {
+    const w = COLS * TILE;
+    if (mover.x < -TILE / 2) mover.x = w + TILE / 2;
+    if (mover.x > w + TILE / 2) mover.x = -TILE / 2;
   }
 }
 
