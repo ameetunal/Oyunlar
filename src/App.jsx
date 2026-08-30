@@ -143,6 +143,8 @@ function buildPages(periods) {
       pages.push({ type: 'poet-profile', poet, profile: poetProfiles[poet.name] });
     });
   pages.push({ type: 'glossary' });
+  pages.push({ type: 'about' });
+  pages.push({ type: 'contact' });
   return pages;
 }
 
@@ -159,6 +161,8 @@ const SECTION_LABELS = {
   admirals: 'Kaptan-ı Deryalar',
   poets: 'Divan Şairleri',
   glossary: 'Terimler Sözlüğü',
+  about: 'Hakkımızda',
+  contact: 'Bize Ulaşın',
 };
 
 function getPageLabel(page) {
@@ -1474,6 +1478,62 @@ export default function App() {
                     </div>
                   ))}
                 </dl>
+              </>
+            )}
+
+            {page.type === 'about' && (
+              <>
+                <p className="chapter-label">Ek</p>
+                <h1 className="chapter-title">Hakkımızda</h1>
+                <p className="chapter-summary">
+                  Bu sitenin ne olduğu ve nasıl hazırlandığı hakkında.
+                </p>
+                <div className="static-page-text">
+                  <p className="event-text">
+                    <strong>Osmanlı — Bir İmparatorluğun Hikâyesi</strong>, Osmanlı
+                    tarihinin kuruluşundan yıkılışına uzanan hikâyesini, belgesel ve
+                    kitap tadında, doğrusal bir anlatımla anlatmak amacıyla hazırlanmış
+                    bağımsız, kurumsal bir yapıya bağlı olmayan kişisel bir projedir.
+                  </p>
+                  <p className="event-text">
+                    Site; padişahlar, sadrazamlar, savaşlar, bilim insanları, mimarlar,
+                    kadın sultanlar, denizciler, şairler ve günlük yaşam dahil 200&rsquo;ü
+                    aşkın özgün sayfadan oluşuyor, artık interaktif bir quiz&rsquo;i de
+                    barındırıyor. İçerikler tarafımızca araştırılıp yazılmıştır; amaç,
+                    Osmanlı tarihini geniş bir kitleye ilgi çekici ve erişilebilir şekilde
+                    ulaştırmaktır.
+                  </p>
+                  <p className="event-text">
+                    Sitenin barındırma ve geliştirme maliyetlerini karşılamak için
+                    sayfalarda reklam gösterilmektedir. Bir eksik bilgi fark edersen ya da
+                    eklenmesini istediğin bir bölüm varsa, her sayfanın altındaki
+                    bağlantıdan ya da doğrudan{' '}
+                    <a href="mailto:ameeet_unal@hotmail.com">ameeet_unal@hotmail.com</a>{' '}
+                    adresinden bize ulaşabilirsin.
+                  </p>
+                </div>
+              </>
+            )}
+
+            {page.type === 'contact' && (
+              <>
+                <p className="chapter-label">Ek</p>
+                <h1 className="chapter-title">Bize Ulaşın</h1>
+                <p className="chapter-summary">
+                  Sorularınız, önerileriniz ya da fark ettiğiniz eksikler için bize
+                  ulaşabilirsiniz.
+                </p>
+                <div className="static-page-text">
+                  <p className="event-text">
+                    Bu site tek bir kişi tarafından hazırlanıp güncelleniyor. Eksik bir
+                    bilgi, bir yazım hatası, eklenmesini istediğin bir bölüm ya da genel
+                    bir geri bildirimin varsa aşağıdaki e-posta adresinden bize
+                    yazabilirsin — mesajlar elden geçirilip mümkün olduğunca değerlendirilir.
+                  </p>
+                  <p className="contact-email-line">
+                    <a href="mailto:ameeet_unal@hotmail.com">ameeet_unal@hotmail.com</a>
+                  </p>
+                </div>
               </>
             )}
 

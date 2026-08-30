@@ -885,6 +885,24 @@ body {
   color: var(--muted);
 }
 
+.static-page-text a {
+  color: var(--maroon);
+  text-decoration: underline;
+  text-decoration-color: var(--gold);
+  text-underline-offset: 3px;
+}
+
+.static-page-text a:hover {
+  color: var(--maroon-deep);
+}
+
+.contact-email-line {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
 .feedback-link {
   display: block;
   margin-top: 1.25rem;
