@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#05050c" />
+  <title>KDV Hesaplama — KDV Dahil / Hariç Tutar Hesapla | Araç Kutusu</title>
+  <meta name="description" content="KDV dahil veya hariç tutarı saniyeler içinde hesaplayın. %1, %10, %20 oranları veya kendi oranınızla anında sonuç." />
+  <link rel="icon" href="../icons/icon-192.png" type="image/png" />
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png" />
+  <meta property="og:title" content="KDV Hesaplama | Araç Kutusu" />
+  <meta property="og:description" content="KDV dahil / hariç tutarı anında hesaplayın." />
+  <meta property="og:image" content="../og-image.png" />
+  <link rel="stylesheet" href="../style.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "KDV Hesaplama",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TRY" }
+  }
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <div class="nav">
+      <a href="../" class="nav-brand"><span class="logo-dot"></span>Araç Kutusu</a>
+      <a href="../" class="nav-back">← Tüm Araçlar</a>
+    </div>
+
+    <div class="card">
+      <h1>KDV <span class="accent">Hesaplama</span></h1>
+      <p class="lead">Tutarı girin, yönü seçin — KDV tutarı ve toplam anında hesaplanır.</p>
+
+      <label>Hesaplama yönü</label>
+      <div class="radio-group" id="mode-group">
+        <label class="radio-chip active">
+          <input type="radio" name="mode" value="netToGross" checked /> KDV Hariç → Dahil
+        </label>
+        <label class="radio-chip">
+          <input type="radio" name="mode" value="grossToNet" /> KDV Dahil → Hariç
+        </label>
+      </div>
+
+      <label for="tutar">Tutar (₺)</label>
+      <input type="number" id="tutar" inputmode="decimal" placeholder="Örn. 1000" min="0" step="0.01" />
+
+      <div class="row">
+        <div>
+          <label for="oran">KDV oranı</label>
+          <select id="oran">
+            <option value="20">%20 (genel oran)</option>
+            <option value="10">%10</option>
+            <option value="1">%1</option>
+            <option value="custom">Diğer…</option>
+          </select>
+        </div>
+        <div id="custom-oran-wrap" style="display:none">
+          <label for="custom-oran">Özel oran (%)</label>
+          <input type="number" id="custom-oran" min="0" step="0.1" placeholder="Örn. 18" />
+        </div>
+      </div>
+
+      <div class="result" id="result" style="display:none">
+        <div class="result-row">
+          <span class="label" id="base-label">KDV Hariç Tutar</span>
+          <span class="value" id="base-value">—</span>
+        </div>
+        <div class="result-row">
+          <span class="label">KDV Tutarı</span>
+          <span class="value" id="kdv-value">—</span>
+        </div>
+        <div class="result-row">
+          <span class="label" id="total-label">KDV Dahil Toplam</span>
+          <span class="value big" id="total-value">—</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="other-tools">
+      <h2>Diğer araçlar</h2>
+      <div class="chip-row">
+        <a class="chip-link" href="../kredi-hesaplama/">Kredi Taksit Hesaplama</a>
+        <a class="chip-link" href="../birim-cevirici/">Birim Çevirici</a>
+        <a class="chip-link" href="../yas-hesaplama/">Yaş Hesaplama</a>
+        <a class="chip-link" href="../sifre-olusturucu/">Şifre Oluşturucu</a>
+        <a class="chip-link" href="../metin-sayaci/">Metin Sayacı</a>
+        <a class="chip-link" href="../qr-kod-olusturucu/">QR Kod Oluşturucu</a>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="footer-links">
+        <a href="../gizlilik-politikasi/">Gizlilik Politikası</a>
+        <a href="../kullanim-sartlari/">Kullanım Şartları</a>
+        <a href="../iletisim/">İletişim</a>
+      </div>
+      <p>Tüm hesaplamalar tarayıcınızda yapılır, hiçbir veri sunucuya gönderilmez.</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

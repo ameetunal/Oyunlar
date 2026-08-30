@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#05050c" />
+  <title>Şifre Oluşturucu — Güçlü ve Rastgele Şifre Üret | Araç Kutusu</title>
+  <meta name="description" content="Kriptografik olarak güvenli, rastgele ve güçlü şifreler üretin. Uzunluk ve karakter tipi (büyük/küçük harf, rakam, sembol) seçebilirsiniz." />
+  <link rel="icon" href="../icons/icon-192.png" type="image/png" />
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png" />
+  <meta property="og:title" content="Şifre Oluşturucu | Araç Kutusu" />
+  <meta property="og:description" content="Güçlü, rastgele ve güvenli şifreler üretin." />
+  <meta property="og:image" content="../og-image.png" />
+  <link rel="stylesheet" href="../style.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Şifre Oluşturucu",
+    "applicationCategory": "SecurityApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TRY" }
+  }
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <div class="nav">
+      <a href="../" class="nav-brand"><span class="logo-dot"></span>Araç Kutusu</a>
+      <a href="../" class="nav-back">← Tüm Araçlar</a>
+    </div>
+
+    <div class="card">
+      <h1>Şifre <span class="accent">Oluşturucu</span></h1>
+      <p class="lead">Tarayıcınızın güvenli rastgele sayı üretecini kullanır — hiçbir yere gönderilmez.</p>
+
+      <div class="result" style="margin-top:0">
+        <div class="row" style="align-items:center; gap:8px">
+          <input type="text" id="output" readonly style="font-family:monospace; font-size:1.05rem; letter-spacing:0.02em" />
+          <button type="button" class="secondary copy-btn" id="copy-btn" style="flex:0 0 auto">Kopyala</button>
+        </div>
+        <div class="note" id="strength-note"></div>
+      </div>
+
+      <label for="uzunluk">Uzunluk: <span id="uzunluk-deger">16</span> karakter</label>
+      <input type="range" id="uzunluk" min="8" max="64" value="16" />
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="buyuk" checked />
+        <label for="buyuk" style="margin:0">Büyük harf (A-Z)</label>
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="kucuk" checked />
+        <label for="kucuk" style="margin:0">Küçük harf (a-z)</label>
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="rakam" checked />
+        <label for="rakam" style="margin:0">Rakam (0-9)</label>
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="sembol" checked />
+        <label for="sembol" style="margin:0">Sembol (!@#$%...)</label>
+      </div>
+
+      <button type="button" id="generate-btn" style="margin-top:14px">🔄 Yeni Şifre Üret</button>
+    </div>
+
+    <div class="other-tools">
+      <h2>Diğer araçlar</h2>
+      <div class="chip-row">
+        <a class="chip-link" href="../kdv-hesaplama/">KDV Hesaplama</a>
+        <a class="chip-link" href="../kredi-hesaplama/">Kredi Taksit Hesaplama</a>
+        <a class="chip-link" href="../birim-cevirici/">Birim Çevirici</a>
+        <a class="chip-link" href="../yas-hesaplama/">Yaş Hesaplama</a>
+        <a class="chip-link" href="../metin-sayaci/">Metin Sayacı</a>
+        <a class="chip-link" href="../qr-kod-olusturucu/">QR Kod Oluşturucu</a>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="footer-links">
+        <a href="../gizlilik-politikasi/">Gizlilik Politikası</a>
+        <a href="../kullanim-sartlari/">Kullanım Şartları</a>
+        <a href="../iletisim/">İletişim</a>
+      </div>
+      <p>Tüm hesaplamalar tarayıcınızda yapılır, hiçbir veri sunucuya gönderilmez.</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

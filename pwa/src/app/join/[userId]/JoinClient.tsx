@@ -56,9 +56,9 @@ export default function JoinClient({ userId, userName }: { userId: string; userN
   }
 
   return (
-    <div className="card">
+    <>
       <h1>Merhaba, {userName}</h1>
-      <p className="muted">
+      <p className="muted" style={{ marginBottom: 20 }}>
         Bu cihazda bildirimleri açtığınızda, size atanan tezgah ve olay
         türlerine ait bildirimleri buradan alacaksınız.
       </p>
@@ -66,12 +66,12 @@ export default function JoinClient({ userId, userName }: { userId: string; userN
       {status === "done" ? (
         <p className="status-ok">Bildirimler açıldı. Bu ekranı ana ekranınıza ekleyebilirsiniz.</p>
       ) : (
-        <button onClick={enableNotifications} disabled={status === "loading"}>
+        <button onClick={enableNotifications} disabled={status === "loading"} style={{ width: "100%" }}>
           {status === "loading" ? "Açılıyor..." : "Bildirimleri Aç"}
         </button>
       )}
 
       {status === "error" && <p className="status-error">{message}</p>}
-    </div>
+    </>
   );
 }

@@ -1,26 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { webpush } from "@/lib/push";
-import { isValidHaberciApiKey } from "@/lib/auth";
+import { resolveTenantByApiKey } from "@/lib/auth";
+import { readJsonBody } from "@/lib/http";
 
 /**
  * haberci-servis buraya, üretim ağından TEK YÖNLÜ, giden bir istekle
- * "şu olay oldu" der. Bu uç nokta olayı, RoutingRule tablosuna göre
- * doğru kişilere (ve sadece doğru kişilere) push bildirim olarak dağıtır.
+ * "şu olay oldu" der. x-api-key başlığı hangi tenant'a (fabrikaya) ait
+ * olduğunu belirler; olay sadece o tenant'ın RoutingRule tablosuna göre
+ * doğru kişilere (ve sadece doğru kişilere) push bildirim olarak dağıtılır.
  */
 export async function POST(req: NextRequest) {
-  if (!isValidHaberciApiKey(req.headers.get("x-api-key"))) {
+  const tenant = await resolveTenantByApiKey(req.headers.get("x-api-key"));
+  if (!tenant) {
     return NextResponse.json({ error: "Yetkisiz" }, { status: 401 });
   }
 
-  const event = await req.json();
-  const { eventType, tezgah, title, body, meta } = event as {
-    eventType: string;
-    tezgah: string;
-    title: string;
-    body: string;
+  const { data, error } = await readJsonBody<{
+    eventType?: string;
+    tezgah?: string;
+    title?: string;
+    body?: string;
     meta?: Record<string, unknown>;
-  };
+  }>(req);
+  if (error) return error;
+  const { eventType, tezgah, title, body, meta } = data;
 
   if (!eventType || !title || !body) {
     return NextResponse.json({ error: "Eksik alan" }, { status: 400 });
@@ -30,6 +34,7 @@ export async function POST(req: NextRequest) {
     where: {
       eventType: { in: [eventType, "hepsi"] },
       OR: [{ tezgah: null }, { tezgah }],
+      user: { tenantId: tenant.id },
     },
     include: { user: { include: { subscriptions: true } } },
   });

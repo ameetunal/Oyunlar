@@ -1,14 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { readJsonBody } from "@/lib/http";
 
 /**
  * Bir çalışan kendi kişisel /join/[userId] bağlantısını açıp bildirimlere
  * izin verdiğinde, tarayıcının ürettiği push aboneliğini o kullanıcıya bağlar.
  */
 export async function POST(req: NextRequest) {
-  const { userId, subscription } = await req.json();
+  const { data, error } = await readJsonBody<{
+    userId?: string;
+    subscription?: { endpoint?: string; keys?: { p256dh?: string; auth?: string } };
+  }>(req);
+  if (error) return error;
+  const { userId, subscription } = data;
 
-  if (!userId || !subscription?.endpoint || !subscription?.keys) {
+  const endpoint = subscription?.endpoint;
+  const p256dh = subscription?.keys?.p256dh;
+  const auth = subscription?.keys?.auth;
+
+  if (!userId || !endpoint || !p256dh || !auth) {
     return NextResponse.json({ error: "Eksik alan" }, { status: 400 });
   }
 
@@ -18,18 +28,9 @@ export async function POST(req: NextRequest) {
   }
 
   await prisma.pushSubscription.upsert({
-    where: { endpoint: subscription.endpoint },
-    update: {
-      userId,
-      p256dh: subscription.keys.p256dh,
-      auth: subscription.keys.auth,
-    },
-    create: {
-      userId,
-      endpoint: subscription.endpoint,
-      p256dh: subscription.keys.p256dh,
-      auth: subscription.keys.auth,
-    },
+    where: { endpoint },
+    update: { userId, p256dh, auth },
+    create: { userId, endpoint, p256dh, auth },
   });
 
   return NextResponse.json({ ok: true });

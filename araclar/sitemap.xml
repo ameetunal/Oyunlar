@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ÖNEMLİ: Aşağıdaki "https://sizin-domaininiz.com" değerini, bu siteyi
+  Vercel'e bağladıktan sonra aldığınız gerçek adresle değiştirin
+  (Google Search Console'a eklemeden önce). Bkz. araclar/README.md.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://sizin-domaininiz.com/</loc>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://sizin-domaininiz.com/kdv-hesaplama/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sizin-domaininiz.com/kredi-hesaplama/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sizin-domaininiz.com/birim-cevirici/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sizin-domaininiz.com/yas-hesaplama/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sizin-domaininiz.com/sifre-olusturucu/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sizin-domaininiz.com/metin-sayaci/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sizin-domaininiz.com/qr-kod-olusturucu/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sizin-domaininiz.com/gizlilik-politikasi/</loc>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://sizin-domaininiz.com/kullanim-sartlari/</loc>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://sizin-domaininiz.com/iletisim/</loc>
+    <priority>0.3</priority>
+  </url>
+</urlset>

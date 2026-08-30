@@ -13,8 +13,14 @@ export default async function JoinPage({ params }: { params: { userId: string } 
   if (!user) notFound();
 
   return (
-    <div className="container">
-      <JoinClient userId={user.id} userName={user.name} />
+    <div className="auth-shell">
+      <span className="auth-brand" style={{ cursor: "default" }}>
+        <span className="logo-dot" />
+        Üretim Takip Bildirim
+      </span>
+      <div className="auth-card">
+        <JoinClient userId={user.id} userName={user.name} />
+      </div>
     </div>
   );
 }

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#05050c" />
+  <title>Birim Çevirici — Uzunluk, Ağırlık, Sıcaklık | Araç Kutusu</title>
+  <meta name="description" content="Metre, kilometre, inç, kilogram, pound, santigrat, fahrenayt gibi birimleri anında birbirine çevirin." />
+  <link rel="icon" href="../icons/icon-192.png" type="image/png" />
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png" />
+  <meta property="og:title" content="Birim Çevirici | Araç Kutusu" />
+  <meta property="og:description" content="Uzunluk, ağırlık ve sıcaklık birimlerini anında çevirin." />
+  <meta property="og:image" content="../og-image.png" />
+  <link rel="stylesheet" href="../style.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Birim Çevirici",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TRY" }
+  }
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <div class="nav">
+      <a href="../" class="nav-brand"><span class="logo-dot"></span>Araç Kutusu</a>
+      <a href="../" class="nav-back">← Tüm Araçlar</a>
+    </div>
+
+    <div class="card">
+      <h1>Birim <span class="accent">Çevirici</span></h1>
+      <p class="lead">Kategori seçin, birimleri belirleyin, değeri yazın — sonuç anında görünür.</p>
+
+      <label for="kategori">Kategori</label>
+      <select id="kategori">
+        <option value="uzunluk">Uzunluk</option>
+        <option value="agirlik">Ağırlık</option>
+        <option value="sicaklik">Sıcaklık</option>
+      </select>
+
+      <div class="row">
+        <div>
+          <label for="deger">Değer</label>
+          <input type="number" id="deger" inputmode="decimal" value="1" step="any" />
+        </div>
+        <div>
+          <label for="from-unit">Birim</label>
+          <select id="from-unit"></select>
+        </div>
+      </div>
+
+      <div class="row" style="align-items:center">
+        <button type="button" class="secondary" id="swap-btn" style="max-width:60px">⇄</button>
+        <div>
+          <label for="to-unit">Hedef birim</label>
+          <select id="to-unit"></select>
+        </div>
+      </div>
+
+      <div class="result" id="result">
+        <div class="result-row">
+          <span class="label">Sonuç</span>
+          <span class="value big" id="sonuc-value">—</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="other-tools">
+      <h2>Diğer araçlar</h2>
+      <div class="chip-row">
+        <a class="chip-link" href="../kdv-hesaplama/">KDV Hesaplama</a>
+        <a class="chip-link" href="../kredi-hesaplama/">Kredi Taksit Hesaplama</a>
+        <a class="chip-link" href="../yas-hesaplama/">Yaş Hesaplama</a>
+        <a class="chip-link" href="../sifre-olusturucu/">Şifre Oluşturucu</a>
+        <a class="chip-link" href="../metin-sayaci/">Metin Sayacı</a>
+        <a class="chip-link" href="../qr-kod-olusturucu/">QR Kod Oluşturucu</a>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="footer-links">
+        <a href="../gizlilik-politikasi/">Gizlilik Politikası</a>
+        <a href="../kullanim-sartlari/">Kullanım Şartları</a>
+        <a href="../iletisim/">İletişim</a>
+      </div>
+      <p>Tüm hesaplamalar tarayıcınızda yapılır, hiçbir veri sunucuya gönderilmez.</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
