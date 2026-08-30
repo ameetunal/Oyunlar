@@ -14,12 +14,14 @@ const DIRS = {
 };
 const OPPOSITE = { up: "down", down: "up", left: "right", right: "left" };
 
-const PLAYER_SPEED = 158; // px/sn
-const GHOST_SPEED = 108;
-const FRIGHTENED_SPEED = 76;
+const PLAYER_SPEED = 210; // px/sn
+const GHOST_SPEED = 118;
+const FRIGHTENED_SPEED = 84;
 const FRIGHTENED_DURATION = 7; // saniye
 const GHOST_HOUSE = { r0: 9, r1: 11, c0: 8, c1: 12 };
 const EXTRA_LIFE_SCORE = 10000;
+const LEADERBOARD_KEY = "nokta-avcisi-liderlik";
+const LEADERBOARD_MAX = 10;
 const FRUIT_CELL = { row: 13, col: 10 };
 const FRUIT_DURATION = 9; // saniye, yenmezse kaybolur
 const FRUIT_TYPES = [
@@ -117,6 +119,12 @@ const btnMute = document.getElementById("btn-mute");
 const btnPause = document.getElementById("btn-pause");
 const overlayMessage = document.getElementById("overlay-message");
 const overlayBtn = document.getElementById("overlay-btn");
+const shareBtn = document.getElementById("share-btn");
+const nameEntry = document.getElementById("name-entry");
+const nameInput = document.getElementById("name-input");
+const nameSubmit = document.getElementById("name-submit");
+const leaderboardPanel = document.getElementById("leaderboard-panel");
+const leaderboardList = document.getElementById("leaderboard-list");
 
 highscoreEl.textContent = highScore;
 
@@ -180,37 +188,51 @@ function resolveDirectionAtCenter(mover, wcol, row) {
   }
 }
 
+// currentCell() konuma EN YAKIN hücreyi verir; hareket yönünde o hücrenin
+// merkezi zaten GERİDE kalmışsa (negatif mesafe), asıl kontrol edilmesi
+// gereken kesişim bir sonraki hücrenindir — mesafeyi ve hücreyi buna göre
+// "ileri" ya kaydırıyoruz. Böylece keyfi bir epsilon eşiğine (önceki
+// sürümlerde hem sonsuz döngüye hem de yüksek hızda gözden kaçan bir "ölü
+// bölge"ye yol açmıştı) ihtiyaç kalmadan, her zaman gerçekten ÖNDEKİ
+// kesişim doğrulanır ve tek geçişte (döngüsüz) hesaplanır.
 function stepMover(mover, dt) {
-  const dist = mover.speed * dt;
+  // Tek geçişte en fazla bir hücre genişliğine kadar ilerleme doğrulanır;
+  // dt bir TILE'ı aşacak kadar büyürse (örn. sekme uzun süre arka plana
+  // düşüp geri dönerse) kesişim doğrulaması atlanabilir. loop() zaten dt'yi
+  // 0.05sn ile sınırlıyor, bu ek sınır savunma amaçlı ikinci bir kilittir.
+  const dist = mover.speed * Math.min(dt, TILE / mover.speed);
 
   if (!mover.dir) {
-    // Duruyor: zaten tam bir hücre merkezinde. Yeni yön denenebilir mi bak,
-    // dener ama sabit dursa da her karede yeniden doğrulanır (duvara doğru
-    // yön talep edilirse asla harekete geçmez).
     const { col, row } = currentCell(mover);
     resolveDirectionAtCenter(mover, wrapCol(col), row);
     if (!mover.dir) return;
   }
 
-  const { col, row } = currentCell(mover);
-  const wcol = wrapCol(col);
-  const inTunnelOverflow = col < 0 || col >= COLS;
-  const center = cellCenter(wcol, row);
+  let { col, row } = currentCell(mover);
   const d = DIRS[mover.dir];
-  const distToCenter = d.x !== 0
+  let wcol = wrapCol(col);
+  let inTunnelOverflow = col < 0 || col >= COLS;
+  let center = cellCenter(wcol, row);
+  let distToCenter = d.x !== 0
     ? (inTunnelOverflow ? Infinity : (center.x - mover.x) * d.x)
     : (center.y - mover.y) * d.y;
 
-  if (distToCenter > 0.0005 && distToCenter < dist) {
-    // Bu karede hücre merkezine ulaşıp geçecek: tam merkeze snap'le, yönü
-    // orada çöz/doğrula, kalan mesafeyi hemen (yeni) yönde uygula. Böylece
-    // hızlı hareket bile hiçbir kesişimi atlamaz.
+  if (distToCenter < 0) {
+    col += d.x;
+    row += d.y;
+    wcol = wrapCol(col);
+    inTunnelOverflow = col < 0 || col >= COLS;
+    center = cellCenter(wcol, row);
+    distToCenter += TILE;
+  }
+
+  if (!inTunnelOverflow && distToCenter <= dist + 1e-6) {
     mover.x = center.x;
     mover.y = center.y;
     resolveDirectionAtCenter(mover, wcol, row);
     if (!mover.dir) return;
 
-    const remaining = dist - distToCenter;
+    const remaining = Math.max(dist - distToCenter, 0);
     const nd = DIRS[mover.dir];
     mover.x += nd.x * remaining;
     mover.y += nd.y * remaining;
@@ -283,8 +305,8 @@ function newGame() {
 function goToNextLevel() {
   level++;
   resetEntitiesAndMaze();
-  respawnPause = 1.4;
-  showBanner(`Bölüm ${level}!`, 1.4);
+  respawnPause = 1;
+  showBanner(`Bölüm ${level}!`, 1);
   playSequence([392, 494, 587, 784], "triangle", 0.07, 0.1, 0.09);
   updateHud();
 }
@@ -440,7 +462,7 @@ window.addEventListener("keydown", (e) => {
 // aşılır aşılmaz yönü uygular ve referans noktasını sıfırlar — böylece
 // parmağınızı kaldırmadan sürekli yön değiştirebilirsiniz (bekleme hissi
 // olmadan, anlık tepki verir).
-const SWIPE_THRESHOLD = 9;
+const SWIPE_THRESHOLD = 6;
 let touchRef = null;
 
 canvas.addEventListener(
@@ -475,6 +497,7 @@ canvas.addEventListener(
 canvas.addEventListener("touchend", () => (touchRef = null), { passive: true });
 
 overlayBtn.addEventListener("click", () => {
+  hideEndGameExtras();
   if (gameOver) newGame();
   startGame();
 });
@@ -487,6 +510,7 @@ function togglePause() {
     paused = true;
     running = false;
     btnPause.textContent = "▶";
+    hideEndGameExtras();
     showOverlay("Duraklatıldı", `Skor: ${score} · Bölüm: ${level}`, "Devam Et");
   }
 }
@@ -503,6 +527,100 @@ window.addEventListener("keydown", (e) => {
 document.addEventListener("visibilitychange", () => {
   if (document.hidden && running && !paused) togglePause();
 });
+
+/* ---------- Liderlik tablosu (yerel) ---------- */
+function loadLeaderboard() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(LEADERBOARD_KEY) || "[]");
+    return Array.isArray(raw) ? raw : [];
+  } catch {
+    return [];
+  }
+}
+
+function qualifiesForLeaderboard(list, s) {
+  if (s <= 0) return false;
+  return list.length < LEADERBOARD_MAX || s > list[list.length - 1].score;
+}
+
+function addToLeaderboard(name, s, lvl) {
+  const list = loadLeaderboard();
+  list.push({ name: (name || "Oyuncu").slice(0, 12), score: s, level: lvl });
+  list.sort((a, b) => b.score - a.score);
+  list.length = Math.min(list.length, LEADERBOARD_MAX);
+  localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(list));
+  return list;
+}
+
+function renderLeaderboard() {
+  const list = loadLeaderboard();
+  leaderboardList.innerHTML =
+    list
+      .map(
+        (e, i) =>
+          `<li><span class="lb-rank">${i + 1}</span><span class="lb-name"></span><span class="lb-score">${e.score}</span></li>`
+      )
+      .join("") || `<li class="lb-empty">Henüz kayıt yok — ilk sen ol!</li>`;
+  // İsimleri textContent ile ekleyip HTML enjeksiyonunu önlüyoruz.
+  leaderboardList.querySelectorAll(".lb-name").forEach((el, i) => {
+    el.textContent = list[i].name;
+  });
+}
+
+function showEndGameExtras() {
+  leaderboardPanel.classList.remove("hidden");
+  shareBtn.classList.remove("hidden");
+  const list = loadLeaderboard();
+  if (qualifiesForLeaderboard(list, score)) {
+    nameEntry.classList.remove("hidden");
+    nameInput.value = "";
+    setTimeout(() => nameInput.focus(), 50);
+    renderLeaderboard();
+  } else {
+    nameEntry.classList.add("hidden");
+    renderLeaderboard();
+  }
+}
+
+function hideEndGameExtras() {
+  nameEntry.classList.add("hidden");
+  leaderboardPanel.classList.add("hidden");
+  shareBtn.classList.add("hidden");
+}
+
+function submitLeaderboardName() {
+  addToLeaderboard(nameInput.value.trim(), score, level);
+  renderLeaderboard();
+  nameEntry.classList.add("hidden");
+}
+
+nameSubmit.addEventListener("click", submitLeaderboardName);
+nameInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") submitLeaderboardName();
+});
+
+shareBtn.addEventListener("click", async () => {
+  const text = `Nokta Avcısı'nda ${score} puan yaptım, ${level}. bölüme ulaştım! Sen de dene:`;
+  const url = location.href.split("#")[0];
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: "Nokta Avcısı", text, url });
+    } catch {
+      // Kullanıcı paylaşımı iptal etti; sessizce geç.
+    }
+  } else {
+    try {
+      await navigator.clipboard.writeText(`${text} ${url}`);
+      const original = shareBtn.textContent;
+      shareBtn.textContent = "✅ Kopyalandı!";
+      setTimeout(() => (shareBtn.textContent = original), 1600);
+    } catch {
+      // Pano erişimi yoksa sessizce geç.
+    }
+  }
+});
+
+renderLeaderboard();
 
 /* ---------- Ses (küçük WebAudio efektleri, dosya gerekmez) ---------- */
 let audioCtx = null;
@@ -744,10 +862,11 @@ function loseLife() {
       `Skor: ${score} · Bölüm: ${level}`,
       "Tekrar Oyna"
     );
+    showEndGameExtras();
     return;
   }
   resetPositionsAfterDeath();
-  respawnPause = 1;
+  respawnPause = 0.6;
 }
 
 /* ---------- Çizim ---------- */
@@ -776,9 +895,18 @@ function drawBackground() {
   }
 }
 
+const LEVEL_THEMES = [
+  { top: "#1c3f8f", bottom: "#0e1f4a", stroke: "rgba(120,190,255,0.55)", glow: "rgba(77,217,255,0.55)" },
+  { top: "#6a1c8f", bottom: "#2e0e4a", stroke: "rgba(220,150,255,0.55)", glow: "rgba(200,77,255,0.55)" },
+  { top: "#1c8f6a", bottom: "#0e4a35", stroke: "rgba(150,255,210,0.55)", glow: "rgba(77,255,180,0.55)" },
+  { top: "#8f5a1c", bottom: "#4a2e0e", stroke: "rgba(255,210,150,0.55)", glow: "rgba(255,170,77,0.55)" },
+  { top: "#8f1c3a", bottom: "#4a0e1f", stroke: "rgba(255,150,180,0.55)", glow: "rgba(255,77,120,0.55)" },
+];
+
 function drawWalls() {
+  const theme = LEVEL_THEMES[(level - 1) % LEVEL_THEMES.length];
   ctx.save();
-  ctx.shadowColor = "rgba(77, 217, 255, 0.55)";
+  ctx.shadowColor = theme.glow;
   ctx.shadowBlur = 6;
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
@@ -787,12 +915,12 @@ function drawWalls() {
       const y = r * TILE + 2;
       const size = TILE - 4;
       const g = ctx.createLinearGradient(x, y, x, y + size);
-      g.addColorStop(0, "#1c3f8f");
-      g.addColorStop(1, "#0e1f4a");
+      g.addColorStop(0, theme.top);
+      g.addColorStop(1, theme.bottom);
       ctx.fillStyle = g;
       roundRect(x, y, size, size, 5);
       ctx.fill();
-      ctx.strokeStyle = "rgba(120, 190, 255, 0.55)";
+      ctx.strokeStyle = theme.stroke;
       ctx.lineWidth = 1;
       ctx.stroke();
     }
@@ -1039,6 +1167,7 @@ fitCanvasForDisplay();
 newGame();
 draw();
 showOverlay("Nokta Avcısı", "Tüm noktaları topla, hayaletlerden kaç! Güç topu yersen hayaletleri sen avlarsın.", "Başla");
+leaderboardPanel.classList.remove("hidden");
 requestAnimationFrame(loop);
 
 if ("serviceWorker" in navigator) {
