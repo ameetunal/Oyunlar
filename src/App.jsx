@@ -239,6 +239,7 @@ export default function App() {
   });
 
   const touchStartX = useRef(null);
+  const touchStartY = useRef(null);
   const touchStartedInScrollable = useRef(false);
   const tocRef = useRef(null);
 
@@ -374,6 +375,7 @@ export default function App() {
 
   const onTouchStart = (e) => {
     touchStartX.current = e.changedTouches[0].clientX;
+    touchStartY.current = e.changedTouches[0].clientY;
     // Tablo gibi kendi içinde yatay kaydırılan alanlarda başlayan dokunuşlar
     // sayfa çevirmeyi tetiklemesin — kullanıcı tabloyu kaydırmak istiyordur.
     touchStartedInScrollable.current = Boolean(e.target.closest('.sultans-table-wrap'));
@@ -382,12 +384,18 @@ export default function App() {
   const onTouchEnd = (e) => {
     if (touchStartX.current === null) return;
     const dx = e.changedTouches[0].clientX - touchStartX.current;
+    const dy = e.changedTouches[0].clientY - (touchStartY.current ?? 0);
     touchStartX.current = null;
+    touchStartY.current = null;
     if (touchStartedInScrollable.current) {
       touchStartedInScrollable.current = false;
       return;
     }
     if (Math.abs(dx) < 60) return;
+    // Aşağı çekip yenileme (pull-to-refresh) veya dikey kaydırma gibi büyük
+    // ölçüde dikey hareketler yanlışlıkla sayfa çevirmesin — yatay hareket
+    // dikeyden belirgin şekilde baskın değilse bunu bir kaydırma sayma.
+    if (Math.abs(dx) < Math.abs(dy) * 1.5) return;
     if (dx < 0) goTo(pageIndex + 1);
     else goTo(pageIndex - 1);
   };
