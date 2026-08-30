@@ -14,11 +14,21 @@ const DIRS = {
 };
 const OPPOSITE = { up: "down", down: "up", left: "right", right: "left" };
 
-const PLAYER_SPEED = 132; // px/sn
+const PLAYER_SPEED = 158; // px/sn
 const GHOST_SPEED = 108;
 const FRIGHTENED_SPEED = 76;
 const FRIGHTENED_DURATION = 7; // saniye
 const GHOST_HOUSE = { r0: 9, r1: 11, c0: 8, c1: 12 };
+const EXTRA_LIFE_SCORE = 10000;
+const FRUIT_CELL = { row: 13, col: 10 };
+const FRUIT_DURATION = 9; // saniye, yenmezse kaybolur
+const FRUIT_TYPES = [
+  { name: "Kiraz", value: 100, color: "#ff5c6c", accent: "#ffb3ba" },
+  { name: "Çilek", value: 300, color: "#ff3b8d", accent: "#ffc4e0" },
+  { name: "Portakal", value: 500, color: "#ff9c33", accent: "#ffd9a0" },
+  { name: "Elma", value: 700, color: "#4dd964", accent: "#c6ffce" },
+  { name: "Yıldız", value: 1000, color: "#ffd23f", accent: "#fff3c4" },
+];
 
 const GHOST_DEFS = [
   { color: "#ff4d4d", glow: "rgba(255,77,77,0.8)", home: { col: 9, row: 10 } },
@@ -91,6 +101,9 @@ let floatingTexts = [];
 let particles = [];
 let muted = localStorage.getItem("nokta-avcisi-sessiz") === "1";
 let wakaToggle = false;
+let fruit = null;
+let fruitSpawnedThisLevel = 0;
+let extraLifeAwarded = false;
 
 const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
@@ -252,6 +265,8 @@ function resetEntitiesAndMaze() {
   respawnPause = 0;
   particles = [];
   floatingTexts = [];
+  fruit = null;
+  fruitSpawnedThisLevel = 0;
 }
 
 function newGame() {
@@ -260,6 +275,7 @@ function newGame() {
   lives = 3;
   gameOver = false;
   paused = false;
+  extraLifeAwarded = false;
   resetEntitiesAndMaze();
   updateHud();
 }
@@ -277,6 +293,60 @@ function updateHud() {
   scoreEl.textContent = score;
   levelEl.textContent = level;
   livesEl.textContent = "●".repeat(Math.max(lives, 0)) || "—";
+}
+
+function checkExtraLife() {
+  if (extraLifeAwarded || score < EXTRA_LIFE_SCORE) return;
+  extraLifeAwarded = true;
+  lives++;
+  updateHud();
+  showBanner("🎉 Ekstra Can!", 1.6);
+  playSequence([523, 659, 784, 1046, 784, 1046], "triangle", 0.09, 0.12, 0.09);
+}
+
+/* ---------- Bonus meyve ----------
+ * Her bölümde noktaların %35'i ve %70'i yendiğinde labirentin sabit bir
+ * noktasında kısa süreliğine belirir; yakalanırsa bölüme göre artan puan
+ * kazandırır, süresi dolarsa sessizce kaybolur.
+ */
+function hexToRgbList(hex) {
+  const num = parseInt(hex.slice(1), 16);
+  return `${(num >> 16) & 0xff},${(num >> 8) & 0xff},${num & 0xff}`;
+}
+
+function maybeSpawnFruit() {
+  if (fruit || fruitSpawnedThisLevel >= 2 || totalDots === 0) return;
+  const eatenRatio = 1 - dots.size / totalDots;
+  const thresholds = [0.35, 0.7];
+  if (eatenRatio >= thresholds[fruitSpawnedThisLevel]) {
+    const type = FRUIT_TYPES[Math.min(level - 1, FRUIT_TYPES.length - 1)];
+    fruit = { type, timer: FRUIT_DURATION };
+    fruitSpawnedThisLevel++;
+  }
+}
+
+function updateFruit(dt) {
+  maybeSpawnFruit();
+  if (!fruit) return;
+
+  fruit.timer -= dt;
+  if (fruit.timer <= 0) {
+    fruit = null;
+    return;
+  }
+
+  const center = cellCenter(FRUIT_CELL.col, FRUIT_CELL.row);
+  const dx = center.x - player.x;
+  const dy = center.y - player.y;
+  if (dx * dx + dy * dy < (TILE * 0.6) ** 2) {
+    score += fruit.type.value;
+    spawnFloatingText(center.x, center.y, `+${fruit.type.value}`, fruit.type.color);
+    spawnBurst(center.x, center.y, hexToRgbList(fruit.type.color), 16);
+    playSequence([880, 1175, 1568], "triangle", 0.08, 0.09, 0.06);
+    updateHud();
+    checkExtraLife();
+    fruit = null;
+  }
 }
 
 /* ---------- Efektler ---------- */
@@ -370,7 +440,7 @@ window.addEventListener("keydown", (e) => {
 // aşılır aşılmaz yönü uygular ve referans noktasını sıfırlar — böylece
 // parmağınızı kaldırmadan sürekli yön değiştirebilirsiniz (bekleme hissi
 // olmadan, anlık tepki verir).
-const SWIPE_THRESHOLD = 14;
+const SWIPE_THRESHOLD = 9;
 let touchRef = null;
 
 canvas.addEventListener(
@@ -575,6 +645,7 @@ function update(dt) {
     score += 10;
     wakaToggle = !wakaToggle;
     beep(wakaToggle ? 420 : 330, 0.05, "square", 0.045);
+    checkExtraLife();
   }
   if (isPowerCell(pc.row, wpc)) {
     const center = cellCenter(wpc, pc.row);
@@ -590,6 +661,7 @@ function update(dt) {
       }
     });
     playSweep(700, 160, 0.35, "sawtooth", 0.06);
+    checkExtraLife();
   }
   updateHud();
 
@@ -597,6 +669,8 @@ function update(dt) {
     goToNextLevel();
     return;
   }
+
+  updateFruit(dt);
 
   if (frightenedTimer > 0) {
     frightenedTimer -= dt;
@@ -640,6 +714,7 @@ function update(dt) {
         spawnBurst(g.x, g.y, "77,217,255", 18);
         playSequence([660, 990], "square", 0.08, 0.08, 0.07);
         updateHud();
+        checkExtraLife();
       } else {
         loseLife();
         return;
@@ -760,6 +835,34 @@ function drawDots() {
     ctx.arc(x, y, pulse, 0, Math.PI * 2);
     ctx.fill();
   });
+  ctx.restore();
+}
+
+function drawFruit() {
+  if (!fruit) return;
+  const { x, y } = cellCenter(FRUIT_CELL.col, FRUIT_CELL.row);
+  const pulse = 1 + Math.sin(performance.now() / 130) * 0.08;
+  const blinking = fruit.timer < 2.5 && Math.floor(fruit.timer * 6) % 2 === 0;
+
+  ctx.save();
+  ctx.globalAlpha = blinking ? 0.35 : 1;
+  ctx.translate(x, y);
+  ctx.scale(pulse, pulse);
+  ctx.shadowColor = fruit.type.color;
+  ctx.shadowBlur = 12;
+  const g = ctx.createRadialGradient(-3, -3, 1, 0, 0, TILE / 2 - 3);
+  g.addColorStop(0, fruit.type.accent);
+  g.addColorStop(1, fruit.type.color);
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.arc(0, 0, TILE / 2 - 4, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = "#5a3d1e";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(0, -(TILE / 2 - 4));
+  ctx.lineTo(3, -(TILE / 2 + 2));
+  ctx.stroke();
   ctx.restore();
 }
 
@@ -897,6 +1000,7 @@ function draw() {
   drawBackground();
   drawWalls();
   drawDots();
+  drawFruit();
   drawPlayer();
   drawGhosts();
   drawParticles();
