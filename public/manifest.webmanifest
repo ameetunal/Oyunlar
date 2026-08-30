@@ -2,14 +2,14 @@
   "name": "Osmanlı — Bir İmparatorluğun Hikâyesi",
   "short_name": "Osmanlı",
   "description": "Osmanlı tarihinin kuruluşundan yıkılışına, kitap ve belgesel tadında doğrusal bir anlatımı.",
-  "start_url": "/Oyunlar/",
-  "scope": "/Oyunlar/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#16324a",
   "theme_color": "#4a0e17",
   "icons": [
     {
-      "src": "/Oyunlar/favicon.svg",
+      "src": "favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
