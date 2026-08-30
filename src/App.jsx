@@ -148,7 +148,7 @@ function buildPages(periods) {
   return pages;
 }
 
-const FEEDBACK_EMAIL = 'ameeet_unal@hotmail.com';
+const FEEDBACK_EMAIL = 'Tarihiiosmanli@hotmail.com';
 
 const SECTION_LABELS = {
   sultans: 'Padişahlar Listesi',
@@ -1516,7 +1516,7 @@ export default function App() {
                     sayfalarda reklam gösterilmektedir. Bir eksik bilgi fark edersen ya da
                     eklenmesini istediğin bir bölüm varsa, her sayfanın altındaki
                     bağlantıdan ya da doğrudan{' '}
-                    <a href="mailto:ameeet_unal@hotmail.com">ameeet_unal@hotmail.com</a>{' '}
+                    <a href={`mailto:${FEEDBACK_EMAIL}`}>{FEEDBACK_EMAIL}</a>{' '}
                     adresinden bize ulaşabilirsin.
                   </p>
                 </div>
@@ -1539,7 +1539,7 @@ export default function App() {
                     yazabilirsin — mesajlar elden geçirilip mümkün olduğunca değerlendirilir.
                   </p>
                   <p className="contact-email-line">
-                    <a href="mailto:ameeet_unal@hotmail.com">ameeet_unal@hotmail.com</a>
+                    <a href={`mailto:${FEEDBACK_EMAIL}`}>{FEEDBACK_EMAIL}</a>
                   </p>
                 </div>
               </>
