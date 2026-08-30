@@ -147,32 +147,53 @@ function atCellCenter(mover) {
   return Math.abs(mover.x - targetX) < 1.2 && Math.abs(mover.y - c.y) < 1.2;
 }
 
+// Bir karede alınan mesafe, hücre merkezinin etrafındaki dar tespit
+// penceresini atlayabilir (özellikle yüksek hızda) — bu da yön
+// değişikliğinin bir sonraki kesişime kadar gecikmesine yol açardı. Bunun
+// yerine, bu karede merkezin "geçilip geçilmeyeceğini" hesaplayıp tam o
+// noktada yöne karar veriyoruz; böylece hiçbir kesişim atlanmaz.
 function stepMover(mover, dt) {
-  const dist = mover.speed * dt;
-  const { col, row } = currentCell(mover);
+  let dist = mover.speed * dt;
+  let guard = 0;
 
-  if (atCellCenter(mover)) {
-    const center = cellCenter(wrapCol(col), row);
-    mover.x = col < 0 || col >= COLS ? mover.x : center.x;
-    mover.y = center.y;
-
-    if (mover.nextDir) {
-      const d = DIRS[mover.nextDir];
-      if (isWalkable(wrapCol(col) + d.x, row + d.y)) {
-        mover.dir = mover.nextDir;
+  while (dist > 0.0001 && guard++ < 8) {
+    if (!mover.dir) {
+      const { col, row } = currentCell(mover);
+      const wcol = wrapCol(col);
+      if (mover.nextDir) {
+        const d = DIRS[mover.nextDir];
+        if (isWalkable(wcol + d.x, row + d.y)) {
+          mover.dir = mover.nextDir;
+        }
       }
+      if (!mover.dir) break;
     }
 
-    if (mover.dir) {
-      const d = DIRS[mover.dir];
-      if (!isWalkable(wrapCol(col) + d.x, row + d.y)) {
+    const { col, row } = currentCell(mover);
+    const wcol = wrapCol(col);
+    const inTunnelOverflow = col < 0 || col >= COLS;
+    const center = cellCenter(wcol, row);
+    const d = DIRS[mover.dir];
+    const distToCenter = d.x !== 0 ? (inTunnelOverflow ? Infinity : (center.x - mover.x) * d.x) : (center.y - mover.y) * d.y;
+
+    if (distToCenter > 0.001 && distToCenter < dist) {
+      mover.x = center.x;
+      mover.y = center.y;
+      dist -= distToCenter;
+
+      if (mover.nextDir) {
+        const nd = DIRS[mover.nextDir];
+        if (isWalkable(wcol + nd.x, row + nd.y)) {
+          mover.dir = mover.nextDir;
+        }
+      }
+      const cd = DIRS[mover.dir];
+      if (!isWalkable(wcol + cd.x, row + cd.y)) {
         mover.dir = null;
       }
+      continue;
     }
-  }
 
-  if (mover.dir) {
-    const d = DIRS[mover.dir];
     mover.x += d.x * dist;
     mover.y += d.y * dist;
 
@@ -181,6 +202,7 @@ function stepMover(mover, dt) {
       if (mover.x < -TILE / 2) mover.x = w + TILE / 2;
       if (mover.x > w + TILE / 2) mover.x = -TILE / 2;
     }
+    dist = 0;
   }
 }
 
