@@ -48,7 +48,19 @@
       <div id="overlay">
         <h2 id="overlay-title">Nokta Avcısı</h2>
         <p id="overlay-message">Tüm noktaları topla, hayaletlerden kaç!</p>
+        <div id="name-entry" class="hidden">
+          <p class="name-entry-label">🏆 Liderlik tablosuna girdin! İsmini yaz:</p>
+          <div class="name-entry-row">
+            <input id="name-input" maxlength="12" placeholder="İsim" autocomplete="off" />
+            <button id="name-submit">Kaydet</button>
+          </div>
+        </div>
+        <div id="leaderboard-panel" class="hidden">
+          <h3>🏆 En İyi 10</h3>
+          <ol id="leaderboard-list"></ol>
+        </div>
         <button id="overlay-btn">Başla</button>
+        <button id="share-btn" class="hidden">📤 Skoru Paylaş</button>
       </div>
     </div>
 

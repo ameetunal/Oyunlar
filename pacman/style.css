@@ -160,13 +160,145 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 24px;
+  padding: 20px;
   gap: 10px;
+  overflow-y: auto;
   transition: opacity 0.2s ease;
 }
 
 #overlay.hidden {
   display: none;
+}
+
+.hidden {
+  display: none !important;
+}
+
+#name-entry {
+  width: 100%;
+  max-width: 300px;
+}
+
+.name-entry-label {
+  margin: 0 0 8px;
+  font-size: 0.82rem;
+  color: var(--accent);
+}
+
+.name-entry-row {
+  display: flex;
+  gap: 6px;
+}
+
+#name-input {
+  flex: 1;
+  min-width: 0;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 8px 10px;
+  font-size: 0.95rem;
+}
+
+#name-input:focus {
+  outline: none;
+  border-color: var(--neon);
+}
+
+#name-submit {
+  background: linear-gradient(135deg, #4dd9ff, #4d7bff);
+  color: #001428;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+#leaderboard-panel {
+  width: 100%;
+  max-width: 300px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+#leaderboard-panel h3 {
+  margin: 0 0 6px;
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-align: center;
+  letter-spacing: 0.03em;
+}
+
+#leaderboard-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 138px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+#leaderboard-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  padding: 3px 4px;
+  border-radius: 6px;
+}
+
+#leaderboard-list li:nth-child(odd) {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.lb-rank {
+  width: 18px;
+  text-align: center;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.lb-name {
+  flex: 1;
+  text-align: left;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lb-score {
+  font-weight: 700;
+  color: var(--neon);
+}
+
+.lb-empty {
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.78rem;
+  padding: 6px 0;
+}
+
+#share-btn {
+  margin-top: 0;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+#share-btn:active {
+  border-color: var(--neon);
 }
 
 #overlay h2 {
