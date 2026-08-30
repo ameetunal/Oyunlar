@@ -29,6 +29,7 @@ const PROGRESS_KEY = 'osmanli-hikayesi:progress';
 const THEME_KEY = 'osmanli-hikayesi:theme';
 const MODE_KEY = 'osmanli-hikayesi:mode';
 const BOOKMARKS_KEY = 'osmanli-hikayesi:bookmarks';
+const TTS_SUPPORTED = typeof window !== 'undefined' && 'speechSynthesis' in window;
 const FONT_KEY = 'osmanli-hikayesi:font-size';
 const FONT_SIZES = ['sm', 'md', 'lg'];
 const FONT_LABELS = { sm: 'Küçük', md: 'Orta', lg: 'Büyük' };
@@ -222,6 +223,7 @@ export default function App() {
     return Number.isInteger(saved) && saved > 0 ? saved : null;
   });
   const [isOffline, setIsOffline] = useState(() => !navigator.onLine);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const [bookmarkIds, setBookmarkIds] = useState(() => {
     try {
       const raw = readStorage(BOOKMARKS_KEY);
@@ -306,7 +308,18 @@ export default function App() {
 
   useEffect(() => {
     writeStorage(MODE_KEY, mode);
+    if (mode !== 'book' && TTS_SUPPORTED) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+    }
   }, [mode]);
+
+  useEffect(() => {
+    setIsSpeaking(false);
+    return () => {
+      if (TTS_SUPPORTED) window.speechSynthesis.cancel();
+    };
+  }, [pageIndex]);
 
   useEffect(() => {
     if (!tocOpen) setTocQuery('');
@@ -373,18 +386,36 @@ export default function App() {
 
   const dismissResume = () => setResumeIndex(null);
 
-  let readingMinutes = null;
-  if (page.type === 'intro') readingMinutes = estimateReadingMinutes(page.period.intro);
-  else if (page.type === 'event') readingMinutes = estimateReadingMinutes(page.event.text);
-  else if (page.type === 'theme') readingMinutes = estimateReadingMinutes(page.theme.text);
-  else if (page.type === 'sultan-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
-  else if (page.type === 'vizier-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
-  else if (page.type === 'architect-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
-  else if (page.type === 'daily-life-topic') readingMinutes = estimateReadingMinutes(page.entry.text);
-  else if (page.type === 'scientist-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
-  else if (page.type === 'harem-woman-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
-  else if (page.type === 'admiral-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
-  else if (page.type === 'poet-profile') readingMinutes = estimateReadingMinutes(page.profile.text);
+  let pageText = null;
+  if (page.type === 'intro') pageText = page.period.intro;
+  else if (page.type === 'event') pageText = page.event.text;
+  else if (page.type === 'theme') pageText = page.theme.text;
+  else if (page.type === 'sultan-profile') pageText = page.profile.text;
+  else if (page.type === 'vizier-profile') pageText = page.profile.text;
+  else if (page.type === 'architect-profile') pageText = page.profile.text;
+  else if (page.type === 'daily-life-topic') pageText = page.entry.text;
+  else if (page.type === 'scientist-profile') pageText = page.profile.text;
+  else if (page.type === 'harem-woman-profile') pageText = page.profile.text;
+  else if (page.type === 'admiral-profile') pageText = page.profile.text;
+  else if (page.type === 'poet-profile') pageText = page.profile.text;
+
+  const readingMinutes = pageText ? estimateReadingMinutes(pageText) : null;
+
+  const toggleSpeech = () => {
+    if (!TTS_SUPPORTED || !pageText) return;
+    if (isSpeaking) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(pageText);
+    utterance.lang = 'tr-TR';
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+    window.speechSynthesis.speak(utterance);
+    setIsSpeaking(true);
+  };
 
   if (mode === 'quiz') {
     return (
@@ -614,15 +645,29 @@ export default function App() {
             onTouchStart={onTouchStart}
             onTouchEnd={onTouchEnd}
           >
-            {currentBookmarkId && (
-              <button
-                className={`bookmark-toggle ${isPageBookmarked ? 'bookmark-toggle--active' : ''}`}
-                onClick={toggleBookmark}
-                aria-pressed={isPageBookmarked}
-                aria-label={isPageBookmarked ? 'Yer işaretini kaldır' : 'Bu sayfayı yer işaretle'}
-              >
-                {isPageBookmarked ? '★ Yer İşaretlendi' : '☆ Yer İşaretle'}
-              </button>
+            {(currentBookmarkId || (TTS_SUPPORTED && pageText)) && (
+              <div className="page-toolbar">
+                {TTS_SUPPORTED && pageText && (
+                  <button
+                    className={`tts-toggle ${isSpeaking ? 'tts-toggle--active' : ''}`}
+                    onClick={toggleSpeech}
+                    aria-pressed={isSpeaking}
+                    aria-label={isSpeaking ? 'Sesli okumayı durdur' : 'Bu sayfayı sesli oku'}
+                  >
+                    {isSpeaking ? '⏹ Durdur' : '🔊 Dinle'}
+                  </button>
+                )}
+                {currentBookmarkId && (
+                  <button
+                    className={`bookmark-toggle ${isPageBookmarked ? 'bookmark-toggle--active' : ''}`}
+                    onClick={toggleBookmark}
+                    aria-pressed={isPageBookmarked}
+                    aria-label={isPageBookmarked ? 'Yer işaretini kaldır' : 'Bu sayfayı yer işaretle'}
+                  >
+                    {isPageBookmarked ? '★ Yer İşaretlendi' : '☆ Yer İşaretle'}
+                  </button>
+                )}
+              </div>
             )}
 
             {resumeIndex !== null && resumeIndex !== pageIndex && (

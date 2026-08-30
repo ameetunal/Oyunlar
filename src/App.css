@@ -536,12 +536,20 @@ body {
 }
 
 /* Resume banner */
-.bookmark-toggle {
+.page-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 0.75rem;
+}
+
+.bookmark-toggle,
+.tts-toggle {
   display: flex;
   align-items: center;
   gap: 0.35rem;
   width: max-content;
-  margin: 0 0 0.75rem auto;
   padding: 0.35rem 0.75rem;
   background: transparent;
   border: 1px solid var(--gold);
@@ -552,7 +560,8 @@ body {
   cursor: pointer;
 }
 
-.bookmark-toggle:hover {
+.bookmark-toggle:hover,
+.tts-toggle:hover {
   color: var(--maroon);
   border-color: var(--maroon);
 }
@@ -567,6 +576,18 @@ body {
   color: var(--paper);
   border-color: var(--maroon);
   background: var(--maroon);
+}
+
+.tts-toggle--active {
+  background: var(--maroon);
+  border-color: var(--maroon);
+  color: var(--paper);
+}
+
+.tts-toggle--active:hover {
+  color: var(--paper);
+  border-color: var(--maroon);
+  background: var(--maroon-deep);
 }
 
 .resume-banner {
