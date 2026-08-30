@@ -908,8 +908,18 @@ requestAnimationFrame(loop);
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js").catch(() => {
-      // Service worker desteklenmiyorsa (ör. file:// üzerinden açılmışsa) sessizce geç.
+    navigator.serviceWorker
+      .register("sw.js")
+      .then((reg) => reg.update())
+      .catch(() => {
+        // Service worker desteklenmiyorsa (ör. file:// üzerinden açılmışsa) sessizce geç.
+      });
+
+    // Yeni bir service worker devreye girdiğinde (deploy sonrası), açık sayfayı
+    // otomatik yeniler; böylece kullanıcı elle birden fazla kez yenilemek
+    // zorunda kalmadan her zaman en güncel sürümü oynar.
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      window.location.reload();
     });
   });
 }
