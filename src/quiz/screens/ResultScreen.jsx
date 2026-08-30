@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ShareIcon } from '../components/Icons.jsx';
 import { categories } from '../data/categories.js';
 import { generateShareImage } from '../shareImage.js';
+import Confetti from '../components/Confetti.jsx';
 
 function resultMessage({ isTimeAttack, correct, total }) {
   if (isTimeAttack) {
@@ -37,6 +38,10 @@ export default function ResultScreen({ session, pointsEarned, onStartQuiz, onSta
   const modeLabel = isTimeAttack
     ? 'Zaman Yarışı'
     : (categories.find((c) => c.key === session.categoryKey)?.title ?? 'Karma Quiz');
+
+  // Rozet kazandıran eşiklerle aynı (bkz. stats.js): mükemmel skor veya
+  // Zaman Yarışı'nda 15+ doğru — kutlamaya değer, nadir bir an.
+  const isCelebration = isTimeAttack ? correct >= 15 : total > 0 && correct === total;
 
   const shareText = isTimeAttack
     ? `Osmanlı Quiz Zaman Yarışı'nda 60 saniyede ${correct} doğru yaptım! Sen de dener misin?`
@@ -79,6 +84,7 @@ export default function ResultScreen({ session, pointsEarned, onStartQuiz, onSta
 
   return (
     <div className="screen screen--focus screen--centered">
+      {isCelebration && <Confetti />}
       <div className="screen__body result-body">
         <div className="result-label">{isTimeAttack ? 'SÜRE DOLDU!' : 'QUIZ TAMAMLANDI'}</div>
         <div className="result-score">

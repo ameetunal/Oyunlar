@@ -601,6 +601,37 @@
 
 /* --- Sonuç --- */
 
+.quiz-app .confetti {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 40;
+}
+
+.quiz-app .confetti-piece {
+  position: absolute;
+  top: -12px;
+  width: 8px;
+  height: 14px;
+  border-radius: 2px;
+  opacity: 0.9;
+  animation-name: confetti-fall;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--confetti-drift), 105vh) rotate(var(--confetti-rotate));
+    opacity: 0.4;
+  }
+}
+
 .quiz-app .result-body {
   align-items: center;
   text-align: center;
