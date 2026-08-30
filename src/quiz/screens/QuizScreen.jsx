@@ -14,6 +14,27 @@ export default function QuizScreen({ session, onSelectAnswer, onContinue, onLear
     return () => clearTimeout(id);
   }, [isTimeAttack, session.answered, session.index]);
 
+  // Klavye desteği: cevaplanmamışken 1-4 tuşlarıyla şık seçilir, cevaplandıktan
+  // sonra (Zaman Yarışı dışında, o zaten otomatik ilerliyor) Enter/Boşluk ile
+  // devam edilir — masaüstünde/PWA'da fare olmadan da quiz oynanabilsin diye.
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (!session.answered) {
+        const num = Number(e.key);
+        if (num >= 1 && num <= question.shuffledOptions.length) {
+          onSelectAnswer(num - 1);
+        }
+        return;
+      }
+      if (!isTimeAttack && (e.key === 'Enter' || e.key === ' ')) {
+        e.preventDefault();
+        onContinue();
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [session.answered, question, isTimeAttack, onSelectAnswer, onContinue]);
+
   return (
     <div className="screen screen--focus">
       <header className="quiz-top">
