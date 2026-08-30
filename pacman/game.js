@@ -157,29 +157,25 @@ function stepMover(mover, dt) {
   let guard = 0;
 
   while (dist > 0.0001 && guard++ < 8) {
-    if (!mover.dir) {
-      const { col, row } = currentCell(mover);
-      const wcol = wrapCol(col);
-      if (mover.nextDir) {
-        const d = DIRS[mover.nextDir];
-        if (isWalkable(wcol + d.x, row + d.y)) {
-          mover.dir = mover.nextDir;
-        }
-      }
-      if (!mover.dir) break;
-    }
-
     const { col, row } = currentCell(mover);
     const wcol = wrapCol(col);
     const inTunnelOverflow = col < 0 || col >= COLS;
     const center = cellCenter(wcol, row);
-    const d = DIRS[mover.dir];
-    const distToCenter = d.x !== 0 ? (inTunnelOverflow ? Infinity : (center.x - mover.x) * d.x) : (center.y - mover.y) * d.y;
 
-    if (distToCenter > 0.001 && distToCenter < dist) {
-      mover.x = center.x;
+    // mover.dir yoksa zaten tam bir merkezde durur (sabit değişmez); bu
+    // durumda merkeze mesafe 0 kabul edilip aşağıdaki dal her zaman
+    // tetiklenir ve yön her karede yeniden doğrulanır — tıpkı dururken
+    // duvara çarpmadan yön değiştirilememesi gerektiği gibi.
+    const distToCenter = !mover.dir
+      ? 0
+      : DIRS[mover.dir].x !== 0
+      ? (inTunnelOverflow ? Infinity : (center.x - mover.x) * DIRS[mover.dir].x)
+      : (center.y - mover.y) * DIRS[mover.dir].y;
+
+    if (distToCenter <= dist + 0.001 && distToCenter !== Infinity) {
+      mover.x = inTunnelOverflow ? mover.x : center.x;
       mover.y = center.y;
-      dist -= distToCenter;
+      dist -= Math.max(distToCenter, 0);
 
       if (mover.nextDir) {
         const nd = DIRS[mover.nextDir];
@@ -187,13 +183,17 @@ function stepMover(mover, dt) {
           mover.dir = mover.nextDir;
         }
       }
-      const cd = DIRS[mover.dir];
-      if (!isWalkable(wcol + cd.x, row + cd.y)) {
-        mover.dir = null;
+      if (mover.dir) {
+        const cd = DIRS[mover.dir];
+        if (!isWalkable(wcol + cd.x, row + cd.y)) {
+          mover.dir = null;
+        }
       }
+      if (!mover.dir) break;
       continue;
     }
 
+    const d = DIRS[mover.dir];
     mover.x += d.x * dist;
     mover.y += d.y * dist;
 
