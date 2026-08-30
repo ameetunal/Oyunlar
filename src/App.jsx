@@ -297,6 +297,15 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const goToRandomPage = () => {
+    if (pages.length <= 1) return;
+    let randomIndex = Math.floor(Math.random() * pages.length);
+    while (randomIndex === pageIndex) {
+      randomIndex = Math.floor(Math.random() * pages.length);
+    }
+    goTo(randomIndex);
+  };
+
   useEffect(() => {
     writeStorage(PROGRESS_KEY, String(pageIndex));
   }, [pageIndex]);
@@ -534,6 +543,9 @@ export default function App() {
               aria-label="İçindekilerde ara"
             />
           </div>
+          <button className="toc__random-btn" onClick={goToRandomPage}>
+            🎲 Rastgele Sayfa
+          </button>
           {filteredBookmarkedPages.length > 0 && (
             <div className="toc__period">
               <p className="toc__period-title toc__period-title--static">

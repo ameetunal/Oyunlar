@@ -361,6 +361,27 @@ body {
   border-color: var(--gold);
 }
 
+.toc__random-btn {
+  display: block;
+  width: 100%;
+  margin: 0 0 0.85rem;
+  padding: 0.4rem 0.75rem;
+  background: transparent;
+  border: 1px dashed var(--gold);
+  border-radius: 20px;
+  color: var(--muted);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+  text-align: center;
+}
+
+.toc__random-btn:hover {
+  color: var(--maroon);
+  border-color: var(--maroon);
+  border-style: solid;
+}
+
 .toc__no-results {
   font-family: 'Source Sans 3', sans-serif;
   font-size: 0.82rem;
