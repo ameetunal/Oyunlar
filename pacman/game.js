@@ -196,7 +196,11 @@ function resolveDirectionAtCenter(mover, wcol, row) {
 // bölge"ye yol açmıştı) ihtiyaç kalmadan, her zaman gerçekten ÖNDEKİ
 // kesişim doğrulanır ve tek geçişte (döngüsüz) hesaplanır.
 function stepMover(mover, dt) {
-  const dist = mover.speed * dt;
+  // Tek geçişte en fazla bir hücre genişliğine kadar ilerleme doğrulanır;
+  // dt bir TILE'ı aşacak kadar büyürse (örn. sekme uzun süre arka plana
+  // düşüp geri dönerse) kesişim doğrulaması atlanabilir. loop() zaten dt'yi
+  // 0.05sn ile sınırlıyor, bu ek sınır savunma amaçlı ikinci bir kilittir.
+  const dist = mover.speed * Math.min(dt, TILE / mover.speed);
 
   if (!mover.dir) {
     const { col, row } = currentCell(mover);
