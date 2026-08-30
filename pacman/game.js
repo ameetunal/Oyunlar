@@ -147,40 +147,69 @@ function atCellCenter(mover) {
   return Math.abs(mover.x - targetX) < 1.2 && Math.abs(mover.y - c.y) < 1.2;
 }
 
-function stepMover(mover, dt) {
-  const dist = mover.speed * dt;
-  const { col, row } = currentCell(mover);
-
-  if (atCellCenter(mover)) {
-    const center = cellCenter(wrapCol(col), row);
-    mover.x = col < 0 || col >= COLS ? mover.x : center.x;
-    mover.y = center.y;
-
-    if (mover.nextDir) {
-      const d = DIRS[mover.nextDir];
-      if (isWalkable(wrapCol(col) + d.x, row + d.y)) {
-        mover.dir = mover.nextDir;
-      }
-    }
-
-    if (mover.dir) {
-      const d = DIRS[mover.dir];
-      if (!isWalkable(wrapCol(col) + d.x, row + d.y)) {
-        mover.dir = null;
-      }
+// Bir karede alınan mesafe, hücre merkezinin etrafındaki dar tespit
+// penceresini atlayabilir (özellikle yüksek hızda) — bu da yön
+// değişikliğinin bir sonraki kesişime kadar gecikmesine yol açardı. Bunun
+// yerine, bu karede merkezin "geçilip geçilmeyeceğini" hesaplayıp tam o
+// noktada yöne karar veriyoruz; böylece hiçbir kesişim atlanmaz.
+function resolveDirectionAtCenter(mover, wcol, row) {
+  if (mover.nextDir) {
+    const nd = DIRS[mover.nextDir];
+    if (isWalkable(wcol + nd.x, row + nd.y)) {
+      mover.dir = mover.nextDir;
     }
   }
-
   if (mover.dir) {
-    const d = DIRS[mover.dir];
+    const cd = DIRS[mover.dir];
+    if (!isWalkable(wcol + cd.x, row + cd.y)) {
+      mover.dir = null;
+    }
+  }
+}
+
+function stepMover(mover, dt) {
+  const dist = mover.speed * dt;
+
+  if (!mover.dir) {
+    // Duruyor: zaten tam bir hücre merkezinde. Yeni yön denenebilir mi bak,
+    // dener ama sabit dursa da her karede yeniden doğrulanır (duvara doğru
+    // yön talep edilirse asla harekete geçmez).
+    const { col, row } = currentCell(mover);
+    resolveDirectionAtCenter(mover, wrapCol(col), row);
+    if (!mover.dir) return;
+  }
+
+  const { col, row } = currentCell(mover);
+  const wcol = wrapCol(col);
+  const inTunnelOverflow = col < 0 || col >= COLS;
+  const center = cellCenter(wcol, row);
+  const d = DIRS[mover.dir];
+  const distToCenter = d.x !== 0
+    ? (inTunnelOverflow ? Infinity : (center.x - mover.x) * d.x)
+    : (center.y - mover.y) * d.y;
+
+  if (distToCenter > 0.0005 && distToCenter < dist) {
+    // Bu karede hücre merkezine ulaşıp geçecek: tam merkeze snap'le, yönü
+    // orada çöz/doğrula, kalan mesafeyi hemen (yeni) yönde uygula. Böylece
+    // hızlı hareket bile hiçbir kesişimi atlamaz.
+    mover.x = center.x;
+    mover.y = center.y;
+    resolveDirectionAtCenter(mover, wcol, row);
+    if (!mover.dir) return;
+
+    const remaining = dist - distToCenter;
+    const nd = DIRS[mover.dir];
+    mover.x += nd.x * remaining;
+    mover.y += nd.y * remaining;
+  } else {
     mover.x += d.x * dist;
     mover.y += d.y * dist;
+  }
 
-    if (row === TUNNEL_ROW) {
-      const w = COLS * TILE;
-      if (mover.x < -TILE / 2) mover.x = w + TILE / 2;
-      if (mover.x > w + TILE / 2) mover.x = -TILE / 2;
-    }
+  if (row === TUNNEL_ROW) {
+    const w = COLS * TILE;
+    if (mover.x < -TILE / 2) mover.x = w + TILE / 2;
+    if (mover.x > w + TILE / 2) mover.x = -TILE / 2;
   }
 }
 
@@ -303,8 +332,10 @@ function updateEffects(dt) {
 /* ---------- Girdi ---------- */
 function setDesiredDir(dir) {
   if (!player) return;
+  // Sadece istenen yönü kaydeder; asıl yönü stepMover, duvar kontrolünden
+  // geçirdikten sonra hücre merkezinde uygular. Burada doğrudan player.dir'i
+  // atamak duvar kontrolünü atlatıp oyuncunun duvardan geçmesine yol açardı.
   player.nextDir = dir;
-  if (!player.dir) player.dir = dir;
 }
 
 function handleInputStart(dir) {
