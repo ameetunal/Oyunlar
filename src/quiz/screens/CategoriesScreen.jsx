@@ -1,7 +1,7 @@
 import { categories } from '../data/categories.js';
-import { categoryProgress } from '../stats.js';
+import { categoryProgress, getCategoryBadge } from '../stats.js';
 import { questions } from '../data/questions.js';
-import { CheckIcon, RefreshIcon } from '../components/Icons.jsx';
+import { TrophyIcon, RefreshIcon } from '../components/Icons.jsx';
 
 export default function CategoriesScreen({ stats, onStartQuiz, onStartCategoryReview }) {
   return (
@@ -28,6 +28,7 @@ export default function CategoriesScreen({ stats, onStartQuiz, onStartCategoryRe
           const wrongCount = questions.filter(
             (q) => q.category === c.key && stats.wrongIds?.includes(q.id)
           ).length;
+          const categoryBadge = mastered ? getCategoryBadge(c.key) : null;
           const cardClass = ['category-card', mastered && 'category-card--mastered', almost && 'category-card--almost']
             .filter(Boolean)
             .join(' ');
@@ -38,8 +39,8 @@ export default function CategoriesScreen({ stats, onStartQuiz, onStartCategoryRe
                 <div className="category-card__subtitle">{c.subtitle}</div>
                 {mastered && (
                   <div className="category-card__badge category-card__badge--mastered">
-                    <CheckIcon size={12} color="var(--gold)" />
-                    <span>Tamamlandı</span>
+                    <TrophyIcon size={13} color="var(--gold)" />
+                    <span>{categoryBadge?.label ?? 'Tamamlandı'}</span>
                   </div>
                 )}
                 {almost && <div className="category-card__badge category-card__badge--almost">Neredeyse bitti</div>}

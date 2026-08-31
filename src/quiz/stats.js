@@ -67,6 +67,12 @@ const CATEGORY_BADGES = {
 
 const ALL_CATEGORY_KEYS = Object.keys(CATEGORY_BADGES);
 
+// Bir kategoriye tam hakimiyet kazanınca hangi rozetin kazanılacağını
+// döndürür (Kategoriler ekranında kartın üstünde göstermek için).
+export function getCategoryBadge(categoryKey) {
+  return CATEGORY_BADGES[categoryKey] ?? null;
+}
+
 // Bir quiz turunun sonunda çağrılır; puanı, seriyi, çözülen soruları ve
 // hak edilen yeni rozetleri günceller. Yeni kazanılan rozetlerin
 // listesini döndürür (ekranda "yeni rozet!" göstermek için kullanılabilir).
