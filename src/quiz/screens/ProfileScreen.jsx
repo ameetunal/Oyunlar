@@ -117,6 +117,10 @@ export default function ProfileScreen({ stats }) {
                 <div className="result-stats__num">{stats.badges.length}</div>
                 <div className="result-stats__label">Rozet</div>
               </div>
+              <div>
+                <div className="result-stats__num">{stats.totalRounds || 0}</div>
+                <div className="result-stats__label">Toplam Tur</div>
+              </div>
             </div>
           </section>
         )}

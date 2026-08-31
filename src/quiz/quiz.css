@@ -691,7 +691,8 @@
 
 .quiz-app .result-stats {
   display: flex;
-  gap: 28px;
+  flex-wrap: wrap;
+  gap: 16px 28px;
 }
 
 .quiz-app .result-stats__num {

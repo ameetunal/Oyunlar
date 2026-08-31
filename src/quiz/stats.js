@@ -18,6 +18,7 @@ const DEFAULT_STATS = {
   bestTimeAttackScore: 0,
   playedDates: [],
   longestStreak: 0,
+  totalRounds: 0,
 };
 
 export function loadStats() {
@@ -73,6 +74,7 @@ export function recordQuizResult({ categoryKey, correctCount, solvedIds, wrongId
   const stats = loadStats();
   const newlyEarned = [];
 
+  stats.totalRounds = (stats.totalRounds || 0) + 1;
   stats.totalPoints += correctCount * 10;
   stats.totalAnswered += solvedIds.length;
   stats.totalCorrect += correctCount;
