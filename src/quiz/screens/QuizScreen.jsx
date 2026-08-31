@@ -75,13 +75,16 @@ export default function QuizScreen({ session, onSelectAnswer, onContinue, onLear
           {question.shuffledOptions.map((option, i) => {
             let className = 'quiz-option';
             let icon = null;
+            let stateLabel = null;
             if (session.answered) {
               if (i === question.shuffledCorrectIndex) {
                 className += ' quiz-option--correct';
                 icon = <CheckIcon size={18} color="var(--gold)" />;
+                stateLabel = 'Doğru cevap.';
               } else if (i === session.selected) {
                 className += ' quiz-option--wrong';
                 icon = <CrossIcon size={18} color="var(--maroon)" />;
+                stateLabel = 'Senin cevabın, yanlış.';
               }
             }
             return (
@@ -92,11 +95,20 @@ export default function QuizScreen({ session, onSelectAnswer, onContinue, onLear
                 onClick={() => onSelectAnswer(i)}
               >
                 <span>{option}</span>
+                {stateLabel && <span className="visually-hidden">{stateLabel}</span>}
                 {icon}
               </button>
             );
           })}
         </div>
+
+        {session.answered && (
+          <div className="visually-hidden" role="status" aria-live="polite">
+            {isCorrect
+              ? 'Doğru cevap verdin.'
+              : `Yanlış cevap. Doğru cevap: ${question.shuffledOptions[question.shuffledCorrectIndex]}`}
+          </div>
+        )}
       </div>
 
       {session.answered && !isTimeAttack && (
