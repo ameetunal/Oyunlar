@@ -17,6 +17,7 @@ const DEFAULT_STATS = {
   wrongIds: [],
   bestTimeAttackScore: 0,
   playedDates: [],
+  longestStreak: 0,
 };
 
 export function loadStats() {
@@ -94,6 +95,7 @@ export function recordQuizResult({ categoryKey, correctCount, solvedIds, wrongId
     stats.streak = 1;
   }
   stats.lastPlayedDate = todayKey();
+  stats.longestStreak = Math.max(stats.longestStreak || 0, stats.streak);
 
   // Son 90 günün oynama geçmişi (haftalık aktivite görünümü için); daha
   // eskisi atılır ki depolama sınırsız büyümesin.

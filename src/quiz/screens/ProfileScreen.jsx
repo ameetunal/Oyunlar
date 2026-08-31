@@ -123,6 +123,12 @@ export default function ProfileScreen({ stats }) {
 
         <section>
           <div className="section-label">SON 7 GÜN</div>
+          {stats.longestStreak > 0 && (
+            <div className="longest-streak-note">
+              <FlameIcon size={13} color="var(--gold)" />
+              <span>En uzun serin: {stats.longestStreak} gün</span>
+            </div>
+          )}
           <div className="activity-strip">
             {recentActivity.map(({ dateKey, label, played, isToday }) => (
               <div key={dateKey} className="activity-strip__day">

@@ -876,6 +876,15 @@
   color: var(--muted);
 }
 
+.quiz-app .longest-streak-note {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--muted);
+  margin: 6px 0 10px;
+}
+
 .quiz-app .activity-strip {
   display: flex;
   justify-content: space-between;
