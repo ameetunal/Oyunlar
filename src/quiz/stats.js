@@ -19,6 +19,7 @@ const DEFAULT_STATS = {
   playedDates: [],
   longestStreak: 0,
   totalRounds: 0,
+  bestRoundPercent: 0,
 };
 
 export function loadStats() {
@@ -155,17 +156,31 @@ export function recordQuizResult({ categoryKey, correctCount, solvedIds, wrongId
     }
   }
 
+  // Bu turda kişisel bir rekor kırılıp kırılmadığını takip eder — Sonuç
+  // ekranında "Yeni Kişisel Rekor!" rozetini göstermek için kullanılır.
+  // Çok küçük tekrar turlarının (1-2 soru) rekoru kolayca kırmasını
+  // önlemek için normal turlarda en az 5 soru şartı aranır.
+  let newRoundRecord = false;
+
   if (timeAttackScore !== null) {
-    stats.bestTimeAttackScore = Math.max(stats.bestTimeAttackScore || 0, timeAttackScore);
+    const previousBest = stats.bestTimeAttackScore || 0;
+    stats.bestTimeAttackScore = Math.max(previousBest, timeAttackScore);
+    if (timeAttackScore > previousBest) newRoundRecord = true;
     const speedBadge = { key: 'hiz-ustasi', label: 'Hız Ustası' };
     if (timeAttackScore >= 15 && !stats.badges.includes(speedBadge.key)) {
       stats.badges.push(speedBadge.key);
       newlyEarned.push(speedBadge);
     }
+  } else if (solvedIds.length >= 5) {
+    const percent = Math.round((correctCount / solvedIds.length) * 100);
+    if (percent > (stats.bestRoundPercent || 0)) {
+      stats.bestRoundPercent = percent;
+      newRoundRecord = true;
+    }
   }
 
   saveStats(stats);
-  return { stats, newlyEarned };
+  return { stats, newlyEarned, newRoundRecord };
 }
 
 const DAY_LABELS_TR = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];

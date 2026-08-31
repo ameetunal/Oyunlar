@@ -63,6 +63,7 @@ export default function QuizApp({ onExit }) {
   const [session, setSession] = useState(null);
   const [pendingStory, setPendingStory] = useState(null);
   const [lastPointsEarned, setLastPointsEarned] = useState(0);
+  const [lastNewRecord, setLastNewRecord] = useState(false);
 
   const startQuiz = (categoryKey) => {
     setSession({
@@ -132,7 +133,7 @@ export default function QuizApp({ onExit }) {
   const finishTimeAttack = () => {
     setSession((prev) => {
       if (!prev) return prev;
-      const { stats: newStats } = recordQuizResult({
+      const { stats: newStats, newRoundRecord } = recordQuizResult({
         categoryKey: null,
         correctCount: prev.correctCount,
         solvedIds: prev.solvedIds,
@@ -141,6 +142,7 @@ export default function QuizApp({ onExit }) {
       });
       setStats(newStats);
       setLastPointsEarned(prev.correctCount * 10);
+      setLastNewRecord(newRoundRecord);
       setScreen('result');
       return prev;
     });
@@ -194,7 +196,7 @@ export default function QuizApp({ onExit }) {
             answered: false,
           };
         }
-        const { stats: newStats } = recordQuizResult({
+        const { stats: newStats, newRoundRecord } = recordQuizResult({
           categoryKey: prev.categoryKey ?? prev.roundQuestions[0]?.category,
           correctCount: prev.correctCount,
           solvedIds: prev.solvedIds,
@@ -202,6 +204,7 @@ export default function QuizApp({ onExit }) {
         });
         setStats(newStats);
         setLastPointsEarned(prev.correctCount * 10);
+        setLastNewRecord(newRoundRecord);
         setScreen('result');
         return prev;
       }
@@ -269,6 +272,7 @@ export default function QuizApp({ onExit }) {
           <ResultScreen
             session={session}
             pointsEarned={lastPointsEarned}
+            isNewRecord={lastNewRecord}
             onStartQuiz={startQuiz}
             onStartTimeAttack={startTimeAttack}
             onGoHome={() => navigate('home')}

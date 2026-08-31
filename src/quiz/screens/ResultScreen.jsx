@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ShareIcon } from '../components/Icons.jsx';
+import { ShareIcon, TrophyIcon } from '../components/Icons.jsx';
 import { categories } from '../data/categories.js';
 import { generateShareImage } from '../shareImage.js';
 import Confetti from '../components/Confetti.jsx';
@@ -28,7 +28,7 @@ function downloadBlob(blob, filename) {
   URL.revokeObjectURL(url);
 }
 
-export default function ResultScreen({ session, pointsEarned, onStartQuiz, onStartTimeAttack, onGoHome }) {
+export default function ResultScreen({ session, pointsEarned, isNewRecord, onStartQuiz, onStartTimeAttack, onGoHome }) {
   const [shareStatus, setShareStatus] = useState(null);
   const isTimeAttack = session.mode === 'timeAttack';
   const total = session.solvedIds.length;
@@ -87,6 +87,12 @@ export default function ResultScreen({ session, pointsEarned, onStartQuiz, onSta
       {isCelebration && <Confetti />}
       <div className="screen__body result-body">
         <div className="result-label">{isTimeAttack ? 'SÜRE DOLDU!' : 'QUIZ TAMAMLANDI'}</div>
+        {isNewRecord && (
+          <div className="new-record-badge">
+            <TrophyIcon size={14} color="var(--gold)" />
+            <span>Yeni Kişisel Rekor!</span>
+          </div>
+        )}
         <div className="result-score">
           {correct}
           <span>{isTimeAttack ? ' doğru' : <>{' '}/ {total}</>}</span>
