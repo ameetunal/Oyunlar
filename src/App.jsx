@@ -165,6 +165,23 @@ const SECTION_LABELS = {
   contact: 'Bize Ulaşın',
 };
 
+// Bu sayfalar yalnızca başlık + tek cümlelik özet + isim/tarih tablosundan
+// oluşuyor; gerçek anlatı metni yok. AdSense politikası gereği ("yayıncı
+// içeriği olmayan ekranlarda reklam" / "düşük değerli içerik") bu sayfalarda
+// reklam gösterilmiyor — asıl anlatıyı taşıyan profil/olay/dönem
+// sayfalarında ve Hakkımızda/Bize Ulaşın'da reklam aynen kalıyor.
+const THIN_CONTENT_PAGE_TYPES = new Set([
+  'sultans',
+  'wars',
+  'viziers',
+  'architects',
+  'daily-life',
+  'scientists',
+  'harem-women',
+  'admirals',
+  'poets',
+]);
+
 function getPageLabel(page) {
   switch (page.type) {
     case 'intro':
@@ -244,6 +261,7 @@ export default function App() {
   const tocRef = useRef(null);
 
   const page = pages[pageIndex];
+  const isThinContentPage = THIN_CONTENT_PAGE_TYPES.has(page.type);
   const canPrev = pageIndex > 0;
   const canNext = pageIndex < pages.length - 1;
   const progressPercent = Math.round(((pageIndex + 1) / pages.length) * 100);
@@ -510,7 +528,7 @@ export default function App() {
         <div className="progress-track__fill" style={{ width: `${progressPercent}%` }} />
       </div>
 
-      <AdSlot variant="banner" />
+      {!isThinContentPage && <AdSlot variant="banner" />}
 
       {page.period && (
         <EraTimeline
@@ -659,7 +677,7 @@ export default function App() {
             </div>
           )}
 
-          <AdSlot variant="sidebar" />
+          {!isThinContentPage && <AdSlot variant="sidebar" />}
         </nav>
 
         <main className="reader" id="main-content">
@@ -1545,7 +1563,7 @@ export default function App() {
               </>
             )}
 
-            {pageIndex % 3 === 2 && <AdSlot variant="inline" />}
+            {pageIndex % 3 === 2 && !isThinContentPage && <AdSlot variant="inline" />}
 
             <div className="pager">
               <button disabled={!canPrev} onClick={() => goTo(pageIndex - 1)}>
