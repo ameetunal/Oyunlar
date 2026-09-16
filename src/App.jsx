@@ -22,6 +22,16 @@ import AdSlot from './components/AdSlot';
 import EraTimeline from './components/EraTimeline';
 import useAdSenseScript from './hooks/useAdSenseScript';
 import QuizApp from './quiz/QuizApp.jsx';
+import {
+  buildPages,
+  getPageLabel,
+  getPageBookmarkId,
+  getPageText,
+  getPageSlug,
+  findPageIndexBySlug,
+  SECTION_LABELS,
+  THIN_CONTENT_PAGE_TYPES,
+} from './content.js';
 import './App.css';
 import './quiz/quiz.css';
 
@@ -33,6 +43,22 @@ const TTS_SUPPORTED = typeof window !== 'undefined' && 'speechSynthesis' in wind
 const FONT_KEY = 'osmanli-hikayesi:font-size';
 const FONT_SIZES = ['sm', 'md', 'lg'];
 const FONT_LABELS = { sm: 'Küçük', md: 'Orta', lg: 'Büyük' };
+const SITE_TITLE = 'Osmanlı — Bir İmparatorluğun Hikâyesi';
+
+// Adres çubuğundaki geçerli yolu (base ön ekini çıkarıp) bir sayfa
+// slug'ına çevirir — hem gerçek gezinmede (kitap içinde ileri/geri) hem
+// bir sayfaya doğrudan bağlantıyla (paylaşılan link, arama sonucu) gelen
+// ziyaretlerde kullanılır.
+function getSlugFromLocation() {
+  const base = import.meta.env.BASE_URL;
+  let path = window.location.pathname;
+  if (path.startsWith(base)) path = path.slice(base.length);
+  return path.replace(/^\/+|\/+$/g, '');
+}
+
+function pathForSlug(slug) {
+  return `${import.meta.env.BASE_URL}${slug}/`;
+}
 
 function readStorage(key) {
   try {
@@ -79,137 +105,7 @@ function estimateReadingMinutes(text) {
   return Math.max(1, Math.round(words / 200));
 }
 
-// Okuma akışı: her dönemin bir "bölüm açılışı" (giriş) sayfası, ardından
-// o dönemin olay sayfaları ve en sonda o dönemi konu bazında derinleştiren
-// tematik incelemeler (Ekonomi, Toplum, Ordu, Kültür) gelir; en sonda iki
-// referans eki (Padişahlar Listesi, Terimler Sözlüğü) yer alır. Tamamı tek,
-// doğrusal bir kitap gibi "önceki / sonraki sayfa" ile de gezilebilir.
-function buildPages(periods) {
-  const pages = [];
-  periods.forEach((period) => {
-    pages.push({ type: 'intro', period });
-    period.events.forEach((event) => {
-      pages.push({ type: 'event', period, event });
-    });
-    (themesByPeriod[period.id] || []).forEach((theme) => {
-      pages.push({ type: 'theme', period, theme });
-    });
-  });
-  pages.push({ type: 'sultans' });
-  sultans
-    .filter((s) => sultanProfiles[s.name])
-    .forEach((sultan) => {
-      pages.push({ type: 'sultan-profile', sultan, profile: sultanProfiles[sultan.name] });
-    });
-  pages.push({ type: 'wars' });
-  pages.push({ type: 'viziers' });
-  viziers
-    .filter((v) => vizierProfiles[v.name])
-    .forEach((vizier) => {
-      pages.push({ type: 'vizier-profile', vizier, profile: vizierProfiles[vizier.name] });
-    });
-  pages.push({ type: 'architects' });
-  architects
-    .filter((a) => architectProfiles[a.name])
-    .forEach((architect) => {
-      pages.push({ type: 'architect-profile', architect, profile: architectProfiles[architect.name] });
-    });
-  pages.push({ type: 'daily-life' });
-  dailyLife.forEach((entry) => {
-    pages.push({ type: 'daily-life-topic', entry });
-  });
-  pages.push({ type: 'scientists' });
-  scientists
-    .filter((s) => scientistProfiles[s.name])
-    .forEach((scientist) => {
-      pages.push({ type: 'scientist-profile', scientist, profile: scientistProfiles[scientist.name] });
-    });
-  pages.push({ type: 'harem-women' });
-  haremWomen
-    .filter((w) => haremWomenProfiles[w.name])
-    .forEach((woman) => {
-      pages.push({ type: 'harem-woman-profile', woman, profile: haremWomenProfiles[woman.name] });
-    });
-  pages.push({ type: 'admirals' });
-  admirals
-    .filter((a) => admiralProfiles[a.name])
-    .forEach((admiral) => {
-      pages.push({ type: 'admiral-profile', admiral, profile: admiralProfiles[admiral.name] });
-    });
-  pages.push({ type: 'poets' });
-  poets
-    .filter((p) => poetProfiles[p.name])
-    .forEach((poet) => {
-      pages.push({ type: 'poet-profile', poet, profile: poetProfiles[poet.name] });
-    });
-  pages.push({ type: 'glossary' });
-  pages.push({ type: 'about' });
-  pages.push({ type: 'contact' });
-  return pages;
-}
-
 const FEEDBACK_EMAIL = 'Tarihiiosmanli@hotmail.com';
-
-const SECTION_LABELS = {
-  sultans: 'Padişahlar Listesi',
-  wars: 'Büyük Savaşlar',
-  viziers: 'Ünlü Sadrazamlar',
-  architects: 'Ünlü Mimarlar ve Sanatçılar',
-  'daily-life': 'Günlük Yaşam',
-  scientists: 'Ünlü Bilim İnsanları',
-  'harem-women': 'Kadın Sultanlar',
-  admirals: 'Kaptan-ı Deryalar',
-  poets: 'Divan Şairleri',
-  glossary: 'Terimler Sözlüğü',
-  about: 'Hakkımızda',
-  contact: 'Bize Ulaşın',
-};
-
-// Bu sayfalar yalnızca başlık + tek cümlelik özet + isim/tarih tablosundan
-// oluşuyor; gerçek anlatı metni yok. AdSense politikası gereği ("yayıncı
-// içeriği olmayan ekranlarda reklam" / "düşük değerli içerik") bu sayfalarda
-// reklam gösterilmiyor — asıl anlatıyı taşıyan profil/olay/dönem
-// sayfalarında ve Hakkımızda/Bize Ulaşın'da reklam aynen kalıyor.
-const THIN_CONTENT_PAGE_TYPES = new Set([
-  'sultans',
-  'wars',
-  'viziers',
-  'architects',
-  'daily-life',
-  'scientists',
-  'harem-women',
-  'admirals',
-  'poets',
-]);
-
-function getPageLabel(page) {
-  switch (page.type) {
-    case 'intro':
-      return page.period.title;
-    case 'event':
-      return page.event.title;
-    case 'theme':
-      return page.theme.title;
-    case 'sultan-profile':
-      return page.sultan.name;
-    case 'vizier-profile':
-      return page.vizier.name;
-    case 'architect-profile':
-      return page.architect.name;
-    case 'daily-life-topic':
-      return page.entry.topic;
-    case 'scientist-profile':
-      return page.scientist.name;
-    case 'harem-woman-profile':
-      return page.woman.name;
-    case 'admiral-profile':
-      return page.admiral.name;
-    case 'poet-profile':
-      return page.poet.name;
-    default:
-      return SECTION_LABELS[page.type] ?? null;
-  }
-}
 
 function buildFeedbackMailto(page) {
   const label = getPageLabel(page);
@@ -224,16 +120,17 @@ function normalizeText(text) {
   return text.toLocaleLowerCase('tr-TR');
 }
 
-function getPageBookmarkId(page) {
-  const label = getPageLabel(page);
-  return label ? `${page.type}::${label}` : null;
-}
-
 export default function App() {
   useAdSenseScript();
   const pages = useMemo(() => buildPages(periods), []);
 
-  const [pageIndex, setPageIndex] = useState(0);
+  // Sayfa doğrudan bir kitap adresiyle (ör. /padisah/i-osman-gazi) açıldıysa
+  // o sayfadan başla; aksi halde her zamanki gibi kapaktan (0) başla —
+  // "kaldığın yerden devam et" davranışı (aşağıdaki resumeIndex) değişmiyor.
+  const [pageIndex, setPageIndex] = useState(() => {
+    const matched = findPageIndexBySlug(pages, getSlugFromLocation());
+    return matched >= 0 ? matched : 0;
+  });
   const [tocOpen, setTocOpen] = useState(false);
   const [tocQuery, setTocQuery] = useState('');
   const [theme, setTheme] = useState(getInitialTheme);
@@ -315,6 +212,8 @@ export default function App() {
 
   const goTo = (index) => {
     if (index < 0 || index >= pages.length) return;
+    const slug = getPageSlug(pages[index]);
+    if (slug) window.history.pushState(null, '', pathForSlug(slug));
     setPageIndex(index);
     setTocOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -332,6 +231,19 @@ export default function App() {
   useEffect(() => {
     writeStorage(PROGRESS_KEY, String(pageIndex));
   }, [pageIndex]);
+
+  // Tarayıcının ileri/geri düğmeleri: goTo() burada ÇAĞRILMAZ, çünkü o
+  // zaten yeni bir geçmiş kaydı (pushState) açar — geri/ileri tuşuna
+  // basıldığında tarayıcı adresi kendisi değiştirdiği için burada sadece
+  // hangi sayfada olduğumuzu (pageIndex) buna göre güncelleriz.
+  useEffect(() => {
+    const onPopState = () => {
+      const matched = findPageIndexBySlug(pages, getSlugFromLocation());
+      if (matched >= 0) setPageIndex(matched);
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, [pages]);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -425,20 +337,22 @@ export default function App() {
 
   const dismissResume = () => setResumeIndex(null);
 
-  let pageText = null;
-  if (page.type === 'intro') pageText = page.period.intro;
-  else if (page.type === 'event') pageText = page.event.text;
-  else if (page.type === 'theme') pageText = page.theme.text;
-  else if (page.type === 'sultan-profile') pageText = page.profile.text;
-  else if (page.type === 'vizier-profile') pageText = page.profile.text;
-  else if (page.type === 'architect-profile') pageText = page.profile.text;
-  else if (page.type === 'daily-life-topic') pageText = page.entry.text;
-  else if (page.type === 'scientist-profile') pageText = page.profile.text;
-  else if (page.type === 'harem-woman-profile') pageText = page.profile.text;
-  else if (page.type === 'admiral-profile') pageText = page.profile.text;
-  else if (page.type === 'poet-profile') pageText = page.profile.text;
+  const pageText = getPageText(page);
 
   const readingMinutes = pageText ? estimateReadingMinutes(pageText) : null;
+
+  // Kitap modunda sekme başlığı/açıklaması açık olan sayfayla uyumlu kalsın
+  // (ön-render edilmiş statik sayfalardaki gibi) — quiz modunda dokunmuyoruz.
+  useEffect(() => {
+    if (mode !== 'book') return;
+    const label = getPageLabel(page);
+    document.title = label ? `${label} — ${SITE_TITLE}` : SITE_TITLE;
+    const description = pageText ? pageText.split('\n\n')[0].slice(0, 160) : null;
+    if (description) {
+      const meta = document.querySelector('meta[name="description"]');
+      if (meta) meta.setAttribute('content', description);
+    }
+  }, [mode, page, pageText]);
 
   const toggleSpeech = () => {
     if (!TTS_SUPPORTED || !pageText) return;
