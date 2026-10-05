@@ -54,6 +54,12 @@ export const periods = [
           'I. Murad döneminde Osmanlı kuvvetleri Rumeli\'deki ilerleyişini sürdürerek Edirne\'yi ele geçirdi. Şehir kısa süre içinde yeni başkent oldu; böylece Osmanlı hem Anadolu hem Avrupa yakasında topraklara sahip iki kıtalı bir devlete dönüştü.\n\nEdirne\'nin başkent olması, Balkanlar\'daki fetih hareketinin artık geçici akınlar değil, kalıcı bir yerleşim ve yönetim politikası olduğunu gösterdi; şehir bir asırdan uzun süre Osmanlı\'nın idari merkezi olarak kaldı.\n\nI. Murad döneminde, savaş esirlerinden ve devşirme yoluyla toplanan gençlerden oluşan Yeniçeri Ocağı\'nın temelleri de bu yıllarda atıldı; doğrudan padişaha bağlı, maaşlı bu daimi piyade birlikleri, sonraki yüzyıllarda Osmanlı ordusunun en belirleyici unsurlarından biri haline gelecekti.',
       },
       {
+        year: '1364',
+        title: 'Sırpsındığı Savaşı',
+        text:
+          'I. Murad\'ın Rumeli\'deki hızlı ilerleyişi, Balkan güçlerini ilk kez ortak bir sefer etrafında birleşmeye itti: Macar, Sırp, Bulgar ve Eflak kuvvetlerinden oluşan bir Haçlı ordusu, Osmanlı\'yı Avrupa\'dan söküp atmak amacıyla Edirne üzerine yürüdü.\n\nOsmanlı akıncı birlikleri, Meriç kıyısındaki Sırpsındığı mevkiinde Haçlı ordusuna gece baskını niteliğinde ani bir saldırı düzenledi; sayıca çok daha kalabalık olan düşman ordusu, hazırlıksız yakalanmanın yarattığı paniğin de etkisiyle büyük bir bozguna uğradı.\n\nBu zafer, Osmanlı\'nın Rumeli\'deki varlığının tesadüfi bir akın dalgası olmadığını, kalıcı ve örgütlü bir güç olduğunu Avrupa\'ya gösterdi; Balkan devletlerinin Osmanlı\'ya karşı ortak hareket etme girişimlerinin de ilk, acı bir denemesi oldu.',
+      },
+      {
         year: '1389',
         title: 'I. Kosova Savaşı',
         text:
@@ -90,6 +96,12 @@ export const periods = [
           'II. Murad, Macar Kralı ve Polonya Kralı Vladislav önderliğindeki bir Haçlı ordusunu Varna\'da büyük bir yenilgiye uğrattı. Savaş sırasında Kral Vladislav hayatını kaybetti.\n\nBu zafer, Osmanlı\'nın Balkanlar\'daki varlığını Haçlı seferleriyle sarsılmaz kılan dönüm noktalarından biri oldu ve Avrupa\'nın Osmanlı\'yı Balkanlar\'dan çıkarma umutlarını uzun süreliğine ertelendi.\n\nİlginç biçimde II. Murad, bu sefer öncesinde tahtı henüz on iki yaşındaki oğlu II. Mehmed\'e bırakıp inzivaya çekilmişti; ancak Haçlı seferinin yarattığı tehdit üzerine tekrar orduların başına geçti. Zaferin ardından bir kez daha tahttan çekildiyse de, iki yıl sonra yeniçerilerin isyanı üzerine ikinci kez tahta dönmek zorunda kaldı.',
       },
       {
+        year: '1448',
+        title: 'II. Kosova Savaşı',
+        text:
+          'Varna\'daki ağır yenilginin ardından Macar generali Hunyadi Janos, Osmanlı\'ya karşı ikinci büyük bir Haçlı seferi düzenledi; II. Murad\'ın kuvvetleriyle yine Kosova ovasında, 1389\'daki ilk savaşın yaşandığı aynı topraklarda karşılaştı.\n\nÜç gün süren çetin çarpışmanın ardından Osmanlı ordusu üstünlük sağladı; Hunyadi canını zor kurtararak savaş alanından kaçtı. Bu zafer, Haçlı dünyasının Balkanlar\'dan Osmanlı\'yı çıkarma yönündeki son büyük örgütlü girişimini de etkisiz kıldı.\n\nII. Kosova\'nın ardından Balkanlar\'da Osmanlı\'ya karşı koyabilecek büyük bir koalisyon bir daha kurulamadı; bu da beş yıl sonra II. Murad\'ın oğlu II. Mehmed\'in İstanbul\'u kuşatmaya hazırlanırken arkasını güvenceye almasını sağladı.',
+      },
+      {
         year: '1453',
         title: 'İstanbul\'un Fethi',
         text:
@@ -105,6 +117,12 @@ export const periods = [
     intro:
       'İstanbul\'un fethinden sonra Osmanlı, art arda gelen güçlü hükümdarlar eliyle Avrupa, Asya ve Afrika\'da sınırlarını genişletti. Fatih Sultan Mehmed\'in başlattığı merkezi devlet anlayışı, Yavuz Sultan Selim\'in doğu ve güney seferleriyle hem toprak hem de dini otorite bakımından büyüdü; oğlu Kanuni Sultan Süleyman döneminde ise Osmanlı hem karada hem denizde çağının en güçlü devleti haline geldi.\n\nBu bölümde anlatılan yüz yirmi altı yıl, yalnızca fetihlerin değil, aynı zamanda hukuk (Kanunname-i Osmani), mimari (Mimar Sinan\'ın eserleri) ve idari teşkilatlanmanın da altın çağıdır. Sınırlar Viyana kapılarından Basra Körfezi\'ne, Kırım\'dan Cezayir kıyılarına kadar uzanırken, Osmanlı aynı zamanda döneminin en gelişmiş bürokratik ve hukuki sistemlerinden birini inşa etti.\n\nBu dönemde şekillenen "millet sistemi", gayrimüslim toplulukların kendi dini liderleri aracılığıyla iç işlerinde özerklik kazanmasını sağlarken, devşirme yoluyla toplanıp Enderun\'da yetiştirilen kadrolar devletin en üst kademelerine kadar yükselebiliyordu. Mimar Sinan\'ın yüzlerce yapıya imza attığı bu yıllar, aynı zamanda İstanbul\'un cami, köprü ve su kemerleriyle donatılarak gerçek bir imparatorluk başkentine dönüştüğü bir imar seferberliğine de sahne oldu.',
     events: [
+      {
+        year: '1456',
+        title: 'Belgrad Kuşatması',
+        text:
+          'İstanbul\'u fethettikten üç yıl sonra Fatih Sultan Mehmed, Macar Krallığı\'nın Tuna üzerindeki en güçlü kalesi Belgrad\'ı kuşattı; şehrin düşmesi hâlinde Orta Avrupa\'nın yolu Osmanlı\'ya açılacaktı.\n\nMacar generali Hunyadi Janos\'un düzenli ordusu ve Fransisken rahip Capistranolu Jan\'ın topladığı silahsız köylü-haçlı kalabalığı, beklenmedik bir direnişle kuşatmayı kırdı; Fatih\'in bizzat bacağından yaralandığı çarpışmalarda Osmanlı ordusu geri çekilmek zorunda kaldı.\n\nBelgrad\'ın savunulması, Katolik Avrupa\'da büyük bir sevinçle karşılandı; rivayete göre zaferin anısına Papa\'nın emriyle kiliselerde öğle vakti çan çalma geleneği bu olaya bağlanır. Kale ancak altmış beş yıl sonra, 1521\'de Kanuni Sultan Süleyman tarafından alınabildi.',
+      },
       {
         year: '1461',
         title: 'Trabzon Rum İmparatorluğu\'nun Sona Ermesi',
@@ -140,6 +158,12 @@ export const periods = [
         title: 'Belgrad\'ın Fethi',
         text:
           'Kanuni Sultan Süleyman, tahta çıkışının hemen ardından, daha önce Fatih döneminde alınamamış olan stratejik öneme sahip Belgrad kalesini fethetti. Bu, genç padişahın gücünü hem içeride hem dışarıda kanıtladığı ilk büyük seferdi.\n\nBu zafer, Orta Avrupa\'ya açılan kapıyı Osmanlı\'ya açtı ve Macaristan üzerine yapılacak sonraki seferler için sağlam bir üs oluşturdu.\n\nBelgrad, 1456\'da bizzat Fatih Sultan Mehmed\'in kuşatıp alamadığı, Osmanlı için âdeta tamamlanmamış bir hesap niteliğindeki kaleydi; Kanuni\'nin bu kaleyi ele geçirmesi, genç padişahın büyük dedesinin başaramadığını başardığını göstererek saltanatının meşruiyetini de güçlendirdi.',
+      },
+      {
+        year: '1522',
+        title: 'Rodos Kuşatması',
+        text:
+          'Kanuni Sultan Süleyman, tahta çıkışının ikinci yılında, Doğu Akdeniz\'deki Osmanlı deniz ticaretini ve hac yolunu sürekli tehdit eden Aziz Yuhanna (Rodos) Şövalyeleri\'nin üssü Rodos adasını kuşattı; dedesi Fatih\'in bir asır önce başarısız olduğu bir hedefti bu.\n\nAltı ay süren kanlı bir kuşatmanın ardından şövalyeler, onurlu şartlarla (silahlarını ve mallarını alarak) adayı terk etmeyi kabul etti. Rodos\'un alınmasıyla Doğu Akdeniz\'deki Osmanlı deniz hâkimiyeti büyük ölçüde güvence altına alındı.\n\nAdadan sürülen şövalyeler önce Girit\'e, ardından Karl V\'in bağışladığı Malta adasına yerleşti; böylece kırk üç yıl sonra Osmanlı donanmasının karşısına bu kez Malta\'da, çok daha güçlü bir savunma hattı kurmuş olarak yeniden çıkacaklardı.',
       },
       {
         year: '1526',
@@ -178,6 +202,12 @@ export const periods = [
           'Safeviler ile uzun süredir devam eden savaşlar, Amasya\'da imzalanan antlaşmayla sona erdi. Bu antlaşma, iki devlet arasındaki ilk resmi sınır düzenlemesi niteliğindeydi ve Bağdat ile çevresinin Osmanlı\'da kalmasını güvence altına aldı.\n\nAmasya Antlaşması, yaklaşık yirmi yıl sürecek göreli bir doğu barışının kapısını araladı; bu süre Osmanlı\'nın enerjisini Avrupa ve Akdeniz cephelerine yoğunlaştırmasına imkân tanıdı.\n\nAntlaşma ayrıca İran\'dan gelen Şii hacıların Mekke\'ye güvenli biçimde ulaşmasını da güvence altına alıyordu; bu, iki devlet arasında mezhep farkına rağmen belirli bir pragmatik iş birliğinin mümkün olduğunu gösteriyordu. Barış yaklaşık yirmi yıl sürse de, 1578\'de sınır anlaşmazlıkları yeniden alevlenerek uzun ve yıpratıcı yeni bir Osmanlı-Safevi savaşına yol açacaktı.',
       },
       {
+        year: '1565',
+        title: 'Malta Kuşatması',
+        text:
+          'Rodos\'tan sürülen Şövalyeler\'in kırk yılı aşkın süredir Malta adasından Osmanlı ticaret gemilerine ve hac yoluna düzenlediği korsan saldırıları artık göz ardı edilemez hâle gelmişti; Kanuni, büyük bir donanma ve kara kuvveti göndererek adayı kuşattırdı.\n\nAncak Malta\'nın sarp kayalık arazisi ve şövalyelerin aylar süren inatçı savunması Osmanlı kuvvetlerini yıprattı; yaz sonunda gelen İspanyol takviye kuvvetleri karşısında kuşatma, ağır kayıplarla kaldırıldı.\n\nMalta, Kanuni\'nin kırk altı yıllık saltanatındaki ender büyük yenilgilerden biri olarak tarihe geçti; bu başarısızlık, yaşlı padişahı bir yıl sonra son seferine, bizzat ordusunun başında Zigetvar\'a çıkmaya yöneltecek hırsın bir parçası olarak da yorumlanır.',
+      },
+      {
         year: '1566',
         title: 'Kanuni\'nin Ölümü',
         text:
@@ -204,6 +234,12 @@ export const periods = [
         title: 'İnebahtı Deniz Savaşı',
         text:
           'Kıbrıs\'ın fethine tepki olarak kurulan Haçlı donanması, Osmanlı filosunu İnebahtı Körfezi\'nde ağır bir yenilgiye uğrattı. Kaptan-ı Derya Müezzinzade Ali Paşa dahil çok sayıda deneyimli denizci bu savaşta hayatını kaybetti.\n\nYenilgi büyük bir şok yaratsa da Osmanlı, kış aylarında yeni bir donanma inşa ederek gücünü kısmen yeniden gösterdi. Yine de İnebahtı, Osmanlı\'nın Akdeniz\'deki dokunulmazlık algısının sona erdiği psikolojik bir eşik olarak tarihe geçti.\n\nDönemin sadrazamı Sokollu Mehmed Paşa\'ya atfedilen ünlü bir söze göre, Venedik Kıbrıs\'ı alarak Osmanlı\'nın kolunu kesmiş, Osmanlı da İnebahtı\'da onların sakalını kesmişti; kol bir daha çıkmaz ama sakal yeniden uzardı. Gerçekten de bir yıl içinde yeni bir filo denize indirildi, ancak deneyimli denizci ve usta kaybı uzun vadede telafisi güç bir kayıp olarak kaldı.',
+      },
+      {
+        year: '1574',
+        title: 'Tunus\'un Fethi',
+        text:
+          'İnebahtı yenilgisinin hemen ardından, Osmanlı\'nın denizlerde gerçekten çökmüş olup olmadığı sorusu Avrupa\'da merak konusuydu; Kaptan-ı Derya Kılıç Ali Paşa komutasındaki donanma, bu soruya Tunus\'u fethederek yanıt verdi.\n\nİspanya\'nın desteklediği yerel Hafsi hanedanına karşı düzenlenen sefer, şehri ve çevresini kalıcı olarak Osmanlı topraklarına kattı; Tunus, bundan sonra üç asırı aşkın süre (sonraki yüzyıllarda özerk bir eyalet olarak da olsa) Osmanlı idaresinde kaldı.\n\nTunus\'un alınması, İnebahtı\'da yıkılan donanmanın bir yıl içinde yeniden inşa edilebildiğini ve Osmanlı deniz gücünün Batı Akdeniz\'de hâlâ belirleyici olduğunu kanıtladı; Sokollu\'nun "sakal yeniden uzar" sözü, pratikte doğrulanmış oldu.',
       },
       {
         year: '1596',
@@ -364,6 +400,12 @@ export const periods = [
           'II. Mahmud, uzun süredir reformların önündeki en büyük engel haline gelen Yeniçeri Ocağı\'nı kanlı bir operasyonla lağvetti. Yeniçerilerin yeni orduya karşı çıkarak ayaklanması, topçu birlikleriyle sert biçimde bastırıldı.\n\n"Hayırlı Olay" anlamına gelen bu adımla birlikte Avrupa tarzı yeni bir ordunun (Asakir-i Mansure-i Muhammediye) kuruluşunun önü açıldı; bu, II. Mahmud dönemi boyunca sürecek geniş kapsamlı modernleşme hamlelerinin de kilit taşı oldu.\n\nYeniçeri Ocağı\'nın kapatılmasıyla birlikte ocağa bağlı mülkler ve vakıflar devlete geçirildi; dört asra yakın süredir Osmanlı ordusunun ve İstanbul\'un günlük hayatının bir parçası olan bu kurumun izleri böylece silindi. Yerine kurulan yeni ordu, subaylarını yetiştirmek üzere kısa süre sonra ilk modern askeri okulları da açacaktı.',
       },
       {
+        year: '1827',
+        title: 'Navarin Deniz Savaşı',
+        text:
+          'Yunan İsyanı\'nı bastırmak için Mısır Valisi Kavalalı Mehmed Ali Paşa\'nın oğlu İbrahim Paşa komutasında güçlü bir Osmanlı-Mısır donanması Mora kıyılarında toplanmıştı; İngiltere, Fransa ve Rusya ise isyancı Rumlara açıkça destek vermeye karar vermişti.\n\nÜç büyük devletin birleşik filosu, Navarin Körfezi\'nde demirli Osmanlı-Mısır donanmasına resmen savaş ilan etmeden bir baskın düzenledi; birkaç saat süren çarpışmanın sonunda Osmanlı donanmasının büyük bölümü batırıldı ya da yakıldı.\n\nNavarin, 19. yüzyılın en ağır deniz felaketlerinden biri olarak tarihe geçti ve Yunanistan\'ın bağımsızlığını fiilen kesinleştiren dönüm noktası oldu; Osmanlı, bu olayı "Vaka-i Müessife" (üzücü olay) olarak andı. Donanmanın bu şekilde yok olması, birkaç yıl sonra donanmayı yeniden kurma çabalarının da itici gücü oldu.',
+      },
+      {
         year: '1830',
         title: 'Yunanistan\'ın Bağımsızlığı',
         text:
@@ -394,6 +436,12 @@ export const periods = [
           'II. Abdülhamid tahta çıkışının hemen ardından Kanun-i Esasi\'yi ilan ederek Osmanlı\'da anayasal monarşiye geçişi başlattı ve ilk Osmanlı Meclis-i Mebusanı toplandı.\n\nAncak meclis, Osmanlı-Rus Savaşı\'nın patlak vermesinin ardından 1878\'de aynı padişah tarafından süresiz olarak kapatıldı; bu, Osmanlı\'nın anayasal deneyiminin otuz yıl boyunca askıya alınması anlamına geliyordu.\n\nAnayasanın hazırlanmasında başrolü oynayan reformcu devlet adamı Midhat Paşa, kısa süre sadrazamlık da yaptı; ancak II. Abdülhamid\'in giderek otoriterleşmesiyle önce sürgüne gönderildi, ardından şüpheli bir suikast davasıyla itibarsızlaştırılıp Taif\'te hayatını kaybetti. Bu akıbet, meşrutiyet deneyiminin karşılaştığı sert direnişin de bir simgesi oldu.',
       },
       {
+        year: '1877',
+        title: 'Plevne Savunması',
+        text:
+          '93 Harbi\'nde Tuna\'yı geçip hızla ilerleyen Rus-Romen ordusu karşısında, Gazi Osman Paşa komutasındaki bir Osmanlı tümeni bugünkü Bulgaristan\'da Plevne (Pleven) şehrine yerleşerek hızlı bir şekilde tahkimat kurdu.\n\nSayıca kendisinden kat kat üstün düşman kuvvetlerinin art arda düzenlediği üç büyük taarruzu geri püskürten Osman Paşa, kuşatma altında beş ay boyunca direndi; nihayetinde cephane ve erzak tükenince, kalan kuvvetleriyle kuşatmayı yarıp geçmeyi deneyen son bir çıkış harekâtının ardından teslim olmak zorunda kaldı.\n\nTeslim olurken kılıcını Rus komutanına uzatan Osman Paşa\'ya, direnişindeki onurlu tavırdan dolayı düşmanınca bile saygıyla "Gazi" unvanı yakıştırıldığı rivayet edilir; Plevne Savunması, 93 Harbi\'nin genel yenilgi tablosu içinde Osmanlı askeri tarihinin gurur duyulan ender anlarından biri olarak hafızalarda kaldı.',
+      },
+      {
         year: '1878',
         title: 'Berlin Antlaşması (93 Harbi\'nin Sonucu)',
         text:
@@ -419,9 +467,21 @@ export const periods = [
       },
       {
         year: '1915',
+        title: 'Sarıkamış Harekâtı',
+        text:
+          'I. Dünya Savaşı\'nın ilk kışında, Harbiye Nazırı Enver Paşa bizzat cepheye giderek 3. Ordu\'yu Kafkas cephesinde Rus kuvvetlerini kuşatıp imha etmeyi amaçlayan iddialı bir harekâta yöneltti; plan, dağlık ve çok sert kışlık arazide hızlı bir yürüyüşle düşmanın gerisine sarkmayı öngörüyordu.\n\nAncak kıyafet, erzak ve kılavuz eksikliğiyle çıkılan yürüyüş, eksi otuz dereceyi bulan dondurucu soğukta bir felakete dönüştü; pek çok birlik çarpışmaya girmeden, yollarda donarak yok oldu. Tahminlere göre doksan binin üzerindeki kuvvetin büyük bir kısmı, düşman ateşinden değil kış koşullarından kaybedildi.\n\nSarıkamış, Türk askeri tarihinin en ağır ve en çok konuşulan felaketlerinden biri olarak hafızalara kazındı; harekâtın baş sorumlusu sayılan Enver Paşa, bu başarısızlığın hesabını kamuoyuna açıkça vermekten kaçınarak kayıpların gerçek boyutunu uzun süre gizli tuttu.',
+      },
+      {
+        year: '1915',
         title: 'Çanakkale Savaşı',
         text:
           'İtilaf Devletleri\'nin İstanbul\'u ele geçirip Rusya\'ya doğrudan yardım hattı açmak amacıyla giriştiği Çanakkale çıkarması, Osmanlı ordusunun sert direnişiyle büyük bir yenilgiye uğratıldı.\n\nBu savunma zaferi, savaşın genel gidişatını değiştirmese de Osmanlı kamuoyunda büyük bir moral kaynağı oldu ve komutanlarından Mustafa Kemal\'in daha sonra Millî Mücadele\'de oynayacağı role giden yolda önemli bir aşama teşkil etti.\n\nSavunmanın en kritik anlarından birinde, o sırada albay rütbesindeki Mustafa Kemal\'in birliklerine taarruzu değil, ölmeyi emrettiği rivayet edilir; bu kararlılık, Anafartalar ve Conkbayırı gibi mevkilerin elde tutulmasında belirleyici oldu. Sekiz ay süren muharebelerde her iki taraftan da yüz binlerce asker hayatını kaybetti veya yaralandı.',
+      },
+      {
+        year: '1916',
+        title: 'Kut\'ül-Amare Zaferi',
+        text:
+          'Mezopotamya cephesinde Dicle kıyısında ilerleyen bir İngiliz-Hint tümeni, 1915 sonunda Bağdat\'a yürürken Osmanlı kuvvetlerince durdurulup Kut şehrine geri püskürtüldü; Halil Paşa komutasındaki Osmanlı birlikleri, şehri aylarca süren sıkı bir kuşatma altına aldı.\n\nDışarıdan gönderilen yardım kuvvetlerinin tamamı kuşatmayı yarmayı başaramayınca, şehirdeki İngiliz-Hint garnizonu aylarca süren açlığın ardından nisan 1916\'da teslim oldu; on üç bini aşkın asker esir düştü.\n\nKut\'ül-Amare, İngiliz sömürge ordusu tarihinin en büyük teslimiyetlerinden biri olarak kayıtlara geçti ve Çanakkale\'den sonra Osmanlı\'nın I. Dünya Savaşı\'nda kazandığı en büyük askeri zafer sayıldı; bu başarı, savaşın genel gidişatını değiştirmese de o dönemde Osmanlı kamuoyunda büyük bir gurur kaynağı oldu.',
       },
       {
         year: '1919',
