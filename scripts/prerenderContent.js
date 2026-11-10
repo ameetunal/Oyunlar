@@ -15,6 +15,8 @@ import { admirals } from '../src/data/admirals.js';
 import { poets } from '../src/data/poets.js';
 import { sultans } from '../src/data/sultans.js';
 import { glossary } from '../src/data/glossary.js';
+import { institutions } from '../src/data/institutions.js';
+import { treaties } from '../src/data/treaties.js';
 import { getPageText } from '../src/content.js';
 
 const FEEDBACK_EMAIL = 'Tarihiiosmanli@hotmail.com';
@@ -110,6 +112,18 @@ export function renderPageContent(page) {
         kicker: `Günlük Yaşam · ${page.entry.topic}`,
         text: page.entry.text,
       });
+    case 'institution-topic':
+      return narrativePage({
+        label: page.entry.title,
+        kicker: `Devlet Kurumları · ${page.entry.topic}`,
+        text: page.entry.text,
+      });
+    case 'treaty-topic':
+      return narrativePage({
+        label: page.entry.title,
+        kicker: `Önemli Antlaşmalar · ${page.entry.topic}`,
+        text: page.entry.text,
+      });
 
     case 'sultans':
       return listPage({
@@ -165,6 +179,18 @@ export function renderPageContent(page) {
         label: 'Divan Şairleri',
         summary: 'Osmanlı divan edebiyatının en etkili şairlerinin kronolojik listesi.',
         items: poets.map((p) => `${esc(p.order)}. ${esc(p.name)} (${esc(p.era)}) — ${esc(p.note)}`),
+      });
+    case 'institutions':
+      return listPage({
+        label: 'Devlet Kurumları',
+        summary: 'Osmanlı devlet yapısını ayakta tutan temel askeri, idari ve hukuki kurumlar.',
+        items: institutions.map((i) => `${esc(i.title)} — ${esc(i.summary)}`),
+      });
+    case 'treaties':
+      return listPage({
+        label: 'Önemli Antlaşmalar',
+        summary: 'Osmanlı diplomasi tarihindeki önemli antlaşmaların maddeleri ve sonuçları.',
+        items: treaties.map((t) => `${esc(t.title)} — ${esc(t.summary)}`),
       });
     case 'glossary':
       return listPage({

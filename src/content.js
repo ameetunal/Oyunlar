@@ -19,6 +19,8 @@ import { admirals } from './data/admirals.js';
 import { admiralProfiles } from './data/admiralProfiles.js';
 import { poets } from './data/poets.js';
 import { poetProfiles } from './data/poetProfiles.js';
+import { institutions } from './data/institutions.js';
+import { treaties } from './data/treaties.js';
 
 export function buildPages(periods) {
   const pages = [];
@@ -78,6 +80,14 @@ export function buildPages(periods) {
     .forEach((poet) => {
       pages.push({ type: 'poet-profile', poet, profile: poetProfiles[poet.name] });
     });
+  pages.push({ type: 'institutions' });
+  institutions.forEach((entry) => {
+    pages.push({ type: 'institution-topic', entry });
+  });
+  pages.push({ type: 'treaties' });
+  treaties.forEach((entry) => {
+    pages.push({ type: 'treaty-topic', entry });
+  });
   pages.push({ type: 'glossary' });
   pages.push({ type: 'about' });
   pages.push({ type: 'contact' });
@@ -94,6 +104,8 @@ export const SECTION_LABELS = {
   'harem-women': 'Kadın Sultanlar',
   admirals: 'Kaptan-ı Deryalar',
   poets: 'Divan Şairleri',
+  institutions: 'Devlet Kurumları',
+  treaties: 'Önemli Antlaşmalar',
   glossary: 'Terimler Sözlüğü',
   about: 'Hakkımızda',
   contact: 'Bize Ulaşın',
@@ -114,6 +126,8 @@ export const THIN_CONTENT_PAGE_TYPES = new Set([
   'harem-women',
   'admirals',
   'poets',
+  'institutions',
+  'treaties',
 ]);
 
 export function getPageLabel(page) {
@@ -140,6 +154,10 @@ export function getPageLabel(page) {
       return page.admiral.name;
     case 'poet-profile':
       return page.poet.name;
+    case 'institution-topic':
+      return page.entry.topic;
+    case 'treaty-topic':
+      return page.entry.topic;
     default:
       return SECTION_LABELS[page.type] ?? null;
   }
@@ -170,6 +188,8 @@ export function getPageText(page) {
     case 'poet-profile':
       return page.profile.text;
     case 'daily-life-topic':
+    case 'institution-topic':
+    case 'treaty-topic':
       return page.entry.text;
     default:
       return null;
@@ -227,6 +247,10 @@ const PAGE_ROUTE_BUILDERS = {
   'admiral-profile': (page) => `kaptan-i-derya/${turkishSlugify(page.admiral.name)}`,
   poets: () => `ekler/${turkishSlugify(SECTION_LABELS.poets)}`,
   'poet-profile': (page) => `sair/${turkishSlugify(page.poet.name)}`,
+  institutions: () => `ekler/${turkishSlugify(SECTION_LABELS.institutions)}`,
+  'institution-topic': (page) => `kurum/${turkishSlugify(page.entry.topic)}`,
+  treaties: () => `ekler/${turkishSlugify(SECTION_LABELS.treaties)}`,
+  'treaty-topic': (page) => `antlasma/${turkishSlugify(page.entry.topic)}`,
   glossary: () => `ekler/${turkishSlugify(SECTION_LABELS.glossary)}`,
   about: () => 'hakkimizda',
   contact: () => 'bize-ulasin',

@@ -18,6 +18,8 @@ import { admirals } from './data/admirals';
 import { admiralProfiles } from './data/admiralProfiles';
 import { poets } from './data/poets';
 import { poetProfiles } from './data/poetProfiles';
+import { institutions } from './data/institutions';
+import { treaties } from './data/treaties';
 import AdSlot from './components/AdSlot';
 import EraTimeline from './components/EraTimeline';
 import useAdSenseScript from './hooks/useAdSenseScript';
@@ -1045,6 +1047,118 @@ export default function App() {
               <>
                 <p className="event-breadcrumb">
                   Günlük Yaşam <span aria-hidden="true">·</span> {page.entry.topic}
+                  {readingMinutes && <span className="reading-time"> · {readingMinutes} dk okuma</span>}
+                </p>
+                <h1 className="event-title">{page.entry.title}</h1>
+                <Paragraphs text={page.entry.text} className="event-text" />
+              </>
+            )}
+
+            {page.type === 'institutions' && (
+              <>
+                <p className="chapter-label">Ek</p>
+                <h1 className="chapter-title">Devlet Kurumları</h1>
+                <p className="chapter-summary">
+                  Divan-ı Hümayun'dan Yeniçeri Ocağı'na, imparatorluğu altı asır boyunca ayakta
+                  tutan askeri, idari ve hukuki kurumlar — bir satıra tıklayarak kendi sayfasına
+                  gidebilirsiniz.
+                </p>
+                <div className="sultans-table-wrap">
+                  <table className="sultans-table wars-table">
+                    <thead>
+                      <tr>
+                        <th>Sıra</th>
+                        <th>Kurum</th>
+                        <th>Özet</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {institutions.map((i) => (
+                        <tr key={i.topic}>
+                          <td>{i.order}</td>
+                          <td>
+                            <button
+                              className="wars-table__link"
+                              onClick={() =>
+                                goTo(
+                                  pages.findIndex(
+                                    (p) => p.type === 'institution-topic' && p.entry.topic === i.topic
+                                  )
+                                )
+                              }
+                            >
+                              {i.topic}
+                            </button>
+                          </td>
+                          <td>{i.summary}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+
+            {page.type === 'institution-topic' && (
+              <>
+                <p className="event-breadcrumb">
+                  Devlet Kurumları <span aria-hidden="true">·</span> {page.entry.topic}
+                  {readingMinutes && <span className="reading-time"> · {readingMinutes} dk okuma</span>}
+                </p>
+                <h1 className="event-title">{page.entry.title}</h1>
+                <Paragraphs text={page.entry.text} className="event-text" />
+              </>
+            )}
+
+            {page.type === 'treaties' && (
+              <>
+                <p className="chapter-label">Ek</p>
+                <h1 className="chapter-title">Önemli Antlaşmalar</h1>
+                <p className="chapter-summary">
+                  Kitabın ana kronolojisindeki savaş ve olay sayfalarının ötesinde, kendi başına
+                  ele alınması gereken antlaşmalar — bir satıra tıklayarak kendi sayfasına
+                  gidebilirsiniz.
+                </p>
+                <div className="sultans-table-wrap">
+                  <table className="sultans-table wars-table">
+                    <thead>
+                      <tr>
+                        <th>Sıra</th>
+                        <th>Antlaşma</th>
+                        <th>Özet</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {treaties.map((t) => (
+                        <tr key={t.topic}>
+                          <td>{t.order}</td>
+                          <td>
+                            <button
+                              className="wars-table__link"
+                              onClick={() =>
+                                goTo(
+                                  pages.findIndex(
+                                    (p) => p.type === 'treaty-topic' && p.entry.topic === t.topic
+                                  )
+                                )
+                              }
+                            >
+                              {t.topic}
+                            </button>
+                          </td>
+                          <td>{t.summary}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+
+            {page.type === 'treaty-topic' && (
+              <>
+                <p className="event-breadcrumb">
+                  Önemli Antlaşmalar <span aria-hidden="true">·</span> {page.entry.topic}
                   {readingMinutes && <span className="reading-time"> · {readingMinutes} dk okuma</span>}
                 </p>
                 <h1 className="event-title">{page.entry.title}</h1>
